@@ -7,12 +7,14 @@
 ## Fase 0 — Fundação
 
 - [x] Repositório monorepo criado (pnpm workspaces: `apps/presenca`, `apps/cuida`, `packages/supabase`). Ambos os apps buildam limpo (`pnpm build`).
-- [ ] Projeto Supabase criado, conectado ao repo. **Bloqueado em você:** Docker não é permitido no notebook da empresa, então não há stack local — o projeto precisa ser criado manualmente no dashboard (supabase.com). Ver instruções no resumo da sessão.
-- [ ] `pgvector` habilitado no banco. SQL pronto na migration (`create extension if not exists vector`), falta aplicar num projeto real.
-- [ ] Todas as tabelas do PRD (seção 4) criadas: `profiles`, `profissionais`, `vinculos`, `biblioteca`, `caderno_entradas`. Migration completa escrita em `supabase/migrations/20260710015241_fase0_schema_inicial.sql` (ordem de criação corrigida: `profissionais` antes de `profiles`), falta aplicar.
-- [ ] RLS habilitado e testado em **cada** tabela, sem exceção, antes de seguir adiante. Policies escritas na migration; teste real (via usuários de teste anon/authenticated) depende do projeto existir.
-- [x] `service_role` confirmado fora do código de frontend e fora de acesso de qualquer agente de IA. Nenhum arquivo do repo referencia `service_role`; `packages/supabase` só expõe clients com a chave `anon`; migrations serão aplicadas por você (SQL Editor ou `db push` com a senha do banco digitada por você).
-- [ ] Processo de backup manual configurado (plano free não tem automático). Script (`scripts/backup.sh`) e passo a passo (`docs/backup.md`) prontos; falta rodar uma vez de verdade contra o projeto assim que ele existir.
+- [x] Projeto Supabase criado, conectado ao repo. Criado manualmente no dashboard (Docker bloqueado no notebook da empresa); URL e chave `anon` em `.env.local` (gitignorado) nos dois apps.
+- [x] `pgvector` habilitado no banco. `create extension vector` aplicado com sucesso via SQL Editor.
+- [x] Todas as tabelas do PRD (seção 4) criadas: `profiles`, `profissionais`, `vinculos`, `biblioteca`, `caderno_entradas`. Migration `supabase/migrations/20260710015241_fase0_schema_inicial.sql` aplicada com sucesso.
+- [x] RLS habilitado e testado em **cada** tabela, sem exceção, antes de seguir adiante. 23/23 checagens em `scripts/rls-check.mjs` passando — usuários de teste reais (paciente A, paciente B, profissional C) via signup público, só com a chave `anon`, nunca `service_role`. Cobre: isolamento entre pacientes, profissional não vê registro de outro, `anon` bloqueado em toda tabela, insert direto em `vinculos` bloqueado, insert em `biblioteca` bloqueado, paciente não consegue se passar por profissional em `caderno_entradas`, profissional sem vínculo ativo é bloqueado.
+  - Nota: pra rodar o script foi preciso desativar "Confirm email" (Authentication > Sign In > Email) — o plano free tem rate limit baixo de e-mail e sem isso `signUp` não retorna sessão. **Reativar antes do piloto com paciente real.**
+  - 3 usuários de teste (`rls-test-a/b/c-*@gmail.com`) ficaram no projeto — são inofensivos (sem dado sensível), mas podem ser removidos em Authentication > Users se preferir.
+- [x] `service_role` confirmado fora do código de frontend e fora de acesso de qualquer agente de IA. Nenhum arquivo do repo referencia `service_role`; `packages/supabase` só expõe clients com a chave `anon`; migration foi aplicada por você no SQL Editor, senha do banco nunca compartilhada.
+- [ ] Processo de backup manual configurado (plano free não tem automático). Script (`scripts/backup.sh`) e passo a passo (`docs/backup.md`) prontos; falta você rodar uma vez de verdade contra o projeto pra validar (precisa de `pg_dump`/`libpq` local e da connection string, que só você tem).
 
 ## Fase 1 — Autenticação e perfil
 
