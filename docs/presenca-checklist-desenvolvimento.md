@@ -27,10 +27,10 @@
 
 ## Fase 2 — Caderno (Meu Livro)
 
-- [ ] CRUD de entradas do Caderno (criar, ler).
-- [ ] Campo `revisitar` funcionando (marcar entrada pra voltar depois).
-- [ ] Autoria visual diferenciada: entrada do usuário (sem moldura) vs. entrada do profissional (borda/fundo slate, nome, avatar).
-- [ ] Embedding calculado automaticamente ao salvar cada entrada.
+- [x] CRUD de entradas do Caderno (criar, ler, apagar). `/caderno` — testado por script e no navegador.
+- [x] Campo `revisitar` funcionando (marcar entrada pra voltar depois). Testado (persistência confirmada).
+- [x] Autoria visual diferenciada: entrada do usuário (sem moldura) vs. entrada do profissional (borda/fundo slate, nome, avatar). Testado com entrada de profissional inserida manualmente (Fase 4 ainda não existe pra criar isso pelo fluxo real). **Bug encontrado e corrigido nesse teste:** faltava policy de RLS pra paciente ler o *nome* do profissional (só a entrada aparecia, sem autoria) — corrigido em `20260710123343_fase2_paciente_ve_nome_profissional.sql`.
+- [ ] Embedding calculado automaticamente ao salvar cada entrada. Código pronto e testado (`lib/embed.ts`, fallback gracioso pra `null` sem serviço no ar) — falta o deploy do `services/ia` (pendência sua) pra confirmar de ponta a ponta com embedding real.
 
 ## Fase 3 — Livro Vivo
 

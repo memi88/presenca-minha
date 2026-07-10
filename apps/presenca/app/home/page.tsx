@@ -42,11 +42,13 @@ export default async function Home() {
         <p className={styles.greeting}>
           {saudacao()}, {profile.nome}
         </p>
-        <div className={styles.menuDots} aria-hidden="true">
+        {/* Navegação real mínima até a Fase 5 construir a travessia
+            claro/escuro de verdade — mesmo elemento visual, só ligado. */}
+        <a className={styles.menuDots} href="/caderno" aria-label="Caderno">
           <span />
           <span />
           <span />
-        </div>
+        </a>
       </div>
 
       {mostrarConviteConversao && (
