@@ -90,7 +90,7 @@
 
 ## Pendências externas (não bloqueiam o código, mas precisam de decisão)
 
-- [ ] Microsserviço Python (Render/Railway), endpoint `/human-design` — cálculo pendente de decisão de biblioteca (`human-design-py` vs. API paga — análise em andamento). Endpoint `/embed` **decidido**, ainda não implementado — é o próximo passo (bloqueia "embedding calculado automaticamente" nas Fases 2 e 3).
+- [ ] Microsserviço Python (Render/Railway) — código pronto em `services/ia` (FastAPI, autenticado por `IA_API_KEY` compartilhada, nunca aberto). Endpoint `/embed` **implementado e testado localmente** (multilingual-e5-small, 384 dim, prefixo passage/query). Endpoint `/human-design` é stub — aceita o formato de entrada real, retorna `pendente: true` até a decisão de biblioteca. **Falta:** deploy no Render/Railway (fora do meu alcance — precisa da sua conta); depois disso, preencher `IA_SERVICE_URL` nos `.env.local` dos apps com a URL pública.
 - [ ] LLM de entrega a usar (personalização de tom/saudação).
 - [ ] Texto final de consentimento + política de privacidade (posso rascunhar quando quiser).
 
