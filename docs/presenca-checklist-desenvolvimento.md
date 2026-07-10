@@ -18,10 +18,10 @@
 
 ## Fase 1 — Autenticação e perfil
 
-- [ ] Cadastro + login funcionando (Supabase Auth).
-- [ ] Tela de Entrada/Landing (ambiente claro).
-- [ ] Tela de Chegada — entrada enxuta, sem pedir nascimento.
-- [ ] Home básica funcionando (mesmo sem personalização ainda).
+- [x] Cadastro + login funcionando (Supabase Auth). **Decisão de arquitetura:** a tela de Chegada não tem campo de e-mail/senha (só apelido) — tocar "entrar" já abre uma sessão anônima do Supabase Auth (`signInAnonymously`), sem fricção. Credencial recuperável (e-mail/senha) fica pra um convite contextual futuro, fora do escopo da Fase 1 — decisão confirmada, não presumida. Testado de ponta a ponta (localhost, navegador real).
+- [x] Tela de Entrada/Landing (ambiente claro). `app/page.tsx` — fiel à tela 01·LANDING do `docs/Presenca Jornada em Telas.dc.html`.
+- [x] Tela de Chegada — entrada enxuta, sem pedir nascimento. `app/chegada/page.tsx` — só pede apelido, grava em `profiles.nome` (primeira escrita na tabela, sem trigger, conforme decisão da Fase 0).
+- [x] Home básica funcionando (mesmo sem personalização ainda). `app/home/page.tsx` — saudação por hora do dia (não é a variação por sinal da Fase 7); botão "conversar" e link "Livro Vivo" renderizados como no mockup mas ainda não funcionais (chat e Livro Vivo são fases futuras).
 
 ## Fase 2 — Caderno (Meu Livro)
 

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@presenca/supabase": "workspace:*",
+    "@supabase/ssr": "latest",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"

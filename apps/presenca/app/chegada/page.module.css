@@ -1,0 +1,96 @@
+.scene {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  background-image: url("/images/claro.png");
+  background-size: cover;
+  background-position: center;
+}
+
+.scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(247, 240, 228, 0.55),
+    rgba(247, 240, 228, 0.82) 42%,
+    rgba(247, 240, 228, 0.95) 100%
+  );
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+.eyebrow {
+  font: 300 14px/1 var(--font-spectral), serif;
+  letter-spacing: 0.32em;
+  color: #b6873f;
+  margin-bottom: 16px;
+}
+
+.headline {
+  font: italic 400 26px/1.28 var(--font-spectral), serif;
+  color: #2a2118;
+  margin-bottom: 8px;
+}
+
+.subtext {
+  font: 400 14px/1.4 var(--font-spectral), serif;
+  color: #7a6a52;
+  margin-bottom: 26px;
+}
+
+.input {
+  width: 100%;
+  background: #fffdf9;
+  border: 1px solid #e0d3bc;
+  border-radius: 14px;
+  padding: 15px 16px;
+  font: 400 15px/1 var(--font-spectral), serif;
+  color: #2a2118;
+  box-shadow: 0 2px 6px rgba(90, 60, 20, 0.05);
+}
+
+.input::placeholder {
+  color: #b3a488;
+}
+
+.cta {
+  width: 100%;
+  margin-top: 20px;
+  background: #c69a4a;
+  color: #2a1c08;
+  font: 500 15px/1 var(--font-spectral), serif;
+  padding: 15px;
+  border-radius: 30px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(150, 110, 40, 0.22);
+  border: none;
+  cursor: pointer;
+}
+
+.cta:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.disclaimer {
+  margin-top: 30px;
+  text-align: center;
+  font: 400 11px/1.4 var(--font-spectral), serif;
+  color: #9a8b72;
+}
+
+.disclaimer a {
+  color: #b6873f;
+  text-decoration: underline;
+}
