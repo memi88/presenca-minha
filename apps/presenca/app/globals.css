@@ -1,0 +1,12 @@
+/* Reset mínimo. Tokens de tema (ambiente claro/escuro, PRD seção 6) entram
+   na Fase 5 — não antecipar aqui. */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#e9e1d3;font-family:system-ui,sans-serif}
+  a{color:#b6873f}a:hover{color:#8a6320}
+  @keyframes presBreathe{0%,100%{opacity:.4}50%{opacity:1}}
+  @keyframes presInhale{0%,100%{transform:scale(.82);opacity:.7}50%{transform:scale(1.12);opacity:1}}
+</style>
+</helmet>
+
+<section style="padding:44px 48px 20px;max-width:900px">
+  <div style="font:600 10px/1 ui-monospace,monospace;letter-spacing:.22em;color:#b6873f;margin-bottom:13px">PRESENÇA · A JORNADA EM TELAS · iOS</div>
+  <h1 style="margin:0 0 12px;font:500 32px/1.12 'Spectral',serif;color:#2a2118">Do amanhecer à despedida — a casa inteira</h1>
+  <p style="margin:0 0 14px;font:400 15px/1.55 'Spectral',serif;color:#5f5342;max-width:640px">A espinha clara e funcional (entrada → conversa → fechamento) e o ambiente escuro contemplativo, ligados pelo limiar em <em>fade</em>. A conversa é com uma <em>presença/IA companheira</em>. O tom das falas é rascunho — você refina depois.</p>
+  <div style="display:inline-flex;align-items:center;gap:9px;padding:9px 14px;background:#f6f1e8;border:1px solid #e2d7c4;border-radius:10px;font:400 12.5px/1.3 'Spectral',serif;color:#7a6a4c"><span style="width:16px;height:16px;border-radius:4px;background:repeating-linear-gradient(45deg,#e8dcc6,#e8dcc6 4px,#f2ead9 4px,#f2ead9 8px);border:1px solid #d8cbb2"></span>Arraste suas imagens de cena nos espaços marcados — elas ficam salvas.</div>
+</section>
+
+<!-- ============ VARIAÇÃO POR SINAIS ============ -->
+<section style="padding:14px 48px 30px;border-bottom:1px solid rgba(90,60,20,.1);margin-bottom:14px">
+  <div style="display:flex;align-items:baseline;gap:10px;margin:0 0 12px;flex-wrap:wrap">
+    <span style="font:600 11px/1 ui-monospace,monospace;letter-spacing:.16em;color:#b6873f;background:#f6f1e8;border:1px solid #e2d7c4;border-radius:6px;padding:5px 9px">VARIAÇÃO POR SINAIS · AMBIENTE CLARO</span>
+    <span style="font:italic 400 13px/1 'Spectral',serif;color:#8a7d68">Home · Conversa — a estrutura não muda, só a personalização</span>
+  </div>
+  <p style="margin:0 0 16px;font:400 14px/1.5 'Spectral',serif;color:#5f5342;max-width:660px">A cena e a abertura respondem a sinais. Estes são exemplos para aprovar a <em>lógica</em> antes de fixar — não uma imagem nem uma frase única toda vez.</p>
+
+  <!-- GUARDRAIL -->
+  <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#f7ece4;border:1px solid #dcc0ab;border-radius:12px;padding:13px 17px;margin-bottom:30px;max-width:760px">
+    <span style="font:600 9px/1 ui-monospace,monospace;letter-spacing:.12em;color:#a8613f">REGRA DE OURO</span>
+    <span style="font:400 13.5px/1.45 'Spectral',serif;color:#5f4636;flex:1 1 340px">O sistema usa o padrão para escolher o <strong style="font-style:normal">tom</strong> da abertura — <strong style="font-style:normal">nunca nomeia o padrão</strong> para a pessoa.</span>
+    <span style="font:italic 400 12.5px/1.3 'Spectral',serif;color:#b8552f;text-decoration:line-through;background:#fff4ee;border:1px dashed #dfa889;border-radius:8px;padding:6px 10px">“percebemos que você anda ansioso”</span>
+  </div>
+
+  <!-- 1 · CENA -->
+  <div style="font:600 10px/1 ui-monospace,monospace;letter-spacing:.14em;color:#a3937a;margin-bottom:14px">1 · CENA VISUAL — <span style="color:#c0a373">mesma linguagem, luz que responde ao momento</span></div>
+  <div style="display:flex;gap:16px;flex-wrap:nowrap;width:max-content;padding-bottom:8px;margin-bottom:34px">
+
+    <!-- amanhecer -->
+    <div style="flex:none;width:208px;display:flex;flex-direction:column;gap:9px">
+      <div style="position:relative;width:208px;height:300px;border-radius:22px;overflow:hidden;box-shadow:0 10px 26px rgba(60,40,10,.16)">
+        <div style="position:absolute;inset:0;background:url('uploads/claro-2.png') center/cover no-repeat;filter:saturate(1.15) brightness(1.03)"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,190,120,.30),rgba(255,140,110,.14) 55%,rgba(255,170,120,.1))"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 52%,rgba(30,18,8,.5))"></div>
+        <div style="position:absolute;top:11px;left:11px;font:600 8px/1 ui-monospace,monospace;letter-spacing:.1em;color:#3a2a12;background:rgba(255,245,230,.85);border-radius:20px;padding:5px 9px">HORA DO DIA</div>
+        <div style="position:absolute;left:0;right:0;bottom:0;padding:14px 15px 15px"><div style="font:italic 400 19px/1 'Spectral',serif;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.35)">Amanhecer</div><div style="font:400 11.5px/1.3 'Spectral',serif;color:rgba(255,255,255,.85);margin-top:4px">início da manhã · luz baixa e quente</div></div>
+      </div>
+    </div>
+
+    <!-- meio-dia -->
+    <div style="flex:none;width:208px;display:flex;flex-direction:column;gap:9px">
+      <div style="position:relative;width:208px;height:300px;border-radius:22px;overflow:hidden;box-shadow:0 10px 26px rgba(60,40,10,.16)">
+        <div style="position:absolute;inset:0;background:url('uploads/claro-2.png') center/cover no-repeat;filter:brightness(1.14) saturate(1.02) contrast(1.03)"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(180,205,235,.16),rgba(255,250,235,.06))"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(30,30,30,.42))"></div>
+        <div style="position:absolute;top:11px;left:11px;font:600 8px/1 ui-monospace,monospace;letter-spacing:.1em;color:#2a3a48;background:rgba(240,248,255,.85);border-radius:20px;padding:5px 9px">HORA DO DIA</div>
+        <div style="position:absolute;left:0;right:0;bottom:0;padding:14px 15px 15px"><div style="font:italic 400 19px/1 'Spectral',serif;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.35)">Meio-dia</div><div style="font:400 11.5px/1.3 'Spectral',serif;color:rgba(255,255,255,.85);margin-top:4px">sol alto · claro e sereno</div></div>
+      </div>
+    </div>
+
+    <!-- entardecer -->
+    <div style="flex:none;width:208px;display:flex;flex-direction:column;gap:9px">
+      <div style="position:relative;width:208px;height:300px;border-radius:22px;overflow:hidden;box-shadow:0 10px 26px rgba(60,40,10,.16)">
+        <div style="position:absolute;inset:0;background:url('uploads/claro-2.png') center/cover no-repeat;filter:saturate(1.25) brightness(.99) contrast(1.03)"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,150,50,.36),rgba(210,80,50,.22) 60%,rgba(120,50,60,.2))"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(40,16,10,.55))"></div>
+        <div style="position:absolute;top:11px;left:11px;font:600 8px/1 ui-monospace,monospace;letter-spacing:.1em;color:#4a1e0e;background:rgba(255,235,215,.85);border-radius:20px;padding:5px 9px">HORA DO DIA</div>
+        <div style="position:absolute;left:0;right:0;bottom:0;padding:14px 15px 15px"><div style="font:italic 400 19px/1 'Spectral',serif;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.4)">Entardecer</div><div style="font:400 11.5px/1.3 'Spectral',serif;color:rgba(255,255,255,.88);margin-top:4px">fim de tarde · âmbar profundo</div></div>
+      </div>
+    </div>
+
+    <!-- lua cheia -->
+    <div style="flex:none;width:208px;display:flex;flex-direction:column;gap:9px">
+      <div style="position:relative;width:208px;height:300px;border-radius:22px;overflow:hidden;box-shadow:0 10px 26px rgba(20,20,40,.28)">
+        <div style="position:absolute;inset:0;background:url('uploads/claro-2.png') center/cover no-repeat;filter:brightness(.5) saturate(.75) contrast(1.08) hue-rotate(-8deg)"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,32,72,.5),rgba(12,18,45,.62))"></div>
+        <div style="position:absolute;top:40px;left:58%;width:44px;height:44px;border-radius:50%;background:radial-gradient(circle,rgba(240,244,255,.98),rgba(240,244,255,.25) 62%,transparent);box-shadow:0 0 34px rgba(210,225,255,.6)"></div>
+        <div style="position:absolute;top:150px;left:60%;width:14px;height:120px;background:linear-gradient(180deg,rgba(220,230,255,.35),transparent);filter:blur(4px)"></div>
+        <div style="position:absolute;top:11px;left:11px;font:600 8px/1 ui-monospace,monospace;letter-spacing:.1em;color:#1a2440;background:rgba(220,228,255,.85);border-radius:20px;padding:5px 9px">FASE DA LUA</div>
+        <div style="position:absolute;left:0;right:0;bottom:0;padding:14px 15px 15px"><div style="font:italic 400 19px/1 'Spectral',serif;color:#eef2ff;text-shadow:0 1px 6px rgba(0,0,0,.5)">Lua cheia</div><div style="font:400 11.5px/1.3 'Spectral',serif;color:rgba(230,236,255,.85);margin-top:4px">noite · o reflexo na água</div></div>
+      </div>
+    </div>
+
+    <!-- inverno -->
+    <div style="flex:none;width:208px;display:flex;flex-direction:column;gap:9px">
+      <div style="position:relative;width:208px;height:300px;border-radius:22px;overflow:hidden;box-shadow:0 10px 26px rgba(60,40,10,.14)">
+        <div style="position:absolute;inset:0;background:url('uploads/claro-2.png') center/cover no-repeat;filter:brightness(1.06) saturate(.5) contrast(.94)"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(222,232,242,.34),rgba(210,222,235,.2))"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(50,55,62,.42))"></div>
+        <div style="position:absolute;top:11px;left:11px;font:600 8px/1 ui-monospace,monospace;letter-spacing:.1em;color:#33444f;background:rgba(240,246,250,.85);border-radius:20px;padding:5px 9px">ESTAÇÃO</div>
+        <div style="position:absolute;left:0;right:0;bottom:0;padding:14px 15px 15px"><div style="font:italic 400 19px/1 'Spectral',serif;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.35)">Bruma de inverno</div><div style="font:400 11.5px/1.3 'Spectral',serif;color:rgba(255,255,255,.85);margin-top:4px">estação · frio e leitoso</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 2 · SAUDAÇÃO -->
+  <div style="font:600 10px/1 ui-monospace,monospace;letter-spacing:.14em;color:#a3937a;margin-bottom:14px">2 · SAUDAÇÃO DA HOME — <span style="color:#c0a373">o tipo de abertura muda com o sinal, o nome nunca é rotulado</span></div>
+  <div style="display:flex;gap:18px;flex-wrap:nowrap;width:max-content;padding-bottom:8px">
+
+    <!-- neutra -->
+    <div style="flex:none;width:250px;display:flex;flex-direction:column;background:#f6f1e8;border:1px solid #e2d7c4;border-radius:18px;overflow:hidden;box-shadow:0 6px 20px rgba(90,60,20,.08)">
+      <div style="padding:12px 15px 11px;border-bottom:1px solid #e8dcc6">
+        <div style="font:600 8.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#a3937a;margin-bottom:6px">SINAL</div>
+        <div style="font:italic 400 12.5px/1.35 'Spectral',serif;color:#6f6250">visita de rotina · nada em aberto</div>
+      </div>
+      <div style="position:relative;padding:22px 18px 24px;background:linear-gradient(160deg,rgba(255,190,120,.16),rgba(255,250,235,.05))">
+        <div style="font:600 8px/1 ui-monospace,monospace;letter-spacing:.1em;color:#b6873f;margin-bottom:12px">TIPO · PERGUNTA NEUTRA</div>
+        <div style="font:italic 400 20px/1.32 'Spectral',serif;color:#2a2118">Bom dia, Marina.<br>Tem algo pesando hoje?</div>
+      </div>
+      <div style="padding:11px 15px;background:#efe7d8;font:400 11.5px/1.35 'Spectral',serif;color:#8a7d68">abre espaço, sem direcionar</div>
+    </div>
+
+    <!-- celebrar -->
+    <div style="flex:none;width:250px;display:flex;flex-direction:column;background:#f6f1e8;border:1px solid #e2d7c4;border-radius:18px;overflow:hidden;box-shadow:0 6px 20px rgba(90,60,20,.08)">
+      <div style="padding:12px 15px 11px;border-bottom:1px solid #e8dcc6">
+        <div style="font:600 8.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#a3937a;margin-bottom:6px">SINAL</div>
+        <div style="font:italic 400 12.5px/1.35 'Spectral',serif;color:#6f6250">sexta-feira · registros recentes mais leves</div>
+      </div>
+      <div style="position:relative;padding:22px 18px 24px;background:linear-gradient(160deg,rgba(255,200,110,.22),rgba(255,245,220,.06))">
+        <div style="font:600 8px/1 ui-monospace,monospace;letter-spacing:.1em;color:#b6873f;margin-bottom:12px">TIPO · CONVITE A CELEBRAR</div>
+        <div style="font:italic 400 20px/1.32 'Spectral',serif;color:#2a2118">Que bom te ver. Tem algo bom desta semana que você queira guardar?</div>
+      </div>
+      <div style="padding:11px 15px;background:#efe7d8;font:400 11.5px/1.35 'Spectral',serif;color:#8a7d68">convida a celebrar — não afirma que “esteve bem”</div>
+    </div>
+
+    <!-- silêncio -->
+    <div style="flex:none;width:250px;display:flex;flex-direction:column;background:#f6f1e8;border:1px solid #e2d7c4;border-radius:18px;overflow:hidden;box-shadow:0 6px 20px rgba(90,60,20,.08)">
+      <div style="padding:12px 15px 11px;border-bottom:1px solid #e8dcc6">
+        <div style="font:600 8.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#a3937a;margin-bottom:6px">SINAL</div>
+        <div style="font:italic 400 12.5px/1.35 'Spectral',serif;color:#6f6250">retorno após 3 semanas · último encontro difícil</div>
+      </div>
+      <div style="position:relative;padding:22px 18px 24px;background:linear-gradient(160deg,rgba(150,160,180,.16),rgba(245,240,232,.05))">
+        <div style="font:600 8px/1 ui-monospace,monospace;letter-spacing:.1em;color:#8a8270;margin-bottom:12px">TIPO · SILÊNCIO ACOLHEDOR</div>
+        <div style="font:italic 400 20px/1.32 'Spectral',serif;color:#2a2118">Bem-vindo de volta, Marina.</div>
+      </div>
+      <div style="padding:11px 15px;background:#efe7d8;font:400 11.5px/1.35 'Spectral',serif;color:#8a7d68">sem pergunta — só abre a porta, não pressiona</div>
+    </div>
+
+    <!-- retomar -->
+    <div style="flex:none;width:250px;display:flex;flex-direction:column;background:#f6f1e8;border:1px solid #e2d7c4;border-radius:18px;overflow:hidden;box-shadow:0 6px 20px rgba(90,60,20,.08)">
+      <div style="padding:12px 15px 11px;border-bottom:1px solid #e8dcc6">
+        <div style="font:600 8.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#a3937a;margin-bottom:6px">SINAL</div>
+        <div style="font:italic 400 12.5px/1.35 'Spectral',serif;color:#6f6250">pergunta em aberto do seu terapeuta</div>
+      </div>
+      <div style="position:relative;padding:22px 18px 24px;background:linear-gradient(160deg,rgba(120,150,160,.18),rgba(245,240,232,.05))">
+        <div style="font:600 8px/1 ui-monospace,monospace;letter-spacing:.1em;color:#5a7787;margin-bottom:12px">TIPO · RETOMADA</div>
+        <div style="font:italic 400 20px/1.32 'Spectral',serif;color:#2a2118">Seu terapeuta deixou uma pergunta pra você. Quer ver quando estiver pronta?</div>
+      </div>
+      <div style="padding:11px 15px;background:#efe7d8;font:400 11.5px/1.35 'Spectral',serif;color:#8a7d68">retoma um fio aberto, no tempo da pessoa</div>
+    </div>
+
+  </div>
+  <!-- 3 · POLÍTICA DE VARIAÇÃO -->
+  <div style="font:600 10px/1 ui-monospace,monospace;letter-spacing:.14em;color:#a3937a;margin:36px 0 14px">3 · ONDE A VARIAÇÃO SE APLICA — <span style="color:#c0a373">e onde é proibida</span></div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:stretch;max-width:1040px">
+    <div style="flex:1 1 280px;background:#fbf7ef;border:1px solid #ece0cc;border-radius:14px;padding:17px 18px">
+      <div style="font:600 9px/1 ui-monospace,monospace;letter-spacing:.14em;color:#b6873f;margin-bottom:15px">AMBIENTE CLARO</div>
+      <div style="margin-bottom:15px"><div style="display:flex;align-items:center;gap:9px;margin-bottom:4px"><span style="display:inline-flex;gap:3px"><span style="width:6px;height:6px;border-radius:50%;background:#b6873f"></span><span style="width:6px;height:6px;border-radius:50%;background:#b6873f"></span><span style="width:6px;height:6px;border-radius:50%;background:#b6873f"></span></span><span style="font:500 14.5px/1 'Spectral',serif;color:#2a2118">Cena · Home e Conversa</span><span style="font:600 8px/1 ui-monospace,monospace;letter-spacing:.08em;color:#8a6320;background:#f3e6cf;border:1px solid #e2cba0;border-radius:20px;padding:3px 7px">ALTA</span></div><div style="font:italic 400 12px/1.3 'Spectral',serif;color:#8a7d68;padding-left:30px">hora do dia, fase da lua, estação</div></div>
+      <div><div style="display:flex;align-items:center;gap:9px;margin-bottom:4px"><span style="display:inline-flex;gap:3px"><span style="width:6px;height:6px;border-radius:50%;background:#b6873f"></span><span style="width:6px;height:6px;border-radius:50%;background:#b6873f"></span><span style="width:6px;height:6px;border-radius:50%;background:#b6873f"></span></span><span style="font:500 14.5px/1 'Spectral',serif;color:#2a2118">Saudação da Home</span><span style="font:600 8px/1 ui-monospace,monospace;letter-spacing:.08em;color:#8a6320;background:#f3e6cf;border:1px solid #e2cba0;border-radius:20px;padding:3px 7px">ALTA</span></div><div style="font:italic 400 12px/1.3 'Spectral',serif;color:#8a7d68;padding-left:30px">o tipo de abertura muda com o sinal</div></div>
+    </div>
+    <div style="flex:1 1 300px;background:#221c15;border:1px solid #372d20;border-radius:14px;padding:17px 18px">
+      <div style="font:600 9px/1 ui-monospace,monospace;letter-spacing:.14em;color:#d9a441;margin-bottom:15px">AMBIENTE ESCURO</div>
+      <div style="margin-bottom:14px"><div style="display:flex;align-items:center;gap:9px;margin-bottom:4px"><span style="display:inline-flex;gap:3px"><span style="width:6px;height:6px;border-radius:50%;background:#d9a441"></span><span style="width:6px;height:6px;border-radius:50%;background:#d9a441"></span><span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.16)"></span></span><span style="font:500 14.5px/1 'Spectral',serif;color:#ece0cc">Livro Vivo</span><span style="font:600 8px/1 ui-monospace,monospace;letter-spacing:.08em;color:#d9a441;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.3);border-radius:20px;padding:3px 7px">SELETIVA</span></div><div style="font:italic 400 12px/1.3 'Spectral',serif;color:#a2947a;padding-left:30px">só qual página sobe primeiro · conteúdo fixo</div></div>
+      <div style="margin-bottom:14px"><div style="display:flex;align-items:center;gap:9px;margin-bottom:4px"><span style="display:inline-flex;gap:3px"><span style="width:6px;height:6px;border-radius:50%;background:#d9a441"></span><span style="width:6px;height:6px;border-radius:50%;background:#d9a441"></span><span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.16)"></span></span><span style="font:500 14.5px/1 'Spectral',serif;color:#ece0cc">Meditação</span><span style="font:600 8px/1 ui-monospace,monospace;letter-spacing:.08em;color:#d9a441;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.3);border-radius:20px;padding:3px 7px">SELETIVA</span></div><div style="font:italic 400 12px/1.3 'Spectral',serif;color:#a2947a;padding-left:30px">só o convite de entrada · práticas fixas</div></div>
+      <div><div style="display:flex;align-items:center;gap:9px;margin-bottom:4px"><span style="display:inline-flex;gap:3px"><span style="width:6px;height:6px;border-radius:50%;background:#d9a441"></span><span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.16)"></span><span style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.16)"></span></span><span style="font:500 14.5px/1 'Spectral',serif;color:#ece0cc">Diário</span><span style="font:600 8px/1 ui-monospace,monospace;letter-spacing:.08em;color:#a2947a;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:3px 7px">RARA</span></div><div style="font:italic 400 12px/1.3 'Spectral',serif;color:#a2947a;padding-left:30px">quase nenhuma — preserva o silêncio do espaço</div></div>
+    </div>
+    <div style="flex:1 1 220px;background:#f7ece4;border:1px solid #dcc0ab;border-radius:14px;padding:17px 18px">
+      <div style="font:600 9px/1 ui-monospace,monospace;letter-spacing:.14em;color:#a8613f;margin-bottom:15px">CUIDADO</div>
+      <div><div style="display:flex;align-items:center;gap:9px;margin-bottom:6px;flex-wrap:wrap"><span style="font:500 14.5px/1.2 'Spectral',serif;color:#3a241a">Recursos · Protocolo de risco</span><span style="font:600 8px/1 ui-monospace,monospace;letter-spacing:.08em;color:#fff;background:#b8552f;border:1px solid #a8613f;border-radius:20px;padding:4px 8px">NUNCA VARIA · TRAVADO</span></div><div style="font:italic 400 12px/1.35 'Spectral',serif;color:#7a5140">sempre igual, sem depender de sinal nenhum — o cuidado não pode ser personalizado a ponto de mudar</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROW 1 · JORNADA PRINCIPAL ============ -->
+<section style="padding:8px 48px 10px">
+  <div style="display:flex;align-items:baseline;gap:10px;margin:0 0 22px">
+    <span style="font:600 11px/1 ui-monospace,monospace;letter-spacing:.16em;color:#b6873f;background:#f6f1e8;border:1px solid #e2d7c4;border-radius:6px;padding:5px 9px">JORNADA PRINCIPAL · AMBIENTE CLARO</span>
+  </div>
+  <div style="display:flex;gap:0;align-items:flex-start;flex-wrap:nowrap;width:max-content;padding-bottom:10px">
+
+    <!-- A · 01 LANDING -->
+    <div style="flex:none;display:flex;flex-direction:column;gap:10px;align-items:center">
+      <div style="position:relative;width:296px;height:632px;background:#111;border-radius:46px;padding:10px;box-shadow:0 24px 55px rgba(60,40,10,.22)">
+        <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#f0e7d7">
+          <div style="position:absolute;inset:0"><x-import component-from-global-scope="image-slot" from="./image-slot.js" id="slot-landing" shape="rect" fit="cover" src="uploads/claro-2.png" placeholder="cena: lago ao amanhecer" hint-size="100%,100%" style="position:absolute;inset:0;display:block"></x-import></div>
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,14,6,.28),rgba(20,14,6,.02) 32%,rgba(30,18,6,.5));pointer-events:none"></div>
+          <div style="position:absolute;top:14px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 24px;pointer-events:none"><span style="font:600 14px/1 system-ui;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.3)">9:41</span><span style="display:flex;gap:3px;align-items:center"><span style="width:17px;height:10px;border:1.4px solid #fff;border-radius:3px;display:inline-block;opacity:.9"></span></span></div>
+          <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:78px;height:22px;background:#000;border-radius:14px;pointer-events:none"></div>
+          <div style="position:absolute;left:0;right:0;bottom:0;padding:0 30px 46px;text-align:center;pointer-events:none">
+            <div style="font:300 15px/1 'Spectral',serif;letter-spacing:.35em;text-transform:lowercase;color:rgba(255,255,255,.85);margin-bottom:14px">presença</div>
+            <div style="font:italic 400 25px/1.32 'Spectral',serif;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.35);margin-bottom:26px">Um lugar tranquilo<br>para se encontrar.</div>
+            <div style="display:inline-block;background:rgba(247,238,224,.95);color:#3a2a12;font:500 15px/1 'Spectral',serif;padding:15px 42px;border-radius:30px;box-shadow:0 6px 18px rgba(0,0,0,.2)">entrar</div>
+          </div>
+          <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:118px;height:5px;border-radius:3px;background:rgba(255,255,255,.7)"></div>
+        </div>
+      </div>
+      <span style="font:600 9.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#a3937a">01 · LANDING</span>
+    </div>
+
+    <!-- arrow -->
+    <div style="flex:none;align-self:center;display:flex;flex-direction:column;align-items:center;gap:6px;color:#c6a75f;width:74px;margin-top:-24px"><span style="font:italic 400 12px/1.2 'Spectral',serif;color:#8a7357">entrar</span><div style="display:flex;align-items:center"><div style="width:36px;height:1.5px;background:currentColor"></div><div style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:7px solid currentColor"></div></div></div>
+
+    <!-- B · 02 CHEGADA -->
+    <div style="flex:none;display:flex;flex-direction:column;gap:10px;align-items:center">
+      <div style="position:relative;width:296px;height:632px;background:#111;border-radius:46px;padding:10px;box-shadow:0 24px 55px rgba(60,40,10,.22)">
+        <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#efe6d5">
+          <div style="position:absolute;inset:0;opacity:.9"><x-import component-from-global-scope="image-slot" from="./image-slot.js" id="slot-chegada" shape="rect" fit="cover" src="uploads/claro-2.png" placeholder="cena: amanhecer suave" hint-size="100%,100%" style="position:absolute;inset:0;display:block"></x-import></div>
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(247,240,228,.55),rgba(247,240,228,.82) 42%,rgba(247,240,228,.95));pointer-events:none"></div>
+          <div style="position:absolute;top:14px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 24px;pointer-events:none"><span style="font:600 14px/1 system-ui;color:#3a2f20">9:41</span><span style="width:17px;height:10px;border:1.4px solid #3a2f20;border-radius:3px;opacity:.8"></span></div>
+          <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:78px;height:22px;background:#000;border-radius:14px;pointer-events:none"></div>
+          <div style="position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:0 30px;pointer-events:none">
+            <div style="font:300 14px/1 'Spectral',serif;letter-spacing:.32em;color:#b6873f;margin-bottom:16px">bem-vindo</div>
+            <div style="font:italic 400 26px/1.28 'Spectral',serif;color:#2a2118;margin-bottom:8px">Que bom ter<br>você aqui.</div>
+            <div style="font:400 14px/1.4 'Spectral',serif;color:#7a6a52;margin-bottom:26px">Como você gostaria de ser chamado?</div>
+            <div style="background:#fffdf9;border:1px solid #e0d3bc;border-radius:14px;padding:15px 16px;font:400 15px/1 'Spectral',serif;color:#b3a488;box-shadow:0 2px 6px rgba(90,60,20,.05)">seu nome ou apelido</div>
+            <div style="margin-top:20px;background:#c69a4a;color:#2a1c08;font:500 15px/1 'Spectral',serif;padding:15px;border-radius:30px;text-align:center;box-shadow:0 6px 16px rgba(150,110,40,.22)">começar</div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;padding:0 30px 30px;text-align:center;pointer-events:none"><div style="font:400 11px/1.4 'Spectral',serif;color:#9a8b72">Ao entrar, você concorda com nossos<br><span style="color:#b6873f;text-decoration:underline">limites de cuidado</span>.</div></div>
+          <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:118px;height:5px;border-radius:3px;background:rgba(60,45,25,.35)"></div>
+        </div>
+      </div>
+      <span style="font:600 9.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#a3937a">02 · CHEGADA · entrada enxuta</span>
+    </div>
+
+    <!-- arrow -->
+    <div style="flex:none;align-self:center;display:flex;flex-direction:column;align-items:center;gap:6px;color:#c6a75f;width:74px;margin-top:-24px"><span style="font:italic 400 12px/1.2 'Spectral',serif;color:#8a7357">começar</span><div style="display:flex;align-items:center"><div style="width:36px;height:1.5px;background:currentColor"></div><div style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:7px solid currentColor"></div></div></div>
+
+    <!-- C · 04 HOME -->
+    <div style="flex:none;display:flex;flex-direction:column;gap:10px;align-items:center">
+      <div style="position:relative;width:296px;height:632px;background:#111;border-radius:46px;padding:10px;box-shadow:0 24px 55px rgba(60,40,10,.22)">
+        <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#efe6d5">
+          <div style="position:absolute;inset:0"><x-import component-from-global-scope="image-slot" from="./image-slot.js" id="slot-home" shape="rect" fit="cover" src="uploads/claro-2.png" placeholder="cena: lago nítido, dia" hint-size="100%,100%" style="position:absolute;inset:0;display:block"></x-import></div>
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,20,8,.32),rgba(247,240,228,.15) 45%,rgba(20,14,6,.4));pointer-events:none"></div>
+          <div style="position:absolute;top:14px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 24px;pointer-events:none"><span style="font:600 14px/1 system-ui;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.3)">9:41</span><span style="width:17px;height:10px;border:1.4px solid #fff;border-radius:3px;opacity:.9"></span></div>
+          <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:78px;height:22px;background:#000;border-radius:14px;pointer-events:none"></div>
+          <div style="position:absolute;top:52px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 26px;pointer-events:none">
+            <div style="font:italic 400 17px/1 'Spectral',serif;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.4)">bom dia, Marina</div>
+            <div style="display:flex;flex-direction:column;gap:3.5px;padding:6px"><span style="width:4px;height:4px;border-radius:50%;background:#fff"></span><span style="width:4px;height:4px;border-radius:50%;background:#fff"></span><span style="width:4px;height:4px;border-radius:50%;background:#fff"></span></div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;padding:0 26px 40px;pointer-events:none">
+            <div style="background:rgba(247,240,228,.9);backdrop-filter:blur(6px);border-radius:20px;padding:22px 20px;box-shadow:0 8px 24px rgba(0,0,0,.18)">
+              <div style="font:italic 400 20px/1.3 'Spectral',serif;color:#2a2118;margin-bottom:18px">Tem algo pesando<br>hoje?</div>
+              <div style="background:#c69a4a;color:#2a1c08;font:500 15px/1 'Spectral',serif;padding:15px;border-radius:28px;text-align:center;box-shadow:0 5px 14px rgba(150,110,40,.24)">conversar</div>
+            </div>
+            <div style="text-align:center;margin-top:16px;font:italic 400 13px/1 'Spectral',serif;color:rgba(255,255,255,.9);text-shadow:0 1px 4px rgba(0,0,0,.4)">ou visitar o Livro Vivo →</div>
+          </div>
+          <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:118px;height:5px;border-radius:3px;background:rgba(255,255,255,.7)"></div>
+        </div>
+      </div>
+      <span style="font:600 9.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#a3937a">04 · HOME · véu âmbar, menu discreto</span>
+    </div>
+
+    <!-- arrow -->
+    <div style="flex:none;align-self:center;display:flex;flex-direction:column;align-items:center;gap:6px;color:#c6a75f;width:74px;margin-top:-24px"><span style="font:italic 400 12px/1.2 'Spectral',serif;color:#8a7357">conversar</span><div style="display:flex;align-items:center"><div style="width:36px;height:1.5px;background:currentColor"></div><div style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:7px solid currentColor"></div></div></div>
+
+    <!-- E · 05 CONVERSA -->
+    <div style="flex:none;display:flex;flex-direction:column;gap:10px;align-items:center">
+      <div style="position:relative;width:296px;height:632px;background:#111;border-radius:46px;padding:10px;box-shadow:0 24px 55px rgba(60,40,10,.22)">
+        <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#eee4d2">
+          <div style="position:absolute;inset:-14px;filter:blur(9px) saturate(1.05);transform:scale(1.12)"><x-import component-from-global-scope="image-slot" from="./image-slot.js" id="slot-conversa" shape="rect" fit="cover" src="uploads/claro-2.png" placeholder="cena desfocada" hint-size="100%,100%" style="position:absolute;inset:0;display:block"></x-import></div>
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(245,238,226,.7),rgba(245,238,226,.55) 40%,rgba(245,238,226,.8));pointer-events:none"></div>
+          <div style="position:absolute;top:14px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 24px;pointer-events:none"><span style="font:600 14px/1 system-ui;color:#3a2f20">9:41</span><span style="width:17px;height:10px;border:1.4px solid #3a2f20;border-radius:3px;opacity:.8"></span></div>
+          <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:78px;height:22px;background:#000;border-radius:14px;pointer-events:none"></div>
+          <div style="position:absolute;top:50px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 0;pointer-events:none"><span style="position:relative;width:8px;height:8px"><span style="position:absolute;inset:0;border-radius:50%;background:#c69a4a;animation:presBreathe 4s ease-in-out infinite"></span></span><span style="font:300 13px/1 'Spectral',serif;letter-spacing:.3em;color:#8a7357">presença</span></div>
+          <div style="position:absolute;left:0;right:0;top:92px;bottom:74px;padding:6px 20px;display:flex;flex-direction:column;gap:12px;justify-content:flex-end;pointer-events:none">
+            <div style="align-self:flex-start;max-width:76%;background:#fbf3e4;border:1px solid #ead9bb;border-radius:18px 18px 18px 5px;padding:12px 14px;font:400 14px/1.4 'Spectral',serif;color:#3a2f20;box-shadow:0 2px 8px rgba(90,60,20,.06)">Estou aqui. Pode começar por onde quiser.</div>
+            <div style="align-self:flex-end;max-width:76%;background:#e7dcc7;border-radius:18px 18px 5px 18px;padding:12px 14px;font:400 14px/1.4 'Spectral',serif;color:#4a3f2c">Acordei com o peito apertado.</div>
+            <div style="align-self:flex-start;max-width:80%;background:#fbf3e4;border:1px solid #ead9bb;border-radius:18px 18px 18px 5px;padding:12px 14px;font:400 14px/1.4 'Spectral',serif;color:#3a2f20;box-shadow:0 2px 8px rgba(90,60,20,.06)">Vamos ficar um instante com isso, sem pressa.</div>
+            <div style="align-self:flex-start;background:#241e17;border-radius:20px;padding:10px 15px;font:italic 400 13px/1 'Spectral',serif;color:#f2e4c9;display:flex;align-items:center;gap:8px;box-shadow:0 3px 10px rgba(0,0,0,.2)"><span style="width:6px;height:6px;border-radius:50%;background:#d9a441"></span>vamos respirar um pouco?</div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;padding:10px 18px 26px;pointer-events:none"><div style="background:#fffdf9;border:1px solid #e4d8c2;border-radius:24px;padding:13px 18px;font:400 14px/1 'Spectral',serif;color:#b3a488;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(90,60,20,.06)">escrever…<span style="width:26px;height:26px;border-radius:50%;background:#c69a4a"></span></div></div>
+          <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:118px;height:5px;border-radius:3px;background:rgba(60,45,25,.35)"></div>
+        </div>
+      </div>
+      <span style="font:600 9.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#a3937a">05 · CONVERSA · íntima, a luz respira</span>
+    </div>
+
+    <!-- fade arrow to dark -->
+    <div style="flex:none;align-self:center;display:flex;flex-direction:column;align-items:center;gap:6px;width:96px;margin-top:-24px"><span style="font:italic 400 12px/1.25 'Spectral',serif;color:#8a7357;text-align:center">a tela<br>escurece</span><div style="display:flex;align-items:center"><div style="width:40px;height:2px;background:linear-gradient(90deg,#c6a75f,#241e17)"></div><div style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:7px solid #241e17"></div></div><span style="font:600 8px/1 ui-monospace,monospace;letter-spacing:.12em;color:#9a875f">LIMIAR · FADE</span></div>
+
+    <!-- F · MOMENTO ESCURO -->
+    <div style="flex:none;display:flex;flex-direction:column;gap:10px;align-items:center">
+      <div style="position:relative;width:296px;height:632px;background:#111;border-radius:46px;padding:10px;box-shadow:0 24px 55px rgba(20,12,4,.4)">
+        <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:radial-gradient(120% 90% at 50% 32%,#2a2013,#171009 62%,#0e0a05)">
+          <div style="position:absolute;top:14px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 24px"><span style="font:600 14px/1 system-ui;color:rgba(255,255,255,.75)">9:41</span><span style="width:17px;height:10px;border:1.4px solid rgba(255,255,255,.7);border-radius:3px"></span></div>
+          <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:78px;height:22px;background:#000;border-radius:14px"></div>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0">
+            <div style="position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center">
+              <div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(217,164,65,.4),rgba(217,164,65,0) 70%);animation:presInhale 8s ease-in-out infinite"></div>
+              <div style="position:absolute;width:130px;height:130px;border-radius:50%;border:1.5px solid rgba(217,164,65,.5);animation:presInhale 8s ease-in-out infinite"></div>
+              <div style="position:relative;font:italic 400 22px/1 'Spectral',serif;color:#f2e4c9">inspire</div>
+            </div>
+            <div style="font:300 30px/1 'Spectral',serif;letter-spacing:.28em;color:#d9a441;margin-top:34px">4 · 7 · 8</div>
+            <div style="font:italic 400 14px/1 'Spectral',serif;color:#a2947a;margin-top:16px">expire devagar</div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;padding:0 30px 44px;text-align:center"><span style="font:400 13px/1 'Spectral',serif;color:rgba(242,228,201,.6)">voltar à conversa</span></div>
+          <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:118px;height:5px;border-radius:3px;background:rgba(255,255,255,.4)"></div>
+        </div>
+      </div>
+      <span style="font:600 9.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#a3937a">MOMENTO ESCURO · RESPIRAÇÃO 4-7-8</span>
+    </div>
+
+    <!-- return arrow -->
+    <div style="flex:none;align-self:center;display:flex;flex-direction:column;align-items:center;gap:6px;width:96px;margin-top:-24px"><span style="font:italic 400 12px/1.25 'Spectral',serif;color:#8a7357;text-align:center">clareia,<br>a conversa fecha</span><div style="display:flex;align-items:center"><div style="width:40px;height:2px;background:linear-gradient(90deg,#241e17,#c6a75f)"></div><div style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:7px solid #c6a75f"></div></div></div>
+
+    <!-- G · 06 FECHAMENTO -->
+    <div style="flex:none;display:flex;flex-direction:column;gap:10px;align-items:center">
+      <div style="position:relative;width:296px;height:632px;background:#111;border-radius:46px;padding:10px;box-shadow:0 24px 55px rgba(60,40,10,.22)">
+        <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#f2ebda">
+          <div style="position:absolute;inset:0;opacity:.85"><x-import component-from-global-scope="image-slot" from="./image-slot.js" id="slot-fechamento" shape="rect" fit="cover" src="uploads/claro-2.png" placeholder="cena clareando" hint-size="100%,100%" style="position:absolute;inset:0;display:block"></x-import></div>
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(250,245,235,.6),rgba(250,245,235,.85) 45%,rgba(250,245,235,.95));pointer-events:none"></div>
+          <div style="position:absolute;top:14px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 24px;pointer-events:none"><span style="font:600 14px/1 system-ui;color:#3a2f20">9:41</span><span style="width:17px;height:10px;border:1.4px solid #3a2f20;border-radius:3px;opacity:.8"></span></div>
+          <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:78px;height:22px;background:#000;border-radius:14px;pointer-events:none"></div>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 30px;pointer-events:none">
+            <div style="font:300 14px/1 'Spectral',serif;letter-spacing:.3em;color:#b6873f;margin-bottom:16px">até logo</div>
+            <div style="font:italic 400 26px/1.28 'Spectral',serif;color:#2a2118;margin-bottom:26px">Por hoje,<br>é o bastante.</div>
+            <div style="font:400 14px/1.4 'Spectral',serif;color:#7a6a52;margin-bottom:12px">Guarde uma palavra deste encontro:</div>
+            <div style="background:#fffdf9;border:1px solid #e0d3bc;border-radius:14px;padding:15px 16px;font:italic 400 15px/1 'Spectral',serif;color:#b3a488;box-shadow:0 2px 6px rgba(90,60,20,.05)">uma palavra…</div>
+            <div style="margin-top:22px;border:1.5px solid #c69a4a;color:#8a6320;font:500 15px/1 'Spectral',serif;padding:14px;border-radius:30px;text-align:center">encerrar por hoje</div>
+          </div>
+          <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:118px;height:5px;border-radius:3px;background:rgba(60,45,25,.35)"></div>
+        </div>
+      </div>
+      <span style="font:600 9.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#a3937a">06 · FECHAMENTO · cena clareando</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ ROW 2 · CÔMODOS ESCUROS & CUIDADO ============ -->
+<section style="padding:26px 48px 60px">
+  <div style="display:flex;align-items:baseline;gap:10px;margin:0 0 22px">
+    <span style="font:600 11px/1 ui-monospace,monospace;letter-spacing:.16em;color:#c99a3f;background:#241e17;border:1px solid #3d3324;border-radius:6px;padding:5px 9px">RAMAIS · AMBIENTE ESCURO & CUIDADO</span>
+    <span style="font:italic 400 13px/1 'Spectral',serif;color:#8a7d68">a partir do menu discreto — e o caminho de risco, sempre à mão</span>
+  </div>
+  <div style="display:flex;gap:0;align-items:flex-start;flex-wrap:nowrap;width:max-content;padding-bottom:10px">
+
+    <!-- D · MENU (fade) -->
+    <div style="flex:none;display:flex;flex-direction:column;gap:10px;align-items:center">
+      <div style="position:relative;width:296px;height:632px;background:#111;border-radius:46px;padding:10px;box-shadow:0 24px 55px rgba(40,26,10,.3)">
+        <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#14100a">
+          <div style="position:absolute;inset:0;background:url('uploads/claro-2.png') center/cover no-repeat;-webkit-mask:linear-gradient(180deg,#000 18%,transparent 58%);mask:linear-gradient(180deg,#000 18%,transparent 58%)"></div>
+          <div style="position:absolute;inset:0;background:url('uploads/sala.png') center/cover no-repeat;-webkit-mask:linear-gradient(180deg,transparent 44%,#000 82%);mask:linear-gradient(180deg,transparent 44%,#000 82%)"></div>
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(244,237,222,.4),rgba(40,30,18,.5) 55%,rgba(15,10,6,.82));pointer-events:none"></div>
+          <div style="position:absolute;top:14px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 24px"><span style="font:600 14px/1 system-ui;color:#3a2f20">9:41</span><span style="width:17px;height:10px;border:1.4px solid #3a2f20;border-radius:3px;opacity:.8"></span></div>
+          <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:78px;height:22px;background:#000;border-radius:14px"></div>
+          <div style="position:absolute;inset:0;padding:64px 26px 40px;display:flex;flex-direction:column">
+            <div style="font:italic 400 22px/1.3 'Spectral',serif;color:#2a2118;margin-bottom:24px">A casa tem<br>outros cômodos.</div>
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:rgba(255,253,249,.85);border-radius:13px"><span style="font:400 15px/1 'Spectral',serif;color:#2a2118">Conversa</span><span style="font:600 8px/1 ui-monospace,monospace;color:#b6873f;letter-spacing:.1em">CLARO</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:rgba(255,253,249,.7);border-radius:13px"><span style="font:400 15px/1 'Spectral',serif;color:#2a2118">Perfil</span><span style="font:600 8px/1 ui-monospace,monospace;color:#b6873f;letter-spacing:.1em">CLARO</span></div>
+              <div style="height:1px;background:rgba(150,120,80,.4);margin:4px 0"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:rgba(36,30,23,.72);border-radius:13px"><span style="font:400 15px/1 'Spectral',serif;color:#f2e4c9">Livro Vivo</span><span style="font:600 8px/1 ui-monospace,monospace;color:#d9a441;letter-spacing:.1em">ESCURO</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:rgba(36,30,23,.72);border-radius:13px"><span style="font:400 15px/1 'Spectral',serif;color:#f2e4c9">Diário</span><span style="font:600 8px/1 ui-monospace,monospace;color:#d9a441;letter-spacing:.1em">ESCURO</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:rgba(36,30,23,.72);border-radius:13px"><span style="font:400 15px/1 'Spectral',serif;color:#f2e4c9">Meditação</span><span style="font:600 8px/1 ui-monospace,monospace;color:#d9a441;letter-spacing:.1em">ESCURO</span></div>
+            </div>
+            <div style="margin-top:auto;text-align:center;font:600 8px/1 ui-monospace,monospace;letter-spacing:.14em;color:rgba(217,164,65,.7)">↓ LIMIAR EM FADE</div>
+          </div>
+          <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:118px;height:5px;border-radius:3px;background:rgba(255,255,255,.5)"></div>
+        </div>
+      </div>
+      <span style="font:600 9.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#a3937a">MENU · a travessia claro → escuro</span>
+    </div>
+
+    <!-- arrow -->
+    <div style="flex:none;align-self:center;display:flex;flex-direction:column;align-items:center;gap:6px;color:#8a6f3f;width:74px;margin-top:-24px"><span style="font:italic 400 12px/1.2 'Spectral',serif;color:#8a7357">entrar</span><div style="display:flex;align-items:center"><div style="width:36px;height:1.5px;background:currentColor"></div><div style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:7px solid currentColor"></div></div></div>
+
+    <!-- H · LIVRO VIVO (dark) -->
+    <div style="flex:none;display:flex;flex-direction:column;gap:10px;align-items:center">
+      <div style="position:relative;width:296px;height:632px;background:#111;border-radius:46px;padding:10px;box-shadow:0 24px 55px rgba(20,12,4,.4)">
+        <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#14100a">
+          <div style="position:absolute;inset:0;opacity:.5"><x-import component-from-global-scope="image-slot" from="./image-slot.js" id="slot-livrovivo" shape="rect" fit="cover" src="uploads/sala.png" placeholder="cena noturna, dim" hint-size="100%,100%" style="position:absolute;inset:0;display:block"></x-import></div>
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,16,10,.7),rgba(14,10,5,.92));pointer-events:none"></div>
+          <div style="position:absolute;top:14px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 24px;pointer-events:none"><span style="font:600 14px/1 system-ui;color:rgba(255,255,255,.75)">9:41</span><span style="width:17px;height:10px;border:1.4px solid rgba(255,255,255,.7);border-radius:3px"></span></div>
+          <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:78px;height:22px;background:#000;border-radius:14px;pointer-events:none"></div>
+          <div style="position:absolute;inset:0;padding:70px 26px 40px;display:flex;flex-direction:column;pointer-events:none">
+            <div style="font:300 12px/1 'Spectral',serif;letter-spacing:.3em;color:#d9a441;margin-bottom:12px">LIVRO VIVO</div>
+            <div style="font:italic 400 22px/1.3 'Spectral',serif;color:#f2e4c9;margin-bottom:26px">Leituras para<br>atravessar o dia.</div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div style="border-bottom:1px solid rgba(120,95,60,.3);padding-bottom:14px"><div style="font:400 16px/1.3 'Spectral',serif;color:#ece0cc">O medo que chega de manhã</div><div style="font:italic 300 12px/1.3 'Spectral',serif;color:#a2947a;margin-top:4px">4 min de leitura</div></div>
+              <div style="border-bottom:1px solid rgba(120,95,60,.3);padding-bottom:14px"><div style="font:400 16px/1.3 'Spectral',serif;color:#ece0cc">Quando o corpo pede pausa</div><div style="font:italic 300 12px/1.3 'Spectral',serif;color:#a2947a;margin-top:4px">3 min de leitura</div></div>
+              <div><div style="font:400 16px/1.3 'Spectral',serif;color:#ece0cc">A gentileza como prática</div><div style="font:italic 300 12px/1.3 'Spectral',serif;color:#a2947a;margin-top:4px">6 min de leitura</div></div>
+            </div>
+          </div>
+          <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:118px;height:5px;border-radius:3px;background:rgba(255,255,255,.4)"></div>
+        </div>
+      </div>
+      <span style="font:600 9.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#a3937a">LIVRO VIVO · destino contemplativo</span>
+    </div>
+
+    <!-- H2 · DIÁRIO (dark) -->
+    <div style="flex:none;width:24px"></div>
+    <div style="flex:none;display:flex;flex-direction:column;gap:10px;align-items:center">
+      <div style="position:relative;width:296px;height:632px;background:#111;border-radius:46px;padding:10px;box-shadow:0 24px 55px rgba(20,12,4,.4)">
+        <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#14100a">
+          <div style="position:absolute;inset:0;opacity:.4"><x-import component-from-global-scope="image-slot" from="./image-slot.js" id="slot-diario" shape="rect" fit="cover" src="uploads/sala.png" placeholder="cena noturna, dim" hint-size="100%,100%" style="position:absolute;inset:0;display:block"></x-import></div>
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,16,10,.72),rgba(14,10,5,.94));pointer-events:none"></div>
+          <div style="position:absolute;top:14px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 24px;pointer-events:none"><span style="font:600 14px/1 system-ui;color:rgba(255,255,255,.75)">9:41</span><span style="width:17px;height:10px;border:1.4px solid rgba(255,255,255,.7);border-radius:3px"></span></div>
+          <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:78px;height:22px;background:#000;border-radius:14px;pointer-events:none"></div>
+          <div style="position:absolute;inset:0;padding:70px 26px 34px;display:flex;flex-direction:column;pointer-events:none">
+            <div style="font:300 12px/1 'Spectral',serif;letter-spacing:.3em;color:#d9a441;margin-bottom:12px">DIÁRIO</div>
+            <div style="font:italic 400 22px/1.3 'Spectral',serif;color:#f2e4c9;margin-bottom:20px">O que você<br>quiser guardar.</div>
+            <div style="border:1px solid rgba(120,95,60,.4);border-radius:16px;padding:16px 16px 20px;background:rgba(30,24,16,.5)">
+              <div style="font:italic 400 15px/1.5 'Spectral',serif;color:#a2947a">Escreva livremente…</div>
+              <div style="width:2px;height:17px;background:#d9a441;margin-top:2px;opacity:.8"></div>
+            </div>
+            <div style="font:italic 300 11.5px/1.3 'Spectral',serif;color:#8a7c66;margin:12px 2px 22px">sem contagem, sem meta — só você</div>
+            <div style="font:600 8px/1 ui-monospace,monospace;letter-spacing:.14em;color:#7a6a4c;margin-bottom:12px">ANTES</div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div style="border-bottom:1px solid rgba(120,95,60,.25);padding-bottom:13px"><div style="font:400 11px/1 'Spectral',serif;color:#a2947a;margin-bottom:5px">terça · manhã</div><div style="font:400 14.5px/1.35 'Spectral',serif;color:#e6d8c2">Dormi melhor. O peito menos apertado hoje.</div></div>
+              <!-- entrada do PROFISSIONAL — visualmente distinta -->
+              <div style="border-left:2px solid #6ea3c0;background:rgba(70,107,120,.18);border-radius:0 12px 12px 0;padding:12px 14px"><div style="display:flex;align-items:center;gap:7px;margin-bottom:6px"><span style="width:19px;height:19px;border-radius:50%;background:#4a6b78;display:flex;align-items:center;justify-content:center;font:600 9px/1 system-ui;color:#dce9ef">C</span><span style="font:600 9px/1 ui-monospace,monospace;letter-spacing:.08em;color:#8fb8cd">DA SUA TERAPEUTA · CLARICE</span></div><div style="font:italic 400 14.5px/1.4 'Spectral',serif;color:#cfe1ea">Entre nossas conversas, repare quando o peito relaxa sozinho. O que estava acontecendo ali?</div></div>
+              <div><div style="font:400 11px/1 'Spectral',serif;color:#a2947a;margin-bottom:5px">domingo · noite</div><div style="font:400 14.5px/1.35 'Spectral',serif;color:#e6d8c2">Só queria registrar que liguei pra minha mãe.</div></div>
+            </div>
+          </div>
+          <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:118px;height:5px;border-radius:3px;background:rgba(255,255,255,.4)"></div>
+        </div>
+      </div>
+      <span style="font:600 9.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#a3937a">DIÁRIO · registro íntimo, sem métrica</span>
+    </div>
+
+    <!-- H3 · MEDITAÇÃO (dark) -->
+    <div style="flex:none;width:24px"></div>
+    <div style="flex:none;display:flex;flex-direction:column;gap:10px;align-items:center">
+      <div style="position:relative;width:296px;height:632px;background:#111;border-radius:46px;padding:10px;box-shadow:0 24px 55px rgba(20,12,4,.4)">
+        <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#14100a">
+          <div style="position:absolute;inset:0;opacity:.4"><x-import component-from-global-scope="image-slot" from="./image-slot.js" id="slot-meditacao" shape="rect" fit="cover" src="uploads/sala.png" placeholder="cena noturna, dim" hint-size="100%,100%" style="position:absolute;inset:0;display:block"></x-import></div>
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,16,10,.72),rgba(14,10,5,.94));pointer-events:none"></div>
+          <div style="position:absolute;top:14px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 24px;pointer-events:none"><span style="font:600 14px/1 system-ui;color:rgba(255,255,255,.75)">9:41</span><span style="width:17px;height:10px;border:1.4px solid rgba(255,255,255,.7);border-radius:3px"></span></div>
+          <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:78px;height:22px;background:#000;border-radius:14px;pointer-events:none"></div>
+          <div style="position:absolute;inset:0;padding:70px 26px 34px;display:flex;flex-direction:column;pointer-events:none">
+            <div style="font:300 12px/1 'Spectral',serif;letter-spacing:.3em;color:#d9a441;margin-bottom:12px">MEDITAÇÃO</div>
+            <div style="font:italic 400 22px/1.3 'Spectral',serif;color:#f2e4c9;margin-bottom:8px">Pequenas práticas,<br>à vontade.</div>
+            <div style="font:italic 300 12px/1.3 'Spectral',serif;color:#8a7c66;margin-bottom:22px">escolha pelo tempo que você tem</div>
+            <div style="display:flex;flex-direction:column;gap:13px">
+              <div style="display:flex;align-items:center;gap:13px;border-bottom:1px solid rgba(120,95,60,.25);padding-bottom:13px"><span style="flex:none;width:38px;height:38px;border-radius:50%;border:1px solid rgba(217,164,65,.55);display:flex;align-items:center;justify-content:center"><span style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid #d9a441;margin-left:2px"></span></span><span style="flex:1"><span style="display:block;font:400 15.5px/1.15 'Spectral',serif;color:#ece0cc">Respiração 4-7-8</span><span style="font:300 11px/1 'Spectral',serif;color:#a2947a">3 minutos</span></span></div>
+              <div style="display:flex;align-items:center;gap:13px;border-bottom:1px solid rgba(120,95,60,.25);padding-bottom:13px"><span style="flex:none;width:38px;height:38px;border-radius:50%;border:1px solid rgba(217,164,65,.55);display:flex;align-items:center;justify-content:center"><span style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid #d9a441;margin-left:2px"></span></span><span style="flex:1"><span style="display:block;font:400 15.5px/1.15 'Spectral',serif;color:#ece0cc">Ho'oponopono</span><span style="font:300 11px/1 'Spectral',serif;color:#a2947a">5 minutos</span></span></div>
+              <div style="display:flex;align-items:center;gap:13px;border-bottom:1px solid rgba(120,95,60,.25);padding-bottom:13px"><span style="flex:none;width:38px;height:38px;border-radius:50%;border:1px solid rgba(217,164,65,.55);display:flex;align-items:center;justify-content:center"><span style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid #d9a441;margin-left:2px"></span></span><span style="flex:1"><span style="display:block;font:400 15.5px/1.15 'Spectral',serif;color:#ece0cc">Varredura do corpo</span><span style="font:300 11px/1 'Spectral',serif;color:#a2947a">8 minutos</span></span></div>
+              <div style="display:flex;align-items:center;gap:13px"><span style="flex:none;width:38px;height:38px;border-radius:50%;border:1px solid rgba(217,164,65,.55);display:flex;align-items:center;justify-content:center"><span style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid #d9a441;margin-left:2px"></span></span><span style="flex:1"><span style="display:block;font:400 15.5px/1.15 'Spectral',serif;color:#ece0cc">Presença de 3 respirações</span><span style="font:300 11px/1 'Spectral',serif;color:#a2947a">2 minutos</span></span></div>
+            </div>
+          </div>
+          <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:118px;height:5px;border-radius:3px;background:rgba(255,255,255,.4)"></div>
+        </div>
+      </div>
+      <span style="font:600 9.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#a3937a">MEDITAÇÃO · práticas guiadas</span>
+    </div>
+
+    <!-- gap divider -->
+    <div style="flex:none;width:64px"></div>
+
+    <!-- I · RECURSOS DE CUIDADO -->
+    <div style="flex:none;display:flex;flex-direction:column;gap:10px;align-items:center">
+      <div style="position:relative;width:296px;height:632px;background:#111;border-radius:46px;padding:10px;box-shadow:0 24px 55px rgba(60,40,10,.22)">
+        <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#f6efe3">
+          <div style="position:absolute;top:14px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 24px"><span style="font:600 14px/1 system-ui;color:#3a2f20">9:41</span><span style="width:17px;height:10px;border:1.4px solid #3a2f20;border-radius:3px;opacity:.8"></span></div>
+          <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:78px;height:22px;background:#000;border-radius:14px"></div>
+          <div style="position:absolute;inset:0;padding:66px 26px 36px;display:flex;flex-direction:column">
+            <div style="font:300 12px/1 'Spectral',serif;letter-spacing:.28em;color:#b8552f;margin-bottom:14px">CUIDADO IMEDIATO</div>
+            <div style="font:italic 400 24px/1.3 'Spectral',serif;color:#2a2118;margin-bottom:8px">Você não está<br>sozinho agora.</div>
+            <div style="font:400 13.5px/1.45 'Spectral',serif;color:#7a6a52;margin-bottom:24px">Ajuda a um toque, sempre disponível — com ou sem profissional conectado.</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="background:#fff6f0;border:1.5px solid #dfa889;border-radius:16px;padding:16px 17px;display:flex;align-items:center;justify-content:space-between"><div><div style="font:500 18px/1 'Spectral',serif;color:#3a241a">CVV · 188</div><div style="font:italic 300 12px/1.2 'Spectral',serif;color:#8a6a55;margin-top:4px">Centro de Valorização da Vida</div></div><span style="width:40px;height:40px;border-radius:50%;background:#c9542c"></span></div>
+              <div style="background:#fff6f0;border:1.5px solid #dfa889;border-radius:16px;padding:16px 17px;display:flex;align-items:center;justify-content:space-between"><div><div style="font:500 18px/1 'Spectral',serif;color:#3a241a">SAMU · 192</div><div style="font:italic 300 12px/1.2 'Spectral',serif;color:#8a6a55;margin-top:4px">emergência médica</div></div><span style="width:40px;height:40px;border-radius:50%;background:#c9542c"></span></div>
+            </div>
+            <div style="margin-top:18px;background:#c69a4a;color:#2a1c08;font:500 15px/1 'Spectral',serif;padding:15px;border-radius:28px;text-align:center;box-shadow:0 5px 14px rgba(150,110,40,.22)">falar com um humano</div>
+            <div style="margin-top:auto;text-align:center;font:italic 300 12px/1.4 'Spectral',serif;color:#9a8b72">disponível em qualquer momento da jornada</div>
+          </div>
+          <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:118px;height:5px;border-radius:3px;background:rgba(60,45,25,.35)"></div>
+        </div>
+      </div>
+      <span style="font:600 9.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#a3937a">RECURSOS · sempre à mão, nos dois caminhos</span>
+    </div>
+
+  </div>
+
+  <p style="margin:30px 0 0;font:400 12.5px/1.5 system-ui;color:#8a7d68;max-width:640px">Estrutura ligada ao mapa em <a href="Jornada Presenca.dc.html">Jornada Presenca</a>. Próximos passos: “refinar o tom das falas da conversa”, “detalhar a respiração passo a passo (inspire/segure/expire)”, e agora, dentro dos cômodos: a leitura do Livro Vivo e a prática de meditação em andamento (abaixo).</p>
+</section>
+
+<!-- ============ ROW 3 · DENTRO DOS CÔMODOS ============ -->
+<section style="padding:26px 48px 64px">
+  <div style="display:flex;align-items:baseline;gap:10px;margin:0 0 22px">
+    <span style="font:600 11px/1 ui-monospace,monospace;letter-spacing:.16em;color:#c99a3f;background:#241e17;border:1px solid #3d3324;border-radius:6px;padding:5px 9px">DENTRO DOS CÔMODOS · DETALHE</span>
+    <span style="font:italic 400 13px/1 'Spectral',serif;color:#8a7d68">a leitura e a prática, na penumbra quente</span>
+  </div>
+  <div style="display:flex;gap:0;align-items:flex-start;flex-wrap:nowrap;width:max-content;padding-bottom:10px">
+
+    <!-- LEITURA · LIVRO VIVO -->
+    <div style="flex:none;display:flex;flex-direction:column;gap:10px;align-items:center">
+      <div style="position:relative;width:296px;height:632px;background:#111;border-radius:46px;padding:10px;box-shadow:0 24px 55px rgba(20,12,4,.4)">
+        <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:radial-gradient(130% 60% at 50% 0%,#241a10,#16110b 55%,#100b06)">
+          <div style="position:absolute;top:14px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 24px"><span style="font:600 14px/1 system-ui;color:rgba(255,255,255,.75)">9:41</span><span style="width:17px;height:10px;border:1.4px solid rgba(255,255,255,.7);border-radius:3px"></span></div>
+          <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:78px;height:22px;background:#000;border-radius:14px"></div>
+          <div style="position:absolute;top:50px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 22px"><span style="font:400 22px/1 'Spectral',serif;color:#c9b48a">‹</span><span style="font:300 11px/1 'Spectral',serif;letter-spacing:.24em;color:#a2947a">LIVRO VIVO</span><span style="width:22px"></span></div>
+          <div style="position:absolute;left:0;right:0;top:96px;bottom:64px;padding:6px 28px 0;overflow:hidden">
+            <div style="font:400 27px/1.24 'Spectral',serif;color:#f2e4c9;margin-bottom:26px">O medo que chega<br>de manhã</div>
+            <div style="font:italic 400 17px/1.72 'Spectral',serif;color:#e4d7c0;margin-bottom:17px">Tem manhãs em que o medo chega antes de você. Ele senta na beira da cama e espera, quieto, como quem já conhece o caminho.</div>
+            <div style="font:italic 400 17px/1.72 'Spectral',serif;color:#e4d7c0;margin-bottom:17px">Não precisa expulsá-lo. Às vezes basta reconhecer que ele veio — e que você também está aqui, respirando, inteira.</div>
+            <div style="font:italic 400 17px/1.72 'Spectral',serif;color:#e4d7c0">O medo não é o dono do quarto. É só mais um que acordou cedo, e que vai embora quando a luz entrar.</div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:56px;height:60px;background:linear-gradient(180deg,transparent,#120d07);pointer-events:none"></div>
+          <div style="position:absolute;left:0;right:0;bottom:0;padding:0 26px 30px;text-align:center"><span style="font:400 12.5px/1 'Spectral',serif;color:rgba(226,215,196,.6)">guardar esta leitura</span></div>
+          <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:118px;height:5px;border-radius:3px;background:rgba(255,255,255,.4)"></div>
+        </div>
+      </div>
+      <span style="font:600 9.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#a3937a">LIVRO VIVO · tela de leitura · conteúdo fixo</span>
+    </div>
+
+    <div style="flex:none;width:40px"></div>
+
+    <!-- MEDITAÇÃO EM ANDAMENTO -->
+    <div style="flex:none;display:flex;flex-direction:column;gap:10px;align-items:center">
+      <div style="position:relative;width:296px;height:632px;background:#111;border-radius:46px;padding:10px;box-shadow:0 24px 55px rgba(20,12,4,.4)">
+        <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:radial-gradient(120% 80% at 50% 34%,#2a2013,#171009 62%,#0e0a05)">
+          <div style="position:absolute;top:14px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 24px"><span style="font:600 14px/1 system-ui;color:rgba(255,255,255,.75)">9:41</span><span style="width:17px;height:10px;border:1.4px solid rgba(255,255,255,.7);border-radius:3px"></span></div>
+          <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:78px;height:22px;background:#000;border-radius:14px"></div>
+          <div style="position:absolute;top:50px;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 24px"><span style="font:400 20px/1 'Spectral',serif;color:#a2947a">×</span><span style="font:300 12px/1 'Spectral',serif;letter-spacing:.2em;color:#c9b48a">FÔLEGO · 4-7-8</span><span style="width:20px"></span></div>
+          <!-- três fases, a ativa acesa -->
+          <div style="position:absolute;top:92px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:0">
+            <div style="text-align:center;padding:0 12px"><div style="font:500 20px/1 'Spectral',serif;color:#f2e4c9">4</div><div style="font:300 9.5px/1 'Spectral',serif;letter-spacing:.14em;color:#e9c98a;margin-top:5px">INSPIRE</div></div>
+            <span style="color:rgba(217,164,65,.3);font:300 13px/1 'Spectral',serif">·</span>
+            <div style="text-align:center;padding:0 12px;opacity:.4"><div style="font:500 20px/1 'Spectral',serif;color:#d9c9a8">7</div><div style="font:300 9.5px/1 'Spectral',serif;letter-spacing:.14em;color:#a2947a;margin-top:5px">SEGURE</div></div>
+            <span style="color:rgba(217,164,65,.3);font:300 13px/1 'Spectral',serif">·</span>
+            <div style="text-align:center;padding:0 12px;opacity:.4"><div style="font:500 20px/1 'Spectral',serif;color:#d9c9a8">8</div><div style="font:300 9.5px/1 'Spectral',serif;letter-spacing:.14em;color:#a2947a;margin-top:5px">EXPIRE</div></div>
+          </div>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+            <div style="position:relative;width:210px;height:210px;display:flex;align-items:center;justify-content:center">
+              <div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(217,164,65,.42),rgba(217,164,65,0) 70%);animation:presInhale 8s ease-in-out infinite"></div>
+              <div style="position:absolute;width:150px;height:150px;border-radius:50%;border:1.5px solid rgba(217,164,65,.5);animation:presInhale 8s ease-in-out infinite"></div>
+              <div style="position:absolute;width:96px;height:96px;border-radius:50%;border:1px solid rgba(217,164,65,.28)"></div>
+              <div style="position:relative;font:italic 400 24px/1 'Spectral',serif;color:#f2e4c9">inspire</div>
+            </div>
+            <div style="font:italic 400 14px/1.4 'Spectral',serif;color:#a2947a;margin-top:34px;text-align:center;max-width:210px">deixe o ar entrar devagar,<br>contando até quatro</div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;padding:0 30px 34px;display:flex;flex-direction:column;align-items:center;gap:14px">
+            <div style="display:flex;align-items:center;gap:9px;border:1px solid rgba(217,164,65,.4);border-radius:26px;padding:11px 22px"><span style="display:flex;gap:3px"><span style="width:3px;height:13px;background:#d9a441;border-radius:1px"></span><span style="width:3px;height:13px;background:#d9a441;border-radius:1px"></span></span><span style="font:400 13px/1 'Spectral',serif;color:#e9dcc2">pausar</span></div>
+            <span style="font:italic 400 12.5px/1.4 'Spectral',serif;color:rgba(226,215,196,.55);text-align:center">encerrar quando quiser — cada respiração já conta</span>
+          </div>
+          <div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:118px;height:5px;border-radius:3px;background:rgba(255,255,255,.4)"></div>
+        </div>
+      </div>
+      <span style="font:600 9.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#a3937a">FÔLEGO · prática em andamento</span>
+    </div>
+
+    <div style="flex:none;width:40px"></div>
+
+    <!-- NOTA DE COMPORTAMENTO -->
+    <div style="flex:none;width:290px;align-self:center;display:flex;flex-direction:column;gap:14px">
+      <div style="background:#241e17;border:1px solid #3d3324;border-radius:16px;padding:18px 20px">
+        <div style="font:600 9px/1 ui-monospace,monospace;letter-spacing:.12em;color:#d9a441;margin-bottom:11px">MOVIMENTO · não é troca de tela</div>
+        <div style="font:400 13.5px/1.5 'Spectral',serif;color:#c9bca4">As três fases fluem no mesmo círculo — ele cresce ao <em>inspirar</em>, repousa ao <em>segurar</em>, encolhe ao <em>expirar</em>. A palavra e a contagem trocam em fade suave, sem corte.</div>
+      </div>
+      <div style="background:#241e17;border:1px solid #3d3324;border-radius:16px;padding:18px 20px">
+        <div style="font:600 9px/1 ui-monospace,monospace;letter-spacing:.12em;color:#d9a441;margin-bottom:11px">SAÍDA · sem desistir</div>
+        <div style="font:400 13.5px/1.5 'Spectral',serif;color:#c9bca4">O <strong style="font-style:normal;color:#e9dcc2">×</strong> encerra a qualquer momento — “cada respiração já conta”, nunca “você abandonou”.</div>
+      </div>
+      <div style="background:#221c15;border:1px solid #372d20;border-radius:16px;padding:18px 20px">
+        <div style="font:600 9px/1 ui-monospace,monospace;letter-spacing:.12em;color:#c99a3f;margin-bottom:11px">VOLTA · retoma onde parou</div>
+        <div style="font:400 13.5px/1.5 'Spectral',serif;color:#c9bca4">Ao terminar, a tela clareia de volta à <em>conversa</em> exatamente no ponto em que parou — a última fala ainda ali, sem reorientar.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ PORTAL CUIDA · LADO DO PROFISSIONAL ============ -->
+<section style="padding:26px 48px 70px;background:#dfe5ea;margin-top:20px;border-top:1px solid #c3ccd4">
+  <div style="display:flex;align-items:baseline;gap:10px;margin:8px 0 8px;flex-wrap:wrap">
+    <span style="font:600 11px/1 ui-monospace,monospace;letter-spacing:.16em;color:#3c5966;background:#e9edf1;border:1px solid #c3ccd4;border-radius:6px;padding:5px 9px">PORTAL CUIDA · cuida.presenca.app</span>
+    <span style="font:italic 400 13px/1 'Spectral',serif;color:#6a7681">o lado do profissional — registro sóbrio, sem a estética contemplativa do paciente</span>
+  </div>
+  <p style="margin:0 0 24px;font:400 14px/1.5 system-ui;color:#55636d;max-width:680px">Desktop, luz neutra, tipografia clara. O terapeuta acompanha seus pacientes e escreve perguntas ou práticas que aparecem no <strong>Caderno</strong> — o mesmo Diário, visto do outro lado.</p>
+
+  <div style="display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start">
+
+    <!-- LISTA DE PACIENTES -->
+    <div style="flex:none;display:flex;flex-direction:column;gap:11px">
+      <div style="width:560px;height:392px;background:#fff;border:1px solid #cdd5dc;border-radius:14px;overflow:hidden;box-shadow:0 12px 34px rgba(40,60,75,.14);display:flex;flex-direction:column">
+        <!-- topbar -->
+        <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid #e3e8ed;background:#f6f8fa">
+          <div style="display:flex;align-items:center;gap:9px"><span style="font:600 11px/1 'Spectral',serif;letter-spacing:.16em;color:#4a6b78">CUIDA</span><span style="font:400 12px/1 system-ui;color:#9aa6ae">/ pacientes</span></div>
+          <div style="display:flex;align-items:center;gap:12px"><span style="font:400 12px/1 system-ui;color:#8a97a0">Dra. Clarice Mendes</span><span style="width:26px;height:26px;border-radius:50%;background:#4a6b78;display:flex;align-items:center;justify-content:center;font:600 11px/1 system-ui;color:#dce9ef">C</span></div>
+        </div>
+        <!-- header row -->
+        <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px">
+          <div style="font:600 16px/1.1 system-ui;color:#2c3841">Seus pacientes <span style="color:#9aa6ae;font-weight:400">· 14</span></div>
+          <div style="display:flex;gap:8px"><span style="font:400 12px/1 system-ui;color:#5a6b75;background:#eef2f5;border:1px solid #d8e0e6;border-radius:16px;padding:7px 13px">Todos</span><span style="font:400 12px/1 system-ui;color:#9aa6ae;background:#f6f8fa;border:1px solid #e3e8ed;border-radius:16px;padding:7px 13px">buscar…</span></div>
+        </div>
+        <!-- rows -->
+        <div style="flex:1;overflow:hidden;padding:0 10px">
+          <!-- sinalizado -->
+          <div style="display:flex;align-items:center;gap:13px;padding:12px 12px;border-radius:10px;background:#fdf1ec;border:1px solid #f0cdb9;margin-bottom:2px">
+            <span style="flex:none;width:38px;height:38px;border-radius:50%;background:#c9a08a;display:flex;align-items:center;justify-content:center;font:600 14px/1 system-ui;color:#fff">M</span>
+            <div style="flex:1"><div style="display:flex;align-items:center;gap:8px"><span style="font:600 14px/1.1 system-ui;color:#2c3841">Marina R.</span><span style="font:600 8px/1 ui-monospace,monospace;letter-spacing:.06em;color:#fff;background:#c9542c;border-radius:20px;padding:3px 7px">ATENÇÃO</span></div><div style="font:400 12px/1.3 system-ui;color:#8a5c48;margin-top:3px">sinal de risco detectado · consentimento ativo</div></div>
+            <span style="font:400 11px/1 system-ui;color:#b0553a">agora há pouco</span>
+          </div>
+          <!-- normal rows -->
+          <div style="display:flex;align-items:center;gap:13px;padding:12px 12px;border-radius:10px;border-bottom:1px solid #eef2f5">
+            <span style="flex:none;width:38px;height:38px;border-radius:50%;background:#8aa6b3;display:flex;align-items:center;justify-content:center;font:600 14px/1 system-ui;color:#fff">J</span>
+            <div style="flex:1"><div style="font:600 14px/1.1 system-ui;color:#2c3841">João P.</div><div style="font:400 12px/1.3 system-ui;color:#8a97a0;margin-top:3px">respondeu à pergunta do Caderno</div></div>
+            <span style="font:400 11px/1 system-ui;color:#9aa6ae">há 2 dias</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:13px;padding:12px 12px;border-radius:10px;border-bottom:1px solid #eef2f5">
+            <span style="flex:none;width:38px;height:38px;border-radius:50%;background:#a8b0a0;display:flex;align-items:center;justify-content:center;font:600 14px/1 system-ui;color:#fff">L</span>
+            <div style="flex:1"><div style="font:600 14px/1.1 system-ui;color:#2c3841">Letícia A.</div><div style="font:400 12px/1.3 system-ui;color:#8a97a0;margin-top:3px">sessão agendada · quinta, 15h</div></div>
+            <span style="font:400 11px/1 system-ui;color:#9aa6ae">há 4 dias</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:13px;padding:12px 12px;border-radius:10px">
+            <span style="flex:none;width:38px;height:38px;border-radius:50%;background:#b0a2b8;display:flex;align-items:center;justify-content:center;font:600 14px/1 system-ui;color:#fff">R</span>
+            <div style="flex:1"><div style="font:600 14px/1.1 system-ui;color:#2c3841">Rafael S.</div><div style="font:400 12px/1.3 system-ui;color:#8a97a0;margin-top:3px">sem novidades</div></div>
+            <span style="font:400 11px/1 system-ui;color:#9aa6ae">há 1 semana</span>
+          </div>
+        </div>
+      </div>
+      <span style="font:600 9.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#7a8790">LISTA DE PACIENTES · o caso de risco sobe sinalizado</span>
+    </div>
+
+    <!-- ESCREVER NO CADERNO -->
+    <div style="flex:none;display:flex;flex-direction:column;gap:11px">
+      <div style="width:480px;height:392px;background:#fff;border:1px solid #cdd5dc;border-radius:14px;overflow:hidden;box-shadow:0 12px 34px rgba(40,60,75,.14);display:flex;flex-direction:column">
+        <!-- header -->
+        <div style="flex:none;display:flex;align-items:center;gap:11px;padding:14px 18px;border-bottom:1px solid #e3e8ed;background:#f6f8fa">
+          <span style="font:400 18px/1 system-ui;color:#8a97a0">‹</span>
+          <span style="width:32px;height:32px;border-radius:50%;background:#c9a08a;display:flex;align-items:center;justify-content:center;font:600 12px/1 system-ui;color:#fff">M</span>
+          <div><div style="font:600 14px/1.1 system-ui;color:#2c3841">Marina R.</div><div style="font:400 11px/1.2 system-ui;color:#8a97a0">escrever no Caderno</div></div>
+        </div>
+        <!-- body -->
+        <div style="flex:1;padding:18px;display:flex;flex-direction:column">
+          <div style="display:flex;gap:8px;margin-bottom:14px">
+            <span style="font:500 12px/1 system-ui;color:#fff;background:#4a6b78;border-radius:16px;padding:8px 14px">Uma pergunta</span>
+            <span style="font:400 12px/1 system-ui;color:#5a6b75;background:#eef2f5;border:1px solid #d8e0e6;border-radius:16px;padding:8px 14px">Uma prática</span>
+          </div>
+          <div style="flex:1;border:1px solid #d8e0e6;border-radius:12px;padding:14px 15px;background:#fbfcfd">
+            <div style="font:400 15px/1.5 system-ui;color:#3a4750">Entre nossas conversas, repare quando o peito relaxa sozinho. O que estava acontecendo ali?</div>
+            <div style="width:2px;height:18px;background:#4a6b78;margin-top:4px"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:9px;margin-top:12px;padding:11px 13px;background:#eef4f7;border:1px solid #d3e0e7;border-radius:10px">
+            <span style="flex:none;width:16px;height:16px;border-radius:50%;border:1.5px solid #6a8b98;display:flex;align-items:center;justify-content:center;font:600 10px/1 system-ui;color:#4a6b78">i</span>
+            <span style="font:400 11.5px/1.4 system-ui;color:#5a6b75">Aparece no Diário de Marina marcado como <strong>seu</strong> — nunca se confunde com o que ela mesma escreve.</span>
+          </div>
+          <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px">
+            <span style="font:500 13px/1 system-ui;color:#8a97a0;padding:11px 16px">cancelar</span>
+            <span style="font:600 13px/1 system-ui;color:#fff;background:#4a6b78;border-radius:22px;padding:11px 22px;box-shadow:0 4px 12px rgba(60,89,102,.28)">enviar ao Caderno</span>
+          </div>
+        </div>
+      </div>
+      <span style="font:600 9.5px/1 ui-monospace,monospace;letter-spacing:.1em;color:#7a8790">ESCREVER · pergunta ou prática pro Caderno do paciente</span>
+    </div>
+
+    <!-- as duas pontas -->
+    <div style="flex:1 1 300px;min-width:280px;max-width:360px;background:#eef2f5;border:1px solid #d3dbe1;border-radius:14px;padding:20px 22px;align-self:stretch">
+      <div style="font:600 9px/1 ui-monospace,monospace;letter-spacing:.14em;color:#4a6b78;margin-bottom:14px">AS DUAS PONTAS DO CADERNO</div>
+      <div style="font:400 14px/1.55 system-ui;color:#4c5962;margin-bottom:18px">O que a terapeuta escreve aqui, no registro slate profissional, chega ao paciente na penumbra quente do Diário — mas <strong>visivelmente diferente</strong> da voz dele.</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="border-left:2px solid #6ea3c0;background:#e7eef2;border-radius:0 10px 10px 0;padding:11px 13px"><div style="font:600 8.5px/1 ui-monospace,monospace;letter-spacing:.08em;color:#4a6b78;margin-bottom:5px">VOZ DA TERAPEUTA</div><div style="font:400 12.5px/1.4 system-ui;color:#3a4750">borda e fundo azul-slate, com nome e avatar — um convite de fora</div></div>
+        <div style="border-radius:10px;background:#f3ede2;border:1px solid #e2d4bd;padding:11px 13px"><div style="font:600 8.5px/1 ui-monospace,monospace;letter-spacing:.08em;color:#a67c33;margin-bottom:5px">VOZ DO PACIENTE</div><div style="font:400 12.5px/1.4 system-ui;color:#5f5342">só data e texto, sem moldura — o silêncio do espaço dele</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <p style="margin:28px 0 0;font:400 12.5px/1.5 system-ui;color:#7a8790;max-width:660px">Ver a mesma pergunta chegando do lado do paciente na tela do <strong>Diário</strong> (fileira dos cômodos escuros, acima), agora com a entrada da terapeuta destacada.</p>
+</section>
+</x-dc>
+</body>
+</html>

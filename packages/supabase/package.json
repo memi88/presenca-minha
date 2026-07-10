@@ -1,0 +1,19 @@
+{
+  "name": "@presenca/supabase",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    "./browser": "./src/browser.ts",
+    "./server": "./src/server.ts",
+    "./types": "./src/database.types.ts"
+  },
+  "dependencies": {
+    "@supabase/ssr": "latest",
+    "@supabase/supabase-js": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "typescript": "^5.7.0"
+  }
+}
