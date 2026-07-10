@@ -6,22 +6,24 @@
 
 ## Fase 0 — Fundação
 
-- [x] Repositório monorepo criado (pnpm workspaces: `apps/presenca`, `apps/cuida`, `packages/supabase`). Ambos os apps buildam limpo (`pnpm build`).
-- [x] Projeto Supabase criado, conectado ao repo. Criado manualmente no dashboard (Docker bloqueado no notebook da empresa); URL e chave `anon` em `.env.local` (gitignorado) nos dois apps.
-- [x] `pgvector` habilitado no banco. `create extension vector` aplicado com sucesso via SQL Editor.
-- [x] Todas as tabelas do PRD (seção 4) criadas: `profiles`, `profissionais`, `vinculos`, `biblioteca`, `caderno_entradas`. Migration `supabase/migrations/20260710015241_fase0_schema_inicial.sql` aplicada com sucesso.
-- [x] RLS habilitado e testado em **cada** tabela, sem exceção, antes de seguir adiante. 23/23 checagens em `scripts/rls-check.mjs` passando — usuários de teste reais (paciente A, paciente B, profissional C) via signup público, só com a chave `anon`, nunca `service_role`. Cobre: isolamento entre pacientes, profissional não vê registro de outro, `anon` bloqueado em toda tabela, insert direto em `vinculos` bloqueado, insert em `biblioteca` bloqueado, paciente não consegue se passar por profissional em `caderno_entradas`, profissional sem vínculo ativo é bloqueado.
-  - Nota: pra rodar o script foi preciso desativar "Confirm email" (Authentication > Sign In > Email) — o plano free tem rate limit baixo de e-mail e sem isso `signUp` não retorna sessão. **Reativar antes do piloto com paciente real.**
-  - 3 usuários de teste (`rls-test-a/b/c-*@gmail.com`) ficaram no projeto — são inofensivos (sem dado sensível), mas podem ser removidos em Authentication > Users se preferir.
-- [x] `service_role` confirmado fora do código de frontend e fora de acesso de qualquer agente de IA. Nenhum arquivo do repo referencia `service_role`; `packages/supabase` só expõe clients com a chave `anon`; migration foi aplicada por você no SQL Editor, senha do banco nunca compartilhada.
-- [ ] Processo de backup manual configurado (plano free não tem automático). Script (`scripts/backup.sh`) e passo a passo (`docs/backup.md`) prontos; falta você rodar uma vez de verdade contra o projeto pra validar (precisa de `pg_dump`/`libpq` local e da connection string, que só você tem).
+- [x] Repositório monorepo criado (pnpm workspaces: `apps/presenca`, `apps/cuida`, `packages/supabase`).
+- [x] Projeto Supabase criado, conectado ao repo.
+- [x] `pgvector` habilitado no banco.
+- [x] Todas as tabelas do PRD (seção 4) criadas: `profiles`, `profissionais`, `vinculos`, `biblioteca`, `caderno_entradas`.
+- [x] RLS habilitado e testado em **cada** tabela, sem exceção, antes de seguir adiante. 23/23 checagens (`scripts/rls-check.mjs`).
+- [x] `service_role` confirmado fora do código de frontend e fora de acesso de qualquer agente de IA.
+- [ ] Processo de backup manual configurado (plano free não tem automático). Script e doc prontos (`scripts/backup.sh`, `docs/backup.md`); falta rodar uma vez de verdade.
 
 ## Fase 1 — Autenticação e perfil
 
-- [x] Cadastro + login funcionando (Supabase Auth). **Decisão de arquitetura:** a tela de Chegada não tem campo de e-mail/senha (só apelido) — tocar "entrar" já abre uma sessão anônima do Supabase Auth (`signInAnonymously`), sem fricção. Credencial recuperável (e-mail/senha) fica pra um convite contextual futuro, fora do escopo da Fase 1 — decisão confirmada, não presumida. Testado de ponta a ponta (localhost, navegador real).
-- [x] Tela de Entrada/Landing (ambiente claro). `app/page.tsx` — fiel à tela 01·LANDING do `docs/Presenca Jornada em Telas.dc.html`.
-- [x] Tela de Chegada — entrada enxuta, sem pedir nascimento. `app/chegada/page.tsx` — só pede apelido, grava em `profiles.nome` (primeira escrita na tabela, sem trigger, conforme decisão da Fase 0).
-- [x] Home básica funcionando (mesmo sem personalização ainda). `app/home/page.tsx` — saudação por hora do dia (não é a variação por sinal da Fase 7); botão "conversar" e link "Livro Vivo" renderizados como no mockup mas ainda não funcionais (chat e Livro Vivo são fases futuras).
+- [x] Login anônimo (`signInAnonymously()`) habilitado, disparado silenciosamente na Entrada.
+- [x] CAPTCHA/Turnstile configurado no login anônimo. Widget oficial da Cloudflare, site key em `.env.local`, secret key só no dashboard do Supabase (Attack Protection).
+- [x] Fluxo de conversão pra conta permanente (e-mail/senha), preservando o mesmo UUID. `/conta` — `supabase.auth.updateUser({email, password})`, testado (mesmo `auth.uid()` antes/depois).
+- [ ] Conversão obrigatória disparando no momento de conectar profissional. **Parcial:** o mecanismo de conversão existe e é reutilizável; o gatilho em si depende da tela de "conectar profissional" (Fase 4), que ainda não existe. Fica registrado aqui pra não esquecer de chamar a conversão obrigatória quando essa tela for construída.
+- [x] Convite de conversão gentil e recorrente pro resto dos casos (não só uma vez). Banner discreto na Home + "agora não" (adia 7 dias via `profiles.lembrete_conversao_em`), testado.
+- [x] Tela de Entrada/Landing (ambiente claro).
+- [x] Tela de Chegada — entrada enxuta, sem pedir nascimento.
+- [x] Home básica funcionando (mesmo sem personalização ainda).
 
 ## Fase 2 — Caderno (Meu Livro)
 
@@ -50,6 +52,7 @@
 - [ ] Transição em fade entre rotas (~400–600ms).
 - [ ] Mapeamento fixo por tela: Livro Vivo, Diário, Meditação = escuro; resto = claro.
 - [ ] Respiração 4-7-8: movimento contínuo (sem corte de tela), saída a qualquer momento, retomada exata da conversa ao voltar.
+- [ ] **Responsividade desktop.** É um PWA (seção 3.2 do PRD), não mobile-only — as telas da Fase 1 (Landing, Chegada, Home, Conta) usam layout mobile-first fiel ao mockup, mas em viewport largo isso vira uma faixa de conteúdo pequena numa janela grande, com a imagem de cena esticada/cortada sem intenção. Tratar sistematicamente aqui (junto dos tokens de tema): conter a experiência numa coluna central de largura fixa (~480px) em telas largas, com o entorno preenchido por um fundo mais discreto em vez de esticar a UI interativa de ponta a ponta. Aplica retroativamente às 4 telas já construídas.
 
 ## Fase 6 — Onboarding (revelação contextual)
 
@@ -87,8 +90,7 @@
 
 ## Pendências externas (não bloqueiam o código, mas precisam de decisão)
 
-- [ ] Biblioteca de cálculo de Human Design — `human-design-py` auto-hospedado vs. API paga (análise em andamento).
-- [ ] Modelo de embeddings a usar.
+- [ ] Microsserviço Python (Render/Railway), endpoint `/human-design` — cálculo pendente de decisão de biblioteca (`human-design-py` vs. API paga — análise em andamento). Endpoint `/embed` **decidido**, ainda não implementado — é o próximo passo (bloqueia "embedding calculado automaticamente" nas Fases 2 e 3).
 - [ ] LLM de entrega a usar (personalização de tom/saudação).
 - [ ] Texto final de consentimento + política de privacidade (posso rascunhar quando quiser).
 

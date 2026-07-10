@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
+import { adiarConversao } from "./actions";
 import styles from "./page.module.css";
 
 // Saudação por hora do dia — cálculo determinístico simples, não é a
@@ -25,11 +26,15 @@ export default async function Home() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("nome")
+    .select("nome, lembrete_conversao_em")
     .eq("id", user.id)
     .maybeSingle();
 
   if (!profile?.nome) redirect("/chegada");
+
+  const mostrarConviteConversao =
+    user.is_anonymous === true &&
+    (!profile.lembrete_conversao_em || new Date(profile.lembrete_conversao_em) <= new Date());
 
   return (
     <main className={styles.scene}>
@@ -43,6 +48,19 @@ export default async function Home() {
           <span />
         </div>
       </div>
+
+      {mostrarConviteConversao && (
+        <div className={styles.convite}>
+          <p>
+            Quer poder voltar de qualquer lugar? <a href="/conta">guardar meu espaço</a>
+          </p>
+          <form action={adiarConversao}>
+            <button type="submit" className={styles.conviteDispensar}>
+              agora não
+            </button>
+          </form>
+        </div>
+      )}
 
       <div className={styles.bottom}>
         <div className={styles.card}>

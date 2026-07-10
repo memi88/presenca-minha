@@ -35,7 +35,7 @@ Estes princípios vêm do Livro Zero e da voz de marca — toda decisão de arqu
 **PWA (Progressive Web App), não app nativo.** As telas geradas no Claude Design usam moldura de iPhone só como referência visual de proporção — isso não implica app nativo iOS. Confirmado: Next.js + Supabase, rodando no navegador com manifest + service worker, instalável na tela inicial sem passar por App Store/Play Store. Isso é consistente com o resto do stack de Guilherme (Facilita, brain da Julie) e evita o ciclo de aprovação e as duas codebases nativas que um app iOS/Android exigiria.
 
 Duas peças que seguem em aberto, sem travar o início do código (podem ficar como stub/placeholder até decidir):
-- **Modelo de embeddings** — ainda não escolhido especificamente.
+- **Modelo de embeddings** — **decidido:** `multilingual-e5-small` (384 dimensões), auto-hospedado, rodando no **mesmo microsserviço Python** que fará o cálculo de Human Design (via `sentence-transformers`, endpoint `/embed` adicional). Não usa o embedding nativo das Supabase Edge Functions (`gte-small`) — esse é só em inglês, incompatível com um produto inteiro em português. Schema (seção 4) já ajustado para `vector(384)`.
 - **LLM de entrega** (personalização de saudação, tom, etc.) — ainda não escolhido especificamente.
 
 ### 3.3 Os dois cenários
@@ -114,7 +114,7 @@ create table biblioteca (
   ambiente text default 'escuro',  -- 'claro' | 'escuro' — em qual modo essa peça aparece
   autor text default 'Guilherme',
   publicado boolean default true,
-  embedding vector(1536),          -- calculado uma vez, no cadastro/edição do conteúdo
+  embedding vector(384),          -- calculado uma vez, no cadastro/edição do conteúdo
   created_at timestamptz default now()
 );
 alter table biblioteca enable row level security;
@@ -132,7 +132,7 @@ create table caderno_entradas (
   conteudo text not null,
   biblioteca_ref_id uuid references biblioteca(id), -- se for uma página/prática indicada
   revisitar boolean default false, -- marcado pela própria pessoa: "quero pensar nisso com mais calma depois"
-  embedding vector(1536),          -- calculado no momento em que a entrada é escrita
+  embedding vector(384),          -- calculado no momento em que a entrada é escrita
   created_at timestamptz default now()
 );
 alter table caderno_entradas enable row level security;
@@ -159,12 +159,22 @@ create policy "profissional insere apenas em pacientes vinculados"
 
 ## 5. Onboarding (revelação contextual)
 
-Fluxo:
-1. **Entrada** (ambiente claro) — Landing + saudação, sem pedir decisão.
+### Identidade também é revelada contextualmente
+Cadastro de verdade (e-mail/senha) não acontece na entrada. Usa **login anônimo do Supabase** (`signInAnonymously()`) de forma silenciosa, assim que a pessoa entra — isso já cria um usuário real em `auth.users`, então o apelido e todas as entradas seguintes (Caderno, conversa) são persistidas de verdade desde o primeiro toque, com RLS funcionando normalmente. A pessoa não vê nem sabe que isso aconteceu.
+
+A conversão pra conta permanente (e-mail/senha, ou OAuth) acontece depois, como convite contextual — mesma lógica da data de nascimento:
+- **Obrigatória** no momento de conectar um profissional (perder esse vínculo por não ter convertido seria grave demais pra deixar opcional).
+- **Convite gentil e recorrente** pro resto — não uma vez só e nunca mais, porque usuário anônimo perde acesso **permanentemente** se sair/limpar dados/trocar de aparelho antes de converter. Isso é risco real de perda de dado emocionalmente significativo, não só inconveniência.
+- Conversão preserva o mesmo UUID — nada do que a pessoa já escreveu se perde ao criar e-mail/senha depois.
+
+Recomendação de segurança do próprio Supabase: habilitar CAPTCHA (ou Cloudflare Turnstile) no login anônimo pra evitar abuso — sem isso, o endpoint pode ser usado pra inflar o banco artificialmente.
+
+### Fluxo
+1. **Entrada** (ambiente claro) — Landing + saudação, sem pedir decisão. Login anônimo acontece aqui, silenciosamente.
 2. **Conversa inicial** (ambiente claro ou transição suave para escuro) — primeira interação real, sem pedir dado de nascimento.
 3. **Fechamento leve** — pequeno encerramento, sem cobrança.
 4. **Convite contextual posterior** — dentro da própria conversa, se o tema pedir (nunca ao entrar numa tela específica — isso reintroduziria formulário-portão). Quando o assunto tocar em algo que se beneficiaria de calibragem, surge o convite: *"posso te acompanhar de um jeito mais calibrado se você quiser me contar sobre sua chegada ao mundo — sem pressa, quando quiser."* Campo de hora tem escape explícito: *"não sabe a hora? sem problema — alguns insights ficam menos precisos, mas você ainda é bem-vindo aqui."*
-5. **Conexão com profissional** — nunca no cadastro inicial. É uma ação dentro de "Terapia" (ou equivalente), disponível quando/se a pessoa quiser.
+5. **Conexão com profissional** — nunca no cadastro inicial. É uma ação dentro de "Terapia" (ou equivalente), disponível quando/se a pessoa quiser. Exige conversão da conta anônima pra permanente nesse momento (ver acima).
 
 ---
 
