@@ -77,7 +77,9 @@ export default async function Home() {
             conversar
           </button>
         </div>
-        <p className={styles.livroVivo}>ou visitar o Livro Vivo →</p>
+        <a className={styles.livroVivo} href="/livro-vivo">
+          ou visitar o Livro Vivo →
+        </a>
       </div>
     </main>
   );

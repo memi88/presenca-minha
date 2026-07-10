@@ -34,10 +34,10 @@
 
 ## Fase 3 — Livro Vivo
 
-- [ ] Estrutura de conteúdo curado (`biblioteca`) funcionando.
-- [ ] Ao menos as primeiras páginas/práticas reais cadastradas (curadoria manual no banco está OK pro piloto).
-- [ ] Embedding calculado ao cadastrar cada item.
-- [ ] Tela de leitura — sem contagem, sem meta, sem "marcar como concluído".
+- [x] Estrutura de conteúdo curado (`biblioteca`) funcionando. `/livro-vivo` lista páginas publicadas (`tipo = 'pagina_livro_vivo'`); leitura via `authenticated`, escrita continua só via `service_role`/SQL Editor (nunca client-side), conforme PRD.
+- [x] Ao menos as primeiras páginas/práticas reais cadastradas (curadoria manual no banco está OK pro piloto). Uma página semente (texto que já existia no mockup de referência) cadastrada e testada; `scripts/cadastrar-biblioteca.mjs` pronto pra curadoria futura (calcula embedding, gera o SQL — você roda).
+- [ ] Embedding calculado ao cadastrar cada item. Mecanismo pronto (script + `lib/embed.ts`); página semente foi cadastrada com `embedding = null` porque o serviço ainda não estava no ar. Recalcular quando `services/ia` for deployado.
+- [x] Tela de leitura — sem contagem, sem meta, sem "marcar como concluído". `/livro-vivo/[id]` — só título, texto, e "guardar esta leitura" (cria referência no Caderno, `biblioteca_ref_id`). Testado.
 
 ## Fase 4 — Vínculo profissional-paciente + Cuida
 

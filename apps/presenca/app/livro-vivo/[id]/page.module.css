@@ -1,0 +1,53 @@
+.scene {
+  min-height: 100dvh;
+  background: #f7f0e4;
+  padding: 32px 24px 64px;
+}
+
+.header {
+  max-width: 560px;
+  margin: 0 auto 30px;
+}
+
+.voltar {
+  display: inline-block;
+  margin-bottom: 18px;
+  font: 400 13px/1 var(--font-spectral), serif;
+  color: #8a7d68;
+  text-decoration: none;
+}
+
+.titulo {
+  font: 400 27px/1.28 var(--font-spectral), serif;
+  color: #2a2118;
+}
+
+.corpo {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.paragrafo {
+  font: italic 400 17px/1.72 var(--font-spectral), serif;
+  color: #4a3f2c;
+  margin-bottom: 18px;
+}
+
+.rodape {
+  max-width: 560px;
+  margin: 30px auto 0;
+  text-align: center;
+}
+
+.guardar {
+  background: none;
+  border: none;
+  font: 400 13px/1 var(--font-spectral), serif;
+  color: #8a7357;
+  cursor: pointer;
+}
+
+.guardado {
+  font: italic 400 13px/1 var(--font-spectral), serif;
+  color: #b6873f;
+}

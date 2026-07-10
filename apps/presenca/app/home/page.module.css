@@ -126,9 +126,11 @@
 }
 
 .livroVivo {
+  display: block;
   text-align: center;
   margin-top: 16px;
   font: italic 400 13px/1 var(--font-spectral), serif;
   color: rgba(255, 255, 255, 0.9);
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  text-decoration: none;
 }
