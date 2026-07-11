@@ -2,10 +2,10 @@ import { notFound, redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
-import { guardarLeitura } from "./actions";
+import { guardarPratica } from "./actions";
 import styles from "./page.module.css";
 
-export default async function LeituraLivroVivo({ params }: { params: Promise<{ id: string }> }) {
+export default async function LeituraPratica({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const supabase = await createClient();
   const {
@@ -13,31 +13,31 @@ export default async function LeituraLivroVivo({ params }: { params: Promise<{ i
   } = await supabase.auth.getUser();
   if (!user) redirect("/");
 
-  const { data: pagina } = await supabase
+  const { data: pratica } = await supabase
     .from("biblioteca")
     .select("id, titulo, conteudo")
     .eq("id", id)
-    .eq("tipo", "pagina_livro_vivo")
+    .eq("tipo", "pratica")
     .maybeSingle();
 
-  if (!pagina) notFound();
+  if (!pratica) notFound();
 
   const { data: jaGuardada } = await supabase
     .from("caderno_entradas")
     .select("id")
     .eq("paciente_id", user.id)
-    .eq("biblioteca_ref_id", pagina.id)
+    .eq("biblioteca_ref_id", pratica.id)
     .maybeSingle();
 
-  const paragrafos: string[] = pagina.conteudo.split(/\n{2,}/).filter(Boolean);
+  const paragrafos: string[] = pratica.conteudo.split(/\n{2,}/).filter(Boolean);
 
   return (
     <main className={styles.scene}>
       <div className={styles.header}>
-        <a className={styles.voltar} href="/livro-vivo">
-          ‹ Livro Vivo
+        <a className={styles.voltar} href="/meditacao">
+          ‹ Meditação
         </a>
-        <h1 className={styles.titulo}>{pagina.titulo}</h1>
+        <h1 className={styles.titulo}>{pratica.titulo}</h1>
       </div>
 
       <div className={styles.corpo}>
@@ -52,9 +52,9 @@ export default async function LeituraLivroVivo({ params }: { params: Promise<{ i
         {jaGuardada ? (
           <span className={styles.guardado}>guardado no seu diário ✓</span>
         ) : (
-          <form action={guardarLeitura.bind(null, pagina.id)}>
+          <form action={guardarPratica.bind(null, pratica.id)}>
             <button className={styles.guardar} type="submit">
-              guardar esta leitura
+              guardar esta prática
             </button>
           </form>
         )}

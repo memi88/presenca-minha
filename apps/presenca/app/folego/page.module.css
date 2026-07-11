@@ -1,0 +1,164 @@
+/* Ambiente escuro (Fase 5/AmbienteShell já cobre /folego). Fundo próprio,
+   sem imagem — mesmo espírito do gradiente radial da tela de leitura do
+   Livro Vivo, mas com o tom mais quente que o mockup usa aqui.
+   Fonte: docs/Presenca Experiencia Standalone.html, tela "05 FÔLEGO". */
+.scene {
+  min-height: 100dvh;
+  background: radial-gradient(120% 90% at 50% 32%, #2a2013, #171009 62%, #0e0a05);
+  display: flex;
+  flex-direction: column;
+  padding: clamp(32px, 5vh, 56px) 24px clamp(32px, 5vh, 48px);
+}
+
+.contador {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: clamp(24px, 4vh, 40px);
+}
+
+.numero,
+.numeroAtivo {
+  text-align: center;
+  padding: 0 16px;
+  transition: opacity 0.6s ease;
+}
+
+.numero {
+  opacity: 0.4;
+}
+
+.numeroAtivo {
+  opacity: 1;
+}
+
+.numeroValor {
+  font: 500 clamp(22px, 2vw, 26px) / 1 var(--font-spectral), serif;
+  color: var(--text);
+}
+
+.numeroRotulo {
+  font: 300 11px/1 var(--font-spectral), serif;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  margin-top: 6px;
+}
+
+.numero .numeroRotulo {
+  color: var(--text-subtle);
+}
+
+.ponto {
+  color: rgba(217, 164, 65, 0.3);
+  font: 300 15px/1 var(--font-spectral), serif;
+}
+
+.centro {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.circuloContainer {
+  position: relative;
+  width: clamp(200px, 24vw, 260px);
+  height: clamp(200px, 24vw, 260px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circuloGlow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(217, 164, 65, 0.42), rgba(217, 164, 65, 0) 70%);
+  animation: folegoRespirar 19s ease-in-out infinite;
+}
+
+.circuloBorda {
+  position: absolute;
+  width: 72%;
+  height: 72%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(217, 164, 65, 0.5);
+  animation: folegoRespirar 19s ease-in-out infinite;
+}
+
+.circuloPausado {
+  animation-play-state: paused;
+}
+
+.circuloBordaInterna {
+  position: absolute;
+  width: 46%;
+  height: 46%;
+  border-radius: 50%;
+  border: 1px solid rgba(217, 164, 65, 0.28);
+}
+
+.rotuloFase {
+  position: relative;
+  font: italic 400 clamp(24px, 2vw, 30px) / 1 var(--font-spectral), serif;
+  color: var(--text);
+}
+
+.instrucao {
+  font: italic 400 16px/1.4 var(--font-spectral), serif;
+  color: var(--text-subtle);
+  margin-top: clamp(30px, 5vh, 42px);
+  text-align: center;
+  max-width: 280px;
+}
+
+/* Paradas em 21% (fim do inspire, 4/19) e 58% (fim do segure, 11/19) — os
+   mesmos limites de tempo do estado em JS, pra circulo e rótulo lerem como
+   a mesma respiração (ver FolegoExperiencia.tsx). */
+@keyframes folegoRespirar {
+  0% {
+    transform: scale(0.82);
+    opacity: 0.7;
+  }
+  21% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  58% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.82);
+    opacity: 0.7;
+  }
+}
+
+.rodape {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.pausar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: 1px solid rgba(217, 164, 65, 0.4);
+  border-radius: 30px;
+  padding: 13px 26px;
+  font: 400 15px/1 var(--font-spectral), serif;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.encerrar {
+  font: italic 400 14px/1.4 var(--font-spectral), serif;
+  color: var(--text-faint);
+  text-align: center;
+  text-decoration: none;
+}

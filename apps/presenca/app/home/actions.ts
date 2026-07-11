@@ -26,3 +26,23 @@ export async function adiarConversao() {
 
   revalidatePath("/home");
 }
+
+// Mesmo padrão do convite de conversão — "agora não" adia 7 dias, nunca
+// silencia de vez (PRD §5).
+export async function adiarNascimento() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const proximoConvite = new Date();
+  proximoConvite.setDate(proximoConvite.getDate() + DIAS_ATE_PROXIMO_CONVITE);
+
+  await supabase
+    .from("profiles")
+    .update({ lembrete_nascimento_em: proximoConvite.toISOString() })
+    .eq("id", user.id);
+
+  revalidatePath("/home");
+}

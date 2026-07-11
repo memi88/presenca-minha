@@ -1,0 +1,56 @@
+/* Mesmo ambiente escuro de /meditacao (PRD seção 6) — data-ambiente="escuro"
+   é setado pelo AmbienteShell. Sem imagem de fundo, mesma decisão já
+   tomada em /livro-vivo/[id] — mais focado pro texto. */
+.scene {
+  min-height: 100dvh;
+  background: radial-gradient(130% 60% at 50% 0%, #241a10, #16110b 55%, #100b06);
+  padding: 32px 24px 64px;
+}
+
+.header {
+  max-width: clamp(560px, 34vw, 720px);
+  margin: 0 auto 30px;
+}
+
+.voltar {
+  display: inline-block;
+  margin-bottom: 18px;
+  font: 400 13px/1 var(--font-spectral), serif;
+  color: var(--text-link-muted);
+  text-decoration: none;
+}
+
+.titulo {
+  font: 400 clamp(30px, 2.2vw, 36px) / 1.28 var(--font-spectral), serif;
+  color: var(--text);
+}
+
+.corpo {
+  max-width: clamp(560px, 34vw, 720px);
+  margin: 0 auto;
+}
+
+.paragrafo {
+  font: italic 400 clamp(19px, 1.3vw, 21px) / 1.72 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 18px;
+}
+
+.rodape {
+  max-width: clamp(560px, 34vw, 720px);
+  margin: 30px auto 0;
+  text-align: center;
+}
+
+.guardar {
+  background: none;
+  border: none;
+  font: 400 13px/1 var(--font-spectral), serif;
+  color: var(--text-link-muted);
+  cursor: pointer;
+}
+
+.guardado {
+  font: italic 400 13px/1 var(--font-spectral), serif;
+  color: var(--accent);
+}

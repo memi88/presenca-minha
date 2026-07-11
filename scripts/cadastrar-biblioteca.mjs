@@ -8,8 +8,14 @@
 // Uso:
 //   IA_SERVICE_URL=... IA_SERVICE_API_KEY=... node scripts/cadastrar-biblioteca.mjs itens.json
 //
+// IA_SERVICE_URL/IA_SERVICE_API_KEY são opcionais — sem eles (serviço ainda
+// sem deploy), o SQL sai com embedding = null, mesmo fallback gracioso que
+// o resto do app já usa (lib/embed.ts). Recalcula depois, quando o serviço
+// estiver no ar.
+//
 // itens.json: array de objetos
 //   { "tipo": "pagina_livro_vivo", "titulo": "...", "conteudo": "...",
+//     "slug": "opcional-identificador-estavel",
 //     "tags_momento_vida": ["confuso"], "tags_hd": [], "ambiente": "escuro",
 //     "autor": "Guilherme", "publicado": true }
 
@@ -19,13 +25,12 @@ const url = process.env.IA_SERVICE_URL;
 const chave = process.env.IA_SERVICE_API_KEY;
 const arquivo = process.argv[2];
 
-if (!url || !chave) {
-  console.error("Defina IA_SERVICE_URL e IA_SERVICE_API_KEY (mesmos valores do .env.local do app).");
-  process.exit(1);
-}
 if (!arquivo) {
   console.error("Uso: node scripts/cadastrar-biblioteca.mjs itens.json");
   process.exit(1);
+}
+if (!url || !chave) {
+  console.error("Aviso: IA_SERVICE_URL/IA_SERVICE_API_KEY não definidos — gerando SQL com embedding = null.\n");
 }
 
 const itens = JSON.parse(readFileSync(arquivo, "utf8"));
@@ -53,19 +58,20 @@ async function embed(texto) {
 
 const linhas = [];
 for (const item of itens) {
-  const vetor = await embed(item.conteudo);
+  const vetor = url && chave ? await embed(item.conteudo) : null;
   linhas.push(
-    `insert into biblioteca (tipo, titulo, conteudo, tags_momento_vida, tags_hd, ambiente, autor, publicado, embedding) values (` +
+    `insert into biblioteca (tipo, titulo, conteudo, slug, tags_momento_vida, tags_hd, ambiente, autor, publicado, embedding) values (` +
       [
         sqlString(item.tipo),
         sqlString(item.titulo),
         sqlString(item.conteudo),
+        sqlString(item.slug),
         sqlArray(item.tags_momento_vida),
         sqlArray(item.tags_hd),
         sqlString(item.ambiente ?? "escuro"),
         sqlString(item.autor ?? "Guilherme"),
         item.publicado === false ? "false" : "true",
-        `'[${vetor.join(",")}]'::vector(384)`,
+        vetor ? `'[${vetor.join(",")}]'::vector(384)` : "null",
       ].join(", ") +
       `);`,
   );
