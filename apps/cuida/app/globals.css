@@ -8,3 +8,31 @@ html,
 body {
   height: 100%;
 }
+
+/* Tokens do Cuida — mesma família quente-neutra do Presença (não a estética
+   "lago/âmbar", que é do lado paciente), com o teal como cor própria de CTA:
+   sinaliza "portal diferente" sem virar cinza de SaaS corporativo (voz-de-marca §4/5). */
+:root {
+  --bg: #f7f4ee;
+  --card-bg: #fff;
+  --border: #e0d9c9;
+  --text: #2a2118;
+  --text-muted: #7a6f5c;
+  --accent: #b6873f;
+  --cta-bg: #2f5d50;
+  --cta-text: #fff;
+  --error: #b3432f;
+  --atencao-bg: #fdf1dc;
+  --atencao-border: #ecd2a3;
+  --atencao-text: #9a6b1f;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+a {
+  color: inherit;
+}

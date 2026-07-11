@@ -13,7 +13,8 @@
     "@presenca/supabase": "workspace:*",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "server-only": "latest"
   },
   "devDependencies": {
     "@types/node": "latest",

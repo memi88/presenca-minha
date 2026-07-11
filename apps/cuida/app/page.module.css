@@ -1,0 +1,64 @@
+.scene {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  width: 100%;
+  max-width: 360px;
+  padding: 0 24px;
+}
+
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.headline {
+  font: italic 500 24px/1.2 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field {
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 15px;
+  color: var(--text);
+}
+
+.cta {
+  margin-top: 4px;
+  background: var(--cta-bg);
+  color: var(--cta-text);
+  font-size: 15px;
+  font-weight: 500;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.cta:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.erro {
+  font-size: 13px;
+  color: var(--error);
+}

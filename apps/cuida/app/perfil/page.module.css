@@ -1,0 +1,69 @@
+.scene {
+  min-height: 100dvh;
+  padding: 24px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.voltar {
+  display: inline-block;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-bottom: 20px;
+}
+
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.headline {
+  font: italic 500 22px/1.2 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
+.field {
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.cta {
+  margin-top: 4px;
+  background: var(--cta-bg);
+  color: var(--cta-text);
+  font-size: 15px;
+  font-weight: 500;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.cta:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.erro {
+  font-size: 13px;
+  color: var(--error);
+  margin-bottom: 10px;
+}
+
+.confirmacao {
+  font-size: 13px;
+  color: var(--cta-bg);
+  margin-bottom: 10px;
+}
