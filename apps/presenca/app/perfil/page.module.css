@@ -1,0 +1,59 @@
+.scene {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  background: var(--bg);
+}
+
+.content {
+  width: 100%;
+  max-width: clamp(420px, 26vw, 560px);
+  margin: 0 auto;
+  padding: 40px clamp(24px, 3vw, 40px);
+}
+
+.eyebrow {
+  font: 300 clamp(16px, 1vw, 18px) / 1 var(--font-spectral), serif;
+  letter-spacing: 0.32em;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.headline {
+  font: italic 400 clamp(30px, 2.2vw, 38px) / 1.28 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 36px;
+}
+
+.secao {
+  border-top: 1px solid var(--border);
+  padding: 18px 0;
+}
+
+.rotulo {
+  font: 300 12px/1 var(--font-spectral), serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 8px;
+}
+
+.valor {
+  font: 400 16px/1.4 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.link {
+  font: 400 14px/1.4 var(--font-spectral), serif;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.voltar {
+  display: inline-block;
+  margin-top: 30px;
+  font: 400 13px/1 var(--font-spectral), serif;
+  color: var(--text-link-muted);
+  text-decoration: none;
+}
