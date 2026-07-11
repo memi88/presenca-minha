@@ -1,0 +1,120 @@
+.scene {
+  min-height: 100dvh;
+  padding: 24px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.voltar {
+  display: inline-block;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-bottom: 12px;
+}
+
+.titulo {
+  font: italic 500 21px/1.2 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+/* Mesmo tom âmbar discreto do selo na lista — nunca vermelho-sirene. */
+.alerta {
+  font-size: 13px;
+  color: var(--atencao-text);
+  background: var(--atencao-bg);
+  border: 1px solid var(--atencao-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.select {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--card-bg);
+}
+
+.textarea {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text);
+  font-family: inherit;
+  resize: vertical;
+}
+
+.cta {
+  background: var(--cta-bg);
+  color: var(--cta-text);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 11px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.cta:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.erro {
+  font-size: 13px;
+  color: var(--error);
+}
+
+.confirmacao {
+  font-size: 13px;
+  color: var(--cta-bg);
+}
+
+.historicoTitulo {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.vazio {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.entrada {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+
+.entradaTipo {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.entradaConteudo {
+  font-size: 14px;
+  color: var(--text);
+}
