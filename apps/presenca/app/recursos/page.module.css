@@ -1,0 +1,141 @@
+.scene {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  background: var(--bg);
+}
+
+.content {
+  width: 100%;
+  max-width: clamp(420px, 30vw, 600px);
+  margin: 0 auto;
+  padding: 40px clamp(24px, 3vw, 40px);
+}
+
+/* Recursos tem paleta própria (terracota), não os tokens âmbar genéricos do
+   resto do app — dá ao "cuidado imediato" um registro sutilmente diferente
+   sem virar alarme (voz-de-marca pilar 4). Fonte: docs/Presenca Experiencia
+   Standalone.html, tela "12 RECURSOS". */
+.eyebrow {
+  font: 300 clamp(14px, 0.9vw, 16px) / 1 var(--font-spectral), serif;
+  letter-spacing: 0.28em;
+  color: #b8552f;
+  margin-bottom: 16px;
+}
+
+.headline {
+  font: italic 400 clamp(28px, 2.1vw, 36px) / 1.3 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.subtext {
+  font: 400 clamp(16px, 1vw, 17px) / 1.45 var(--font-spectral), serif;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+
+.recursos {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.recurso {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff6f0;
+  border: 1.5px solid #dfa889;
+  border-radius: 18px;
+  padding: 18px 19px;
+  text-decoration: none;
+}
+
+.recursoTexto {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.recursoNome {
+  font: 500 20px/1 var(--font-spectral), serif;
+  color: #3a241a;
+}
+
+.recursoDescricao {
+  font: italic 300 13px/1.2 var(--font-spectral), serif;
+  color: #8a6a55;
+}
+
+.recursoIcone {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #c9542c;
+}
+
+.cta {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--accent-strong);
+  color: var(--cta-text);
+  font: 500 clamp(17px, 1vw, 18px) / 1 var(--font-spectral), serif;
+  padding: clamp(17px, 1.1vw, 20px);
+  border-radius: 30px;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(150, 110, 40, 0.22);
+  margin-bottom: 18px;
+}
+
+.rede {
+  font: italic 400 13.5px/1.5 var(--font-spectral), serif;
+  color: var(--text-subtle);
+  margin-bottom: 22px;
+}
+
+.avisoBox {
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+  margin-bottom: 22px;
+}
+
+.avisoBotao {
+  width: 100%;
+  background: none;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 30px;
+  padding: 14px;
+  font: 500 15px/1 var(--font-spectral), serif;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.avisoConfirmado {
+  font: italic 400 14px/1.4 var(--font-spectral), serif;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.avisoMicrocopy {
+  font: 400 12px/1.5 var(--font-spectral), serif;
+  color: var(--text-faint);
+}
+
+.footer {
+  font: italic 300 12px/1 var(--font-spectral), serif;
+  color: var(--text-faint);
+  margin-bottom: 26px;
+}
+
+.voltar {
+  font: 400 13px/1 var(--font-spectral), serif;
+  color: var(--text-link-muted);
+  text-decoration: none;
+}
