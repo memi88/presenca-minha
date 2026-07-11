@@ -1,0 +1,49 @@
+.scene {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  background: var(--bg);
+}
+
+.content {
+  width: 100%;
+  max-width: clamp(420px, 26vw, 560px);
+  margin: 0 auto;
+  padding: 0 clamp(24px, 3vw, 40px);
+}
+
+.eyebrow {
+  font: 300 clamp(16px, 1vw, 18px) / 1 var(--font-spectral), serif;
+  letter-spacing: 0.32em;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+
+.headline {
+  font: italic 400 clamp(30px, 2.2vw, 38px) / 1.28 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 32px;
+}
+
+.opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.opcao {
+  width: 100%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: clamp(17px, 1.1vw, 20px);
+  font: 400 clamp(17px, 1vw, 18px) / 1 var(--font-spectral), serif;
+  color: var(--text);
+  text-align: center;
+  cursor: pointer;
+}
+
+.opcao:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
