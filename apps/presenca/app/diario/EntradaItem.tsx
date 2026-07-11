@@ -30,7 +30,7 @@ export function EntradaItem({ entrada }: { entrada: Entrada }) {
           <span className={styles.nomeProfissional}>{entrada.profissionais?.nome ?? "profissional"}</span>
         </div>
       )}
-      <p className={styles.conteudo}>{entrada.conteudo}</p>
+      <p className={ehProfissional ? styles.conteudoProfissional : styles.conteudo}>{entrada.conteudo}</p>
       <div className={styles.rodape}>
         <span className={styles.data}>{formatoData.format(new Date(entrada.created_at))}</span>
         {entrada.autor_tipo === "usuario" && (

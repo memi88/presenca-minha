@@ -1,11 +1,16 @@
+/* Mesmo ambiente escuro de /livro-vivo (PRD seção 6) — data-ambiente="escuro"
+   é setado pelo AmbienteShell pra qualquer rota abaixo de /livro-vivo. Sem
+   imagem de fundo aqui, de propósito (docs/Presenca Experiencia
+   Standalone.html, tela "09 LEITURA") — a listagem usa a cena noturna, mas
+   a leitura em si fica só com o gradiente, mais focada pro texto. */
 .scene {
   min-height: 100dvh;
-  background: #f7f0e4;
+  background: radial-gradient(130% 60% at 50% 0%, #241a10, #16110b 55%, #100b06);
   padding: 32px 24px 64px;
 }
 
 .header {
-  max-width: 560px;
+  max-width: clamp(560px, 34vw, 720px);
   margin: 0 auto 30px;
 }
 
@@ -13,28 +18,28 @@
   display: inline-block;
   margin-bottom: 18px;
   font: 400 13px/1 var(--font-spectral), serif;
-  color: #8a7d68;
+  color: var(--text-link-muted);
   text-decoration: none;
 }
 
 .titulo {
-  font: 400 27px/1.28 var(--font-spectral), serif;
-  color: #2a2118;
+  font: 400 clamp(30px, 2.2vw, 36px) / 1.28 var(--font-spectral), serif;
+  color: var(--text);
 }
 
 .corpo {
-  max-width: 560px;
+  max-width: clamp(560px, 34vw, 720px);
   margin: 0 auto;
 }
 
 .paragrafo {
-  font: italic 400 17px/1.72 var(--font-spectral), serif;
-  color: #4a3f2c;
+  font: italic 400 clamp(19px, 1.3vw, 21px) / 1.72 var(--font-spectral), serif;
+  color: var(--text);
   margin-bottom: 18px;
 }
 
 .rodape {
-  max-width: 560px;
+  max-width: clamp(560px, 34vw, 720px);
   margin: 30px auto 0;
   text-align: center;
 }
@@ -43,11 +48,11 @@
   background: none;
   border: none;
   font: 400 13px/1 var(--font-spectral), serif;
-  color: #8a7357;
+  color: var(--text-link-muted);
   cursor: pointer;
 }
 
 .guardado {
   font: italic 400 13px/1 var(--font-spectral), serif;
-  color: #b6873f;
+  color: var(--accent);
 }

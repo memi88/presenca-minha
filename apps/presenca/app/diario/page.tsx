@@ -6,7 +6,7 @@ import { EntradaItem, type Entrada } from "./EntradaItem";
 import { NovaEntradaForm } from "./NovaEntradaForm";
 import styles from "./page.module.css";
 
-export default async function Caderno() {
+export default async function Diario() {
   const supabase = await createClient();
   const {
     data: { user },
@@ -20,23 +20,28 @@ export default async function Caderno() {
     .maybeSingle();
   if (!profile?.nome) redirect("/chegada");
 
-  const { data: entradas } = await supabase
-    .from("caderno_entradas")
-    .select("id, autor_tipo, conteudo, revisitar, created_at, profissionais:autor_profissional_id(nome)")
-    .eq("paciente_id", user.id)
-    .order("created_at", { ascending: false });
+  const [{ data: entradas }] = await Promise.all([
+    supabase
+      .from("caderno_entradas")
+      .select("id, autor_tipo, conteudo, revisitar, created_at, profissionais:autor_profissional_id(nome)")
+      .eq("paciente_id", user.id)
+      .order("created_at", { ascending: false }),
+    // Sinal pro "continue de onde você parou" da Home (lib/menuHome.ts).
+    supabase.from("profiles").update({ ultimo_destino: "diario" }).eq("id", user.id),
+  ]);
 
   return (
     <main className={styles.scene}>
       <div className={styles.header}>
-        <p className={styles.eyebrow}>meu livro</p>
-        <h1 className={styles.titulo}>Caderno</h1>
+        <p className={styles.eyebrow}>diário</p>
+        <h1 className={styles.titulo}>O que você quer guardar.</h1>
         <a className={styles.voltar} href="/home">
           ← voltar
         </a>
       </div>
 
       <NovaEntradaForm />
+      <p className={styles.legenda}>sem contagem, sem meta — só você</p>
 
       <div className={styles.lista}>
         {!entradas?.length && <p className={styles.vazio}>Ainda não há nada guardado aqui.</p>}

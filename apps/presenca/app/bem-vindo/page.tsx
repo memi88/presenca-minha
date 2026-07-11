@@ -2,9 +2,10 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
+import { CriarEspacoButton } from "./CriarEspacoButton";
 import styles from "./page.module.css";
 
-export default async function Landing() {
+export default async function BemVindo() {
   const supabase = await createClient();
   const {
     data: { user },
@@ -23,15 +24,18 @@ export default async function Landing() {
   return (
     <main className={styles.scene}>
       <div className={styles.content}>
-        <p className={styles.wordmark}>presença</p>
+        <p className={styles.eyebrow}>bem-vindo</p>
         <h1 className={styles.headline}>
-          Um lugar tranquilo
+          Que bom ter
           <br className={styles.quebra} />
-          para se encontrar.
+          você aqui.
         </h1>
-        <a className={styles.cta} href="/bem-vindo">
-          entrar
-        </a>
+        <div className={styles.opcoes}>
+          <CriarEspacoButton />
+          <a className={styles.ctaContorno} href="/login">
+            Já possuo meu espaço
+          </a>
+        </div>
       </div>
     </main>
   );

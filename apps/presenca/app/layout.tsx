@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Spectral } from "next/font/google";
 
+import { AmbienteShell } from "./AmbienteShell";
 import "./globals.css";
 
 const spectral = Spectral({
@@ -22,7 +23,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR" className={spectral.variable}>
-      <body>{children}</body>
+      <body>
+        <AmbienteShell>{children}</AmbienteShell>
+      </body>
     </html>
   );
 }

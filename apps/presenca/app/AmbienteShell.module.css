@@ -1,0 +1,23 @@
+/* Sem moldura nenhuma — full-bleed em qualquer largura. Cada tela controla
+   seu próprio max-width responsivo por categoria (ver os clamp() dentro de
+   cada page.module.css) — isso, não um wrapper único, é "responsivo por
+   tela". */
+.fundo {
+  min-height: 100dvh;
+}
+
+.coluna {
+  width: 100%;
+  min-height: 100dvh;
+  position: relative;
+  animation: fadeIn 500ms ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
