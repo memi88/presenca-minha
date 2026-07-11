@@ -15,11 +15,14 @@ export default async function Chegada() {
 
   return (
     <main className={styles.scene}>
+      <a className={styles.voltar} href="/bem-vindo">
+        ‹
+      </a>
       <div className={styles.content}>
-        <p className={styles.eyebrow}>bem-vindo</p>
+        <p className={styles.eyebrow}>criar espaço</p>
         <h1 className={styles.headline}>
           Que bom ter
-          <br />
+          <br className={styles.quebra} />
           você aqui.
         </h1>
         <p className={styles.subtext}>Como você gostaria de ser chamado?</p>
@@ -38,8 +41,7 @@ export default async function Chegada() {
         </form>
         <p className={styles.disclaimer}>
           Ao entrar, você concorda com nossos
-          <br />
-          <a href="/limites-de-cuidado">limites de cuidado</a>.
+          <br className={styles.quebra} /> <a href="/limites-de-cuidado">limites de cuidado</a>.
         </p>
       </div>
     </main>

@@ -5,11 +5,12 @@ import { useActionState } from "react";
 import { converterConta } from "./actions";
 import styles from "./page.module.css";
 
-export function ContaForm() {
+export function ContaForm({ next = "/home" }: { next?: string }) {
   const [state, action, pending] = useActionState(converterConta, {});
 
   return (
     <form action={action}>
+      <input type="hidden" name="next" value={next} />
       {state.erro && <p className={styles.erro}>{state.erro}</p>}
       <input
         className={styles.field}

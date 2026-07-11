@@ -12,6 +12,8 @@ export async function converterConta(
 ): Promise<ConverterContaState> {
   const email = String(formData.get("email") ?? "").trim();
   const senha = String(formData.get("senha") ?? "");
+  const nextRaw = String(formData.get("next") ?? "/home");
+  const next = nextRaw.startsWith("/") ? nextRaw : "/home";
 
   if (!email || !senha) {
     return { erro: "Preencha e-mail e senha." };
@@ -34,5 +36,5 @@ export async function converterConta(
     return { erro: error.message };
   }
 
-  redirect("/home");
+  redirect(next);
 }
