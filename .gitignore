@@ -8,6 +8,12 @@ out/
 build/
 dist/
 
+# cloudflare (opennextjs-cloudflare + wrangler)
+.open-next/
+.wrangler/
+.dev.vars*
+!.dev.vars.example
+
 # env
 .env
 .env.local

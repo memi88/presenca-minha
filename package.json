@@ -15,5 +15,8 @@
   "devDependencies": {
     "typescript": "^5.7.0",
     "@supabase/supabase-js": "latest"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild", "workerd"]
   }
 }

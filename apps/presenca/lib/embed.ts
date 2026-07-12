@@ -27,6 +27,7 @@ export async function calcularEmbedding(
         Authorization: `Bearer ${chave}`,
       },
       body: JSON.stringify({ texto, tipo }),
+      signal: AbortSignal.timeout(15_000),
     });
     if (!resposta.ok) {
       console.error("calcularEmbedding: serviço respondeu", resposta.status);

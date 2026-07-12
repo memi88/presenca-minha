@@ -1,0 +1,11 @@
+# Copie para .env.local e preencha com os valores do dashboard do Supabase
+# (Project Settings > API). Só a URL e a chave anon/publishable — nunca a
+# service_role. service_role não tem lugar em nenhum código de frontend.
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+
+# Microsserviço de IA (services/ia) — mesmos valores do apps/presenca/.env.local.
+# SEM prefixo NEXT_PUBLIC_: só server-side (Server Actions), nunca chega no
+# bundle do browser.
+IA_SERVICE_URL=
+IA_SERVICE_API_KEY=

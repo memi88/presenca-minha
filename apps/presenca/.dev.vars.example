@@ -1,0 +1,18 @@
+# Copie para .env.local e preencha com os valores do dashboard do Supabase
+# (Project Settings > API). Só a URL e a chave anon/publishable — nunca a
+# service_role. service_role não tem lugar em nenhum código de frontend.
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+
+# Cloudflare Turnstile — Site Key (pública, segura de expor). A Secret Key
+# NÃO entra aqui: vai só no dashboard do Supabase (Authentication > Attack
+# Protection). Sem essa variável, o login anônimo funciona sem captcha
+# (fallback de dev local).
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=
+
+# Microsserviço de IA (services/ia) — embeddings e, no futuro, Human Design.
+# SEM prefixo NEXT_PUBLIC_: só server-side (Server Actions), nunca chega no
+# bundle do browser. IA_SERVICE_API_KEY precisa ter o mesmo valor configurado
+# no ambiente do serviço (ver services/ia/.env.example).
+IA_SERVICE_URL=
+IA_SERVICE_API_KEY=
