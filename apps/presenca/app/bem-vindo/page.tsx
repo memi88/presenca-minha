@@ -26,7 +26,7 @@ export default async function BemVindo() {
       <div className={styles.content}>
         <p className={styles.eyebrow}>bem-vindo</p>
         <h1 className={styles.headline}>
-          Que bom ter
+          Que bom ter{" "}
           <br className={styles.quebra} />
           você aqui.
         </h1>

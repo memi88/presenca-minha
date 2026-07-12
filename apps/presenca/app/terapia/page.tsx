@@ -26,7 +26,7 @@ export default async function Terapia() {
         <div className={styles.content}>
           <p className={styles.eyebrow}>terapia</p>
           <h1 className={styles.headline}>
-            Antes de conectar,
+            Antes de conectar,{" "}
             <br className={styles.quebra} />
             vamos guardar seu espaço
           </h1>
@@ -52,7 +52,7 @@ export default async function Terapia() {
         <div className={styles.content}>
           <p className={styles.eyebrow}>terapia</p>
           <h1 className={styles.headline}>
-            Você está conectado
+            Você está conectado{" "}
             <br className={styles.quebra} />
             com {profissional?.nome ?? "seu profissional"}
           </h1>
@@ -70,7 +70,7 @@ export default async function Terapia() {
       <div className={styles.content}>
         <p className={styles.eyebrow}>terapia</p>
         <h1 className={styles.headline}>
-          Tem um código
+          Tem um código{" "}
           <br className={styles.quebra} />
           de convite?
         </h1>

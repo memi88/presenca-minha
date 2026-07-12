@@ -21,7 +21,7 @@ export default async function Chegada() {
       <div className={styles.content}>
         <p className={styles.eyebrow}>criar espaço</p>
         <h1 className={styles.headline}>
-          Que bom ter
+          Que bom ter{" "}
           <br className={styles.quebra} />
           você aqui.
         </h1>
@@ -40,7 +40,7 @@ export default async function Chegada() {
           </button>
         </form>
         <p className={styles.disclaimer}>
-          Ao entrar, você concorda com nossos
+          Ao entrar, você concorda com nossos{" "}
           <br className={styles.quebra} /> <a href="/limites-de-cuidado">limites de cuidado</a>.
         </p>
       </div>

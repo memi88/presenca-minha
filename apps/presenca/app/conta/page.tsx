@@ -18,7 +18,7 @@ export default async function Conta() {
       <div className={styles.content}>
         <p className={styles.eyebrow}>seu espaço</p>
         <h1 className={styles.headline}>
-          Quer poder voltar
+          Quer poder voltar{" "}
           <br className={styles.quebra} />
           de qualquer lugar?
         </h1>

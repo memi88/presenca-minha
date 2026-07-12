@@ -25,7 +25,7 @@ export default async function Landing() {
       <div className={styles.content}>
         <p className={styles.wordmark}>presença</p>
         <h1 className={styles.headline}>
-          Um lugar tranquilo
+          Um lugar tranquilo{" "}
           <br className={styles.quebra} />
           para se encontrar.
         </h1>

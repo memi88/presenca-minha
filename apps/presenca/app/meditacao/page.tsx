@@ -31,7 +31,7 @@ export default async function Meditacao() {
       <div className={styles.header}>
         <p className={styles.eyebrow}>meditação</p>
         <h1 className={styles.titulo}>
-          Pequenas práticas,
+          Pequenas práticas,{" "}
           <br className={styles.quebra} />
           à vontade.
         </h1>

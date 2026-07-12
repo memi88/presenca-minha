@@ -27,7 +27,7 @@ export default async function Nascimento() {
         </a>
         <p className={styles.eyebrow}>quer personalizar sua presença?</p>
         <h1 className={styles.headline}>
-          Esses dados ajudam a calibrar
+          Esses dados ajudam a calibrar{" "}
           <br className={styles.quebra} />
           como esse espaço te acompanha.
         </h1>

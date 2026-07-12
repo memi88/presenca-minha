@@ -55,7 +55,7 @@ export default async function LivroVivo() {
       <div className={styles.header}>
         <p className={styles.eyebrow}>livro vivo</p>
         <h1 className={styles.titulo}>
-          Leituras para
+          Leituras para{" "}
           <br className={styles.quebra} />
           atravessar o dia.
         </h1>

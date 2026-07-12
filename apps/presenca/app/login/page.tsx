@@ -29,7 +29,7 @@ export default async function Login() {
         </a>
         <p className={styles.eyebrow}>bem-vindo de volta</p>
         <h1 className={styles.headline}>
-          Seu espaço
+          Seu espaço{" "}
           <br className={styles.quebra} />
           está te esperando.
         </h1>
