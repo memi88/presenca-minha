@@ -1,10 +1,11 @@
 from functools import lru_cache
 from typing import Literal
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel, Field
 
 from .auth import exigir_chave
+from .limiter import limiter
 
 router = APIRouter()
 
@@ -42,7 +43,8 @@ class EmbedResponse(BaseModel):
 
 
 @router.post("/embed", response_model=EmbedResponse, dependencies=[Depends(exigir_chave)])
-def embed(body: EmbedRequest) -> EmbedResponse:
+@limiter.limit("20/minute")
+def embed(request: Request, body: EmbedRequest) -> EmbedResponse:
     texto_prefixado = f"{body.tipo}: {body.texto}"
     vetor = _modelo().encode(texto_prefixado, normalize_embeddings=True)
     return EmbedResponse(embedding=vetor.tolist())

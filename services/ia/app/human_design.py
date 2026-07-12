@@ -1,9 +1,10 @@
 from datetime import date, time
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel
 
 from .auth import exigir_chave
+from .limiter import limiter
 
 router = APIRouter()
 
@@ -24,7 +25,8 @@ class HumanDesignResponse(BaseModel):
 
 
 @router.post("/human-design", response_model=HumanDesignResponse, dependencies=[Depends(exigir_chave)])
-def human_design(body: HumanDesignRequest) -> HumanDesignResponse:
+@limiter.limit("10/minute")
+def human_design(request: Request, body: HumanDesignRequest) -> HumanDesignResponse:
     # STUB — não decide a biblioteca por conta própria. Aceita o formato de
     # entrada que o cálculo real vai precisar, pra quem chama não precisar
     # mudar nada quando a decisão sair do papel.
