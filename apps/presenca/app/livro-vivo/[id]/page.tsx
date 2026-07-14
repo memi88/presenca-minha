@@ -2,8 +2,7 @@ import { notFound, redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
-import { guardarLeitura } from "./actions";
-import styles from "./page.module.css";
+import { PainelLeitura } from "../PainelLeitura";
 
 export default async function LeituraLivroVivo({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -13,52 +12,32 @@ export default async function LeituraLivroVivo({ params }: { params: Promise<{ i
   } = await supabase.auth.getUser();
   if (!user) redirect("/");
 
-  const { data: pagina } = await supabase
+  const { data: profile } = await supabase.from("profiles").select("nome").eq("id", user.id).maybeSingle();
+  if (!profile?.nome) redirect("/chegada");
+
+  const { data: paginas } = await supabase
     .from("biblioteca")
     .select("id, titulo, conteudo")
-    .eq("id", id)
     .eq("tipo", "pagina_livro_vivo")
-    .maybeSingle();
+    .order("created_at", { ascending: false });
 
-  if (!pagina) notFound();
+  const paginaAtiva = paginas?.find((p) => p.id === id);
+  if (!paginaAtiva) notFound();
 
   const { data: jaGuardada } = await supabase
     .from("caderno_entradas")
     .select("id")
     .eq("paciente_id", user.id)
-    .eq("biblioteca_ref_id", pagina.id)
+    .eq("biblioteca_ref_id", paginaAtiva.id)
     .maybeSingle();
 
-  const paragrafos: string[] = pagina.conteudo.split(/\n{2,}/).filter(Boolean);
-
   return (
-    <main className={styles.scene}>
-      <div className={styles.header}>
-        <a className={styles.voltar} href="/livro-vivo">
-          ‹ Livro Vivo
-        </a>
-        <h1 className={styles.titulo}>{pagina.titulo}</h1>
-      </div>
-
-      <div className={styles.corpo}>
-        {paragrafos.map((paragrafo, i) => (
-          <p key={i} className={styles.paragrafo}>
-            {paragrafo}
-          </p>
-        ))}
-      </div>
-
-      <div className={styles.rodape}>
-        {jaGuardada ? (
-          <span className={styles.guardado}>guardado no seu diário ✓</span>
-        ) : (
-          <form action={guardarLeitura.bind(null, pagina.id)}>
-            <button className={styles.guardar} type="submit">
-              guardar esta leitura
-            </button>
-          </form>
-        )}
-      </div>
-    </main>
+    <PainelLeitura
+      variante="detalhe"
+      nome={profile.nome}
+      paginas={paginas ?? []}
+      paginaAtiva={paginaAtiva}
+      jaGuardada={!!jaGuardada}
+    />
   );
 }

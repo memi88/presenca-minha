@@ -10,6 +10,33 @@
   padding: clamp(32px, 5vh, 56px) 24px clamp(32px, 5vh, 48px);
 }
 
+.conteudo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 960px) {
+  /* Conteúdo fica numa faixa central (diferente do header, que é
+     full-bleed) — width:100% explícito evita que margin:auto seja
+     suprimido pelo align-items:stretch implícito do .scene, senão o
+     elemento encolhe pro tamanho do conteúdo em vez de centralizar. */
+  .scene {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .conteudo {
+    max-width: clamp(1000px, 82vw, 1200px);
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: clamp(32px, 4vw, 64px);
+    padding-right: clamp(32px, 4vw, 64px);
+    box-sizing: border-box;
+  }
+}
+
 .contador {
   display: flex;
   align-items: center;

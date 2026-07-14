@@ -2,7 +2,7 @@
   position: relative;
   min-height: 100dvh;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   background-image: url("/images/claro.png");
   background-size: cover;
   background-position: center;
@@ -26,16 +26,8 @@
   z-index: 1;
   width: 100%;
   max-width: clamp(420px, 34vw, 640px);
-  margin: 0 auto;
+  margin: auto;
   padding: 0 clamp(24px, 4vw, 48px);
-}
-
-.voltar {
-  display: inline-block;
-  margin-bottom: 24px;
-  font: 400 26px/1 var(--font-spectral), serif;
-  color: var(--text-link-muted);
-  text-decoration: none;
 }
 
 .eyebrow {

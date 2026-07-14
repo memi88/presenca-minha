@@ -1,0 +1,25 @@
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 26px clamp(24px, 4vw, 48px);
+  border-top: 1px solid rgba(58, 52, 40, 0.08);
+}
+
+.wordmark {
+  font: italic 300 0.85rem/1 var(--font-fraunces), serif;
+  color: #a2947a;
+}
+
+.links {
+  display: flex;
+  gap: 24px;
+}
+
+.link {
+  font: 300 0.8rem/1 var(--font-inter), sans-serif;
+  color: #a2947a;
+  text-decoration: none;
+}

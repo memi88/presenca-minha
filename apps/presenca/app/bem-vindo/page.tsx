@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
+import { PageHeader } from "../PageHeader";
 import { CriarEspacoButton } from "./CriarEspacoButton";
 import styles from "./page.module.css";
 
@@ -23,6 +24,7 @@ export default async function BemVindo() {
 
   return (
     <main className={styles.scene}>
+      <PageHeader voltar={{ href: "/", label: "‹" }} />
       <div className={styles.content}>
         <p className={styles.eyebrow}>bem-vindo</p>
         <h1 className={styles.headline}>

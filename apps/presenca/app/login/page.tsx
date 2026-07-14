@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
+import { PageHeader } from "../PageHeader";
 import { LoginForm } from "./LoginForm";
 import styles from "./page.module.css";
 
@@ -23,10 +24,8 @@ export default async function Login() {
 
   return (
     <main className={styles.scene}>
+      <PageHeader voltar={{ href: "/", label: "‹" }} />
       <div className={styles.content}>
-        <a className={styles.voltar} href="/bem-vindo">
-          ‹
-        </a>
         <p className={styles.eyebrow}>bem-vindo de volta</p>
         <h1 className={styles.headline}>
           Seu espaço{" "}

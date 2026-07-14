@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 120" width="420" height="120">
+  <circle cx="60" cy="60" r="50" fill="none" stroke="#c99a4a" stroke-width="4" opacity="0.45"></circle>
+  <circle cx="60" cy="60" r="32" fill="none" stroke="#c99a4a" stroke-width="4" opacity="0.75"></circle>
+  <circle cx="60" cy="60" r="13" fill="#e8b563"></circle>
+  <text x="130" y="78" font-family="Fraunces, Georgia, &#39;Times New Roman&#39;, serif" font-style="italic" font-weight="400" font-size="52" fill="#fdf5e5">presença</text>
+</svg>

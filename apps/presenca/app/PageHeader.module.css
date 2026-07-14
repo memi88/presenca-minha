@@ -1,0 +1,140 @@
+/* Barra simples — monograma "p." (linka /home) + "voltar", sempre visível
+   no mobile. No desktop, some só quando a tela tem nav completo pra
+   mostrar no lugar dela (.linhaSimplesComNav); sem nav (.linhaSimplesSemNav),
+   continua visível também no desktop. Duas classes distintas de propósito
+   — evita empate de especificidade entre a regra de desktop de uma e da
+   outra (já mordi essa isca duas vezes nesta sessão). */
+.linhaSimples {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: clamp(20px, 3vw, 28px) clamp(24px, 4vw, 40px);
+  box-sizing: border-box;
+}
+
+.monogramaLink {
+  display: flex;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.monograma {
+  width: 22px;
+  height: 28px;
+}
+
+.voltarLink {
+  font: 400 13px/1 var(--font-spectral), serif;
+  color: var(--text-link-muted);
+  text-decoration: none;
+}
+
+@media (min-width: 960px) {
+  .linhaSimplesComNav {
+    display: none;
+  }
+}
+
+/* Header completo (wordmark + nav + avatar) — desktop-only (display:none
+   abaixo de 960px), só existe quando a tela tem `nome`. Usa os tokens de
+   tema (var(--text) etc.) porque aparece tanto em páginas claras (Perfil,
+   Terapia, Recursos) quanto escuras (Livro Vivo, Diário, Práticas,
+   Fôlego), ao contrário do header da Home (que é sempre sobre foto, cores
+   fixas). */
+.topBar {
+  display: none;
+}
+
+@media (min-width: 960px) {
+  .topBar {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    padding-top: clamp(24px, 3vw, 40px);
+    padding-left: clamp(32px, 4vw, 64px);
+    padding-right: clamp(32px, 4vw, 64px);
+    padding-bottom: clamp(28px, 3vw, 40px);
+    box-sizing: border-box;
+  }
+
+  .wordmarkDesktop {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font: 300 15px/1 var(--font-spectral), serif;
+    letter-spacing: 0.32em;
+    color: var(--text-subtle);
+    text-decoration: none;
+  }
+
+  .wordmarkDot {
+    width: 16px;
+    height: 16px;
+    color: var(--accent);
+    animation: headerDesktopRespirar 4s ease-in-out infinite;
+  }
+
+  .topBarDireita {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .navDesktop {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .navItem,
+  .navItemDesabilitado {
+    font-size: 16px;
+    font-family: var(--font-spectral), serif;
+    color: var(--text-subtle);
+    text-decoration: none;
+  }
+
+  .navItemDesabilitado {
+    opacity: 0.6;
+  }
+
+  .navItemAtual {
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .menuAvatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    font: 600 13px/1 var(--font-spectral), serif;
+    text-decoration: none;
+  }
+}
+
+@keyframes headerDesktopRespirar {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}

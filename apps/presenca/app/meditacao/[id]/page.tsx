@@ -2,8 +2,7 @@ import { notFound, redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
-import { guardarPratica } from "./actions";
-import styles from "./page.module.css";
+import { PainelPratica, rotaDePratica } from "../PainelPratica";
 
 export default async function LeituraPratica({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -13,52 +12,37 @@ export default async function LeituraPratica({ params }: { params: Promise<{ id:
   } = await supabase.auth.getUser();
   if (!user) redirect("/");
 
-  const { data: pratica } = await supabase
+  const { data: profile } = await supabase.from("profiles").select("nome").eq("id", user.id).maybeSingle();
+  if (!profile?.nome) redirect("/chegada");
+
+  const { data: praticas } = await supabase
     .from("biblioteca")
-    .select("id, titulo, conteudo")
-    .eq("id", id)
+    .select("id, titulo, slug, conteudo")
     .eq("tipo", "pratica")
-    .maybeSingle();
+    .eq("publicado", true)
+    .order("created_at", { ascending: false });
 
-  if (!pratica) notFound();
+  const praticaAtiva = praticas?.find((p) => p.id === id);
+  if (!praticaAtiva) notFound();
 
-  const { data: jaGuardada } = await supabase
-    .from("caderno_entradas")
-    .select("id")
-    .eq("paciente_id", user.id)
-    .eq("biblioteca_ref_id", pratica.id)
-    .maybeSingle();
-
-  const paragrafos: string[] = pratica.conteudo.split(/\n{2,}/).filter(Boolean);
+  let jaGuardada = false;
+  if (rotaDePratica(praticaAtiva) !== "/folego") {
+    const { data } = await supabase
+      .from("caderno_entradas")
+      .select("id")
+      .eq("paciente_id", user.id)
+      .eq("biblioteca_ref_id", praticaAtiva.id)
+      .maybeSingle();
+    jaGuardada = !!data;
+  }
 
   return (
-    <main className={styles.scene}>
-      <div className={styles.header}>
-        <a className={styles.voltar} href="/meditacao">
-          ‹ Meditação
-        </a>
-        <h1 className={styles.titulo}>{pratica.titulo}</h1>
-      </div>
-
-      <div className={styles.corpo}>
-        {paragrafos.map((paragrafo, i) => (
-          <p key={i} className={styles.paragrafo}>
-            {paragrafo}
-          </p>
-        ))}
-      </div>
-
-      <div className={styles.rodape}>
-        {jaGuardada ? (
-          <span className={styles.guardado}>guardado no seu diário ✓</span>
-        ) : (
-          <form action={guardarPratica.bind(null, pratica.id)}>
-            <button className={styles.guardar} type="submit">
-              guardar esta prática
-            </button>
-          </form>
-        )}
-      </div>
-    </main>
+    <PainelPratica
+      variante="detalhe"
+      nome={profile.nome}
+      praticas={praticas ?? []}
+      praticaAtiva={praticaAtiva}
+      jaGuardada={jaGuardada}
+    />
   );
 }

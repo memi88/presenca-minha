@@ -1,3 +1,4 @@
+import { PageHeader } from "../PageHeader";
 import styles from "./page.module.css";
 
 // Página pública, sem guard de sessão — linkada em /bem-vindo e /chegada,
@@ -5,6 +6,7 @@ import styles from "./page.module.css";
 export default function LimitesDeCuidado() {
   return (
     <main className={styles.scene}>
+      <PageHeader voltar={{ href: "/home", label: "← voltar" }} />
       <div className={styles.content}>
         <p className={styles.eyebrow}>antes de começar</p>
         <h1 className={styles.headline}>Limites de cuidado</h1>
@@ -40,10 +42,6 @@ export default function LimitesDeCuidado() {
           </a>
           .
         </p>
-
-        <a className={styles.voltar} href="/home">
-          ← voltar
-        </a>
       </div>
     </main>
   );

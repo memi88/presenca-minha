@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { PageHeader } from "../PageHeader";
 import styles from "./page.module.css";
 
 type Fase = "inspire" | "segure" | "expire";
@@ -25,7 +26,7 @@ function NumeroFase({ valor, rotulo, ativo }: { valor: string; rotulo: string; a
   );
 }
 
-export function FolegoExperiencia() {
+export function FolegoExperiencia({ nome }: { nome: string }) {
   const [fase, setFase] = useState<Fase>("inspire");
   const [pausado, setPausado] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -43,31 +44,34 @@ export function FolegoExperiencia() {
 
   return (
     <main className={styles.scene}>
-      <div className={styles.contador}>
-        <NumeroFase valor="4" rotulo="INSPIRE" ativo={fase === "inspire"} />
-        <span className={styles.ponto}>·</span>
-        <NumeroFase valor="7" rotulo="SEGURE" ativo={fase === "segure"} />
-        <span className={styles.ponto}>·</span>
-        <NumeroFase valor="8" rotulo="EXPIRE" ativo={fase === "expire"} />
-      </div>
-
-      <div className={styles.centro}>
-        <div className={styles.circuloContainer}>
-          <div className={`${styles.circuloGlow} ${animacao}`} />
-          <div className={`${styles.circuloBorda} ${animacao}`} />
-          <div className={styles.circuloBordaInterna} />
-          <div className={styles.rotuloFase}>{rotulo}</div>
+      <PageHeader nome={nome} atual="pratica" voltar={{ href: "/home", label: "← voltar" }} />
+      <div className={styles.conteudo}>
+        <div className={styles.contador}>
+          <NumeroFase valor="4" rotulo="INSPIRE" ativo={fase === "inspire"} />
+          <span className={styles.ponto}>·</span>
+          <NumeroFase valor="7" rotulo="SEGURE" ativo={fase === "segure"} />
+          <span className={styles.ponto}>·</span>
+          <NumeroFase valor="8" rotulo="EXPIRE" ativo={fase === "expire"} />
         </div>
-        <p className={styles.instrucao}>{instrucao}</p>
-      </div>
 
-      <div className={styles.rodape}>
-        <button className={styles.pausar} type="button" onClick={() => setPausado((p) => !p)}>
-          {pausado ? "continuar" : "pausar"}
-        </button>
-        <a className={styles.encerrar} href="/home">
-          encerrar quando quiser — cada respiração já conta
-        </a>
+        <div className={styles.centro}>
+          <div className={styles.circuloContainer}>
+            <div className={`${styles.circuloGlow} ${animacao}`} />
+            <div className={`${styles.circuloBorda} ${animacao}`} />
+            <div className={styles.circuloBordaInterna} />
+            <div className={styles.rotuloFase}>{rotulo}</div>
+          </div>
+          <p className={styles.instrucao}>{instrucao}</p>
+        </div>
+
+        <div className={styles.rodape}>
+          <button className={styles.pausar} type="button" onClick={() => setPausado((p) => !p)}>
+            {pausado ? "continuar" : "pausar"}
+          </button>
+          <a className={styles.encerrar} href="/home">
+            encerrar quando quiser — cada respiração já conta
+          </a>
+        </div>
       </div>
     </main>
   );

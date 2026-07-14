@@ -15,7 +15,10 @@ import {
 } from "@/lib/menuHome";
 import { atualizarStreak } from "@/lib/streak";
 
+import { CirculoRespirando } from "../CirculoRespirando";
+import { MonogramaP } from "../MonogramaP";
 import { adiarConversao, adiarNascimento } from "./actions";
+import { InstalarPWABanner } from "./InstalarPWABanner";
 import styles from "./page.module.css";
 
 // Saudação por hora do dia — separada do menu de destinos (que varia por
@@ -118,6 +121,9 @@ export default async function Home() {
   }
   const destaqueId = ordemIds[0];
   const destinos = listaDestinos(ordemIds);
+  // listaDestinos(ordemIds) sempre recebe os 4 ids (ordemPorMood/ordemComDestaque
+  // nunca retornam menos que isso) — index sempre em bounds.
+  const destinoPrincipal = destinos[0]!;
 
   await supabase
     .from("profiles")
@@ -131,14 +137,35 @@ export default async function Home() {
   return (
     <main className={styles.scene}>
       <div className={styles.topBar}>
-        <p className={styles.greeting}>
-          {saudacao()}, {profile.nome}
-        </p>
-        <a className={styles.menuDots} href="/perfil" aria-label="Perfil">
-          <span />
-          <span />
-          <span />
-        </a>
+        <div className={styles.topBarEsquerda}>
+          <a className={styles.monogramaLink} href="/home" aria-label="Página inicial">
+            <MonogramaP className={styles.monograma} />
+          </a>
+          <p className={styles.wordmarkDesktop}>
+            <CirculoRespirando className={styles.wordmarkDot} />
+            presença
+          </p>
+        </div>
+        <div className={styles.topBarDireita}>
+          <p className={styles.greeting}>
+            {saudacao()}, {profile.nome}
+          </p>
+          <nav className={styles.navDesktop}>
+            <span className={styles.navItemDesabilitado}>Conversa (em breve)</span>
+            <a className={styles.navItem} href="/livro-vivo">
+              Livro Vivo
+            </a>
+            <a className={styles.navItem} href="/diario">
+              Diário
+            </a>
+            <a className={styles.navItem} href="/meditacao">
+              Práticas
+            </a>
+          </nav>
+          <a className={styles.menuAvatar} href="/perfil" aria-label="Perfil">
+            {profile.nome.charAt(0).toUpperCase()}
+          </a>
+        </div>
       </div>
 
       {mostrarConviteConversao && (
@@ -167,7 +194,12 @@ export default async function Home() {
         </div>
       )}
 
+      <InstalarPWABanner oculto={mostrarConviteConversao || mostrarConviteNascimento} />
+
       <div className={styles.bottom}>
+        <p className={styles.greetingDesktop}>
+          {saudacao()}, {profile.nome}.
+        </p>
         <p className={styles.headline}>{headline}</p>
         <div className={styles.pilulas}>
           {destinos.map((destino) => {
@@ -189,6 +221,21 @@ export default async function Home() {
           })}
         </div>
 
+        {/* Desktop: o nav do topo já dá acesso direto aos 4 destinos, então
+            aqui vira só a recomendação em si — uma única opção (o destino
+            em destaque), sem repetir os 4 pills do mobile. */}
+        <div className={styles.recomendacaoDesktop}>
+          {destinoPrincipal.rota ? (
+            <a className={styles.pilulaDestaque} href={destinoPrincipal.rota}>
+              {destinoPrincipal.rotulo}
+            </a>
+          ) : (
+            <span className={`${styles.pilulaDestaque} ${styles.pilulaDesabilitada}`}>
+              {destinoPrincipal.rotulo}
+            </span>
+          )}
+        </div>
+
         <div className={styles.links}>
           {temRevisitar && (
             <a className={styles.linkSecundario} href="/diario">
@@ -199,6 +246,9 @@ export default async function Home() {
               exige que nunca suma, nem no estado "confuso". */}
           <a className={styles.linkSecundario} href="/recursos">
             recursos de cuidado →
+          </a>
+          <a className={`${styles.linkSecundario} ${styles.linkPerfilMobile}`} href="/perfil">
+            seu perfil →
           </a>
         </div>
       </div>

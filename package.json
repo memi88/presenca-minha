@@ -13,10 +13,14 @@
     "typecheck": "pnpm -r typecheck"
   },
   "devDependencies": {
-    "typescript": "^5.7.0",
-    "@supabase/supabase-js": "latest"
+    "@supabase/supabase-js": "latest",
+    "sharp": "^0.35.3",
+    "typescript": "^5.7.0"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild", "workerd"]
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "workerd"
+    ]
   }
 }

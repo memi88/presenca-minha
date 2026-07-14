@@ -9,7 +9,7 @@ const DESTINOS: Record<DestinoId, Destino> = {
   // Conversa ainda é stub (sem pipeline de IA) — sempre aparece, nunca
   // clicável, nunca "em destaque" (não dá pra "continuar de onde parou"
   // num lugar que não existe de verdade ainda).
-  conversar: { id: "conversar", rota: null, rotulo: "conversar" },
+  conversar: { id: "conversar", rota: null, rotulo: "conversar (em breve)" },
 };
 
 const ORDEM_CURIOSO: DestinoId[] = ["livro", "pratica", "escrever", "conversar"];

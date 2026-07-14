@@ -46,6 +46,9 @@ export function CriarEspacoButton() {
     <div>
       <TurnstileWidget onVerify={setCaptchaToken} />
       {erro && <p className={styles.erro}>{erro}</p>}
+      <button className={styles.ctaSolido} onClick={handleClick} disabled={loading || !aceitou}>
+        Quero criar meu espaço
+      </button>
       <label className={styles.consentimento}>
         <input type="checkbox" checked={aceitou} onChange={(e) => setAceitou(e.target.checked)} />
         <span className={styles.consentimentoTexto}>
@@ -53,9 +56,6 @@ export function CriarEspacoButton() {
           <a href="/limites-de-cuidado">limites de cuidado</a>.
         </span>
       </label>
-      <button className={styles.ctaSolido} onClick={handleClick} disabled={loading || !aceitou}>
-        Quero criar meu espaço
-      </button>
     </div>
   );
 }

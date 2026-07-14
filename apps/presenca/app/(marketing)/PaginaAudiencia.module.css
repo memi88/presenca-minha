@@ -1,0 +1,83 @@
+.hero {
+  position: relative;
+  padding: 130px clamp(24px, 4vw, 48px) 150px;
+  overflow: hidden;
+}
+
+.heroImagem {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroGradiente {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 14, 6, 0.5), rgba(20, 14, 6, 0.28) 55%, #faf7f1 100%);
+}
+
+.heroConteudo {
+  position: relative;
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.heroHeadline {
+  margin: 0 0 1.6rem;
+  font: 400 clamp(2rem, 4.4vw, 3rem) / 1.25 var(--font-fraunces), serif;
+  color: #fdf5e5;
+  text-shadow: 0 2px 20px rgba(10, 7, 4, 0.4);
+}
+
+.heroTexto {
+  margin: 0 auto;
+  max-width: 500px;
+  font: 300 1.02rem/1.75 var(--font-inter), sans-serif;
+  color: rgba(253, 245, 229, 0.92);
+  text-shadow: 0 1px 10px rgba(10, 7, 4, 0.4);
+}
+
+.blocos {
+  padding: 80px clamp(24px, 4vw, 48px) 60px;
+  max-width: 880px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+
+@media (min-width: 640px) {
+  .blocos {
+    grid-template-columns: 1fr 1fr;
+    gap: 52px 64px;
+  }
+}
+
+.blocoTitulo {
+  font: italic 400 1.25rem/1.3 var(--font-fraunces), serif;
+  color: #2e2921;
+  margin-bottom: 0.7rem;
+}
+
+.blocoTexto {
+  font: 300 0.95rem/1.7 var(--font-inter), sans-serif;
+  color: #5f5748;
+}
+
+.ctaSecao {
+  padding: 40px clamp(24px, 4vw, 48px) 130px;
+  text-align: center;
+}
+
+.cta {
+  display: inline-block;
+  font: 500 0.95rem/1 var(--font-inter), sans-serif;
+  color: #faf7f1;
+  background: #3a3428;
+  border-radius: 28px;
+  padding: 16px 34px;
+  text-decoration: none;
+}

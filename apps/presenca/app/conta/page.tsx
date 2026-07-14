@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
+import { PageHeader } from "../PageHeader";
 import { ContaForm } from "./ContaForm";
 import styles from "./page.module.css";
 
@@ -13,8 +14,15 @@ export default async function Conta() {
 
   if (!user) redirect("/");
 
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("nome")
+    .eq("id", user.id)
+    .maybeSingle();
+
   return (
     <main className={styles.scene}>
+      <PageHeader nome={profile?.nome} atual={null} voltar={{ href: "/perfil", label: "← voltar" }} />
       <div className={styles.content}>
         <p className={styles.eyebrow}>seu espaço</p>
         <h1 className={styles.headline}>

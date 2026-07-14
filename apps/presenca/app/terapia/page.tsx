@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
+import { PageHeader } from "../PageHeader";
 import { ContaForm } from "../conta/ContaForm";
 import { ConectarForm } from "./ConectarForm";
 import styles from "./page.module.css";
@@ -23,6 +24,7 @@ export default async function Terapia() {
   if (user.is_anonymous) {
     return (
       <main className={styles.scene}>
+        <PageHeader nome={profile.nome} atual={null} voltar={{ href: "/perfil", label: "← voltar" }} />
         <div className={styles.content}>
           <p className={styles.eyebrow}>terapia</p>
           <h1 className={styles.headline}>
@@ -49,6 +51,7 @@ export default async function Terapia() {
 
     return (
       <main className={styles.scene}>
+        <PageHeader nome={profile.nome} atual={null} voltar={{ href: "/perfil", label: "← voltar" }} />
         <div className={styles.content}>
           <p className={styles.eyebrow}>terapia</p>
           <h1 className={styles.headline}>
@@ -67,6 +70,7 @@ export default async function Terapia() {
 
   return (
     <main className={styles.scene}>
+      <PageHeader nome={profile.nome} atual={null} voltar={{ href: "/perfil", label: "← voltar" }} />
       <div className={styles.content}>
         <p className={styles.eyebrow}>terapia</p>
         <h1 className={styles.headline}>

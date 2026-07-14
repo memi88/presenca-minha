@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
+import { PageHeader } from "../PageHeader";
 import { avisarProfissional } from "./actions";
 import styles from "./page.module.css";
 
@@ -19,7 +20,7 @@ export default async function Recursos() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("profissional_id")
+    .select("nome, profissional_id")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -44,6 +45,7 @@ export default async function Recursos() {
 
   return (
     <main className={styles.scene}>
+      <PageHeader nome={profile?.nome} atual={null} voltar={{ href: "/home", label: "← voltar" }} />
       <div className={styles.content}>
         <p className={styles.eyebrow}>cuidado imediato</p>
         <h1 className={styles.headline}>Você não está sozinho agora.</h1>
@@ -91,10 +93,6 @@ export default async function Recursos() {
         )}
 
         <p className={styles.footer}>disponível em qualquer momento da jornada</p>
-
-        <a className={styles.voltar} href="/home">
-          ← voltar
-        </a>
       </div>
     </main>
   );

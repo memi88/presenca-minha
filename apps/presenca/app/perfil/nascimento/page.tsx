@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
+import { PageHeader } from "../../PageHeader";
 import { NascimentoForm } from "./NascimentoForm";
 import styles from "./page.module.css";
 
@@ -21,10 +22,8 @@ export default async function Nascimento() {
 
   return (
     <main className={styles.scene}>
+      <PageHeader nome={profile.nome} atual={null} voltar={{ href: "/perfil", label: "‹ perfil" }} />
       <div className={styles.content}>
-        <a className={styles.voltar} href="/perfil">
-          ‹ perfil
-        </a>
         <p className={styles.eyebrow}>quer personalizar sua presença?</p>
         <h1 className={styles.headline}>
           Esses dados ajudam a calibrar{" "}

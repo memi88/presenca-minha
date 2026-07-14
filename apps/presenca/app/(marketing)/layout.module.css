@@ -1,0 +1,13 @@
+.pagina {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: #faf7f1;
+  color: #3a3428;
+  font-family: var(--font-inter), sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.main {
+  flex: 1;
+}

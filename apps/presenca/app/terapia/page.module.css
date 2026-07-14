@@ -1,14 +1,14 @@
 .scene {
   min-height: 100dvh;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   background: var(--bg);
 }
 
 .content {
   width: 100%;
   max-width: clamp(420px, 26vw, 560px);
-  margin: 0 auto;
+  margin: auto;
   padding: 0 clamp(24px, 3vw, 40px);
 }
 

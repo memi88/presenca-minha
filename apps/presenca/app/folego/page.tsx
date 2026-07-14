@@ -17,5 +17,5 @@ export default async function Folego() {
   // Sinal pro "continue de onde você parou" da Home (lib/menuHome.ts).
   await supabase.from("profiles").update({ ultimo_destino: "folego" }).eq("id", user.id);
 
-  return <FolegoExperiencia />;
+  return <FolegoExperiencia nome={profile.nome} />;
 }

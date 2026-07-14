@@ -1,0 +1,237 @@
+/* Ambiente escuro (PRD seção 6) — data-ambiente="escuro" é setado pelo
+   AmbienteShell pra esta rota (e /meditacao/[id]). Mesmo padrão de dois
+   painéis do Livro Vivo (ver PainelLeitura.module.css). */
+.scene {
+  min-height: 100dvh;
+  background: var(--bg);
+  padding: 32px 24px 64px;
+}
+
+.duasColunas {
+  position: relative;
+  z-index: 1;
+  max-width: clamp(1000px, 82vw, 1200px);
+  margin: 0 auto;
+}
+
+.painelLista {
+  display: block;
+}
+
+.painelConteudo {
+  display: none;
+}
+
+.varianteDetalhe .painelLista {
+  display: none;
+}
+
+.varianteDetalhe .painelConteudo {
+  display: block;
+}
+
+.voltarMobileDetalhe {
+  display: none;
+}
+
+.varianteDetalhe .voltarMobileDetalhe {
+  display: inline-block;
+  margin-bottom: 18px;
+  font: 400 13px/1 var(--font-spectral), serif;
+  color: var(--text-link-muted);
+  text-decoration: none;
+}
+
+.eyebrow {
+  font: 300 14px/1 var(--font-spectral), serif;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.titulo {
+  font: italic 400 clamp(27px, 2vw, 32px) / 1.3 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.subtitulo {
+  font: italic 300 15px/1.3 var(--font-spectral), serif;
+  color: var(--text-faint);
+  margin-bottom: 28px;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.itemAtivo {
+  border-left: 2px solid var(--accent);
+  padding-left: 16px;
+  margin-left: -16px;
+}
+
+.itemIcone {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(217, 164, 65, 0.55);
+  position: relative;
+}
+
+.itemIcone::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-42%, -50%);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 9px solid var(--accent);
+}
+
+.itemTitulo {
+  font: 400 clamp(16px, 1.1vw, 18px) / 1.2 var(--font-spectral), serif;
+  color: var(--text);
+}
+
+.tituloLeitura {
+  font: 400 clamp(28px, 2.2vw, 36px) / 1.28 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
+.corpo {
+  margin-bottom: 24px;
+}
+
+.paragrafo {
+  font: italic 400 clamp(18px, 1.2vw, 20px) / 1.7 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 18px;
+}
+
+.rodape {
+  text-align: center;
+}
+
+.guardar {
+  background: none;
+  border: none;
+  font: 400 13px/1 var(--font-spectral), serif;
+  color: var(--text-link-muted);
+  cursor: pointer;
+}
+
+.guardado {
+  font: italic 400 13px/1 var(--font-spectral), serif;
+  color: var(--accent);
+}
+
+/* Fôlego (única prática interativa hoje) — em vez de embutir o círculo de
+   respiração aqui, um convite simples pra abrir a experiência de verdade. */
+.cartaoInterativo {
+  padding: clamp(24px, 3vw, 40px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--bg-elevated);
+}
+
+.descricaoInterativa {
+  font: italic 400 15px/1.5 var(--font-spectral), serif;
+  color: var(--text-subtle);
+  margin-bottom: 22px;
+}
+
+.abrirPratica {
+  display: inline-block;
+  background: var(--accent-strong);
+  color: var(--cta-text);
+  font: 500 14px/1 var(--font-spectral), serif;
+  padding: 13px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+}
+
+.vazio {
+  font: italic 400 14px/1.5 var(--font-spectral), serif;
+  color: var(--text-subtle);
+}
+
+/* Estado vazio do painel de conteúdo — /meditacao (lista pura) nunca
+   pré-seleciona uma prática; só /meditacao/[id] (ou /folego) mostra
+   conteúdo real. */
+.convite {
+  font: italic 400 15px/1.5 var(--font-spectral), serif;
+  color: var(--text-faint);
+}
+
+@media (min-width: 640px) {
+  .quebra {
+    display: none;
+  }
+}
+
+@media (min-width: 960px) {
+  /* Conteúdo fica numa faixa central (diferente do header, que é
+     full-bleed) — width:100% explícito evita que margin:auto seja
+     suprimido pelo align-items:stretch implícito do .scene, senão o
+     elemento encolhe pro tamanho do conteúdo em vez de centralizar. */
+  .scene {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .duasColunas {
+    display: flex;
+    align-items: flex-start;
+    gap: 56px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: clamp(32px, 4vw, 64px);
+    padding-right: clamp(32px, 4vw, 64px);
+    box-sizing: border-box;
+  }
+
+  .painelLista,
+  .varianteDetalhe .painelLista,
+  .varianteLista .painelLista {
+    display: block;
+    flex: none;
+    width: 340px;
+  }
+
+  .painelConteudo,
+  .varianteDetalhe .painelConteudo,
+  .varianteLista .painelConteudo {
+    display: block;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .voltarMobileDetalhe,
+  .varianteDetalhe .voltarMobileDetalhe {
+    display: none;
+  }
+
+  .rodape {
+    text-align: left;
+  }
+}

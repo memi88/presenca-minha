@@ -1,0 +1,260 @@
+.hero {
+  position: relative;
+  padding: 120px clamp(24px, 4vw, 48px) 130px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.heroImagem {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.28;
+}
+
+.heroGradiente {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(250, 247, 241, 0.55), rgba(250, 247, 241, 0.25) 55%, #faf7f1);
+}
+
+.heroConteudo {
+  position: relative;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.heroHeadline {
+  margin: 0 0 1.6rem;
+  font: 400 clamp(2.4rem, 5vw, 3.6rem) / 1.18 var(--font-fraunces), serif;
+  color: #2e2921;
+}
+
+.heroTexto {
+  margin: 0 auto 2.8rem;
+  max-width: 520px;
+  font: 300 1.05rem/1.75 var(--font-inter), sans-serif;
+  color: #5f5748;
+}
+
+.heroCtas {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ctaPreenchido {
+  font: 500 0.95rem/1 var(--font-inter), sans-serif;
+  color: #faf7f1;
+  background: #3a3428;
+  border-radius: 28px;
+  padding: 15px 30px;
+  text-decoration: none;
+}
+
+.ctaContorno {
+  font: 500 0.95rem/1 var(--font-inter), sans-serif;
+  color: #3a3428;
+  background: transparent;
+  border: 1px solid rgba(58, 52, 40, 0.3);
+  border-radius: 28px;
+  padding: 15px 30px;
+  text-decoration: none;
+}
+
+.heroScrollSeta {
+  position: absolute;
+  left: 50%;
+  bottom: 36px;
+  width: 14px;
+  height: 14px;
+  border-right: 1px solid rgba(58, 52, 40, 0.45);
+  border-bottom: 1px solid rgba(58, 52, 40, 0.45);
+  transform: translateX(-50%) rotate(45deg);
+  animation: heroScrollSeta 2.2s ease-in-out infinite;
+}
+
+@keyframes heroScrollSeta {
+  0%,
+  100% {
+    transform: translateX(-50%) rotate(45deg) translate(0, 0);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translateX(-50%) rotate(45deg) translate(6px, 6px);
+    opacity: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroScrollSeta {
+    animation: none;
+  }
+}
+
+/* Seção "nossa pergunta" — mergulho escuro, fluido entre as claras. */
+.pergunta {
+  position: relative;
+  text-align: center;
+  background: linear-gradient(
+    180deg,
+    #faf7f1 0%,
+    #3d3222 14%,
+    #2a2216 30%,
+    #241d13 70%,
+    #3d3222 88%,
+    #faf7f1 100%
+  );
+}
+
+.perguntaConteudo {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 170px clamp(24px, 4vw, 48px);
+}
+
+.perguntaEyebrow {
+  margin: 0 0 2.6rem;
+  font: 300 0.9rem/1.6 var(--font-inter), sans-serif;
+  color: #b8a680;
+}
+
+.perguntaDestaque {
+  margin: 0 0 3.6rem;
+  font: italic 400 clamp(1.7rem, 3.8vw, 2.5rem) / 1.45 var(--font-fraunces), serif;
+  color: #fdf5e5;
+}
+
+.perguntaGrifo {
+  color: #e8b563;
+}
+
+.perguntaTraco {
+  display: block;
+  width: 1px;
+  height: 52px;
+  background: linear-gradient(180deg, #c99a4a, transparent);
+  margin: 0 auto 3.4rem;
+}
+
+.perguntaSubtitulo {
+  margin: 0 0 1.4rem;
+  font: italic 400 1.2rem/1.5 var(--font-fraunces), serif;
+  color: #e6d4bb;
+}
+
+.perguntaTexto {
+  margin: 0 0 3.4rem;
+  font: 300 1rem/1.85 var(--font-inter), sans-serif;
+  color: #c7b795;
+}
+
+.perguntaIntervalos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 4.5rem;
+  font: italic 300 clamp(0.85rem, 1.6vw, 1.05rem) / 1.4 var(--font-fraunces), serif;
+  color: #e6d4bb;
+}
+
+.perguntaPonto {
+  flex: none;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #c99a4a;
+}
+
+.perguntaAviso {
+  margin: 0 0 2.4rem;
+  font: 400 0.7rem/2.1 var(--font-inter), sans-serif;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8a7a5c;
+}
+
+.perguntaFinal {
+  margin: 0;
+  font: italic 400 clamp(1.5rem, 3.2vw, 2rem) / 1.4 var(--font-fraunces), serif;
+  color: #fdf5e5;
+}
+
+.perguntaSublinhado {
+  border-bottom: 2px solid #c99a4a;
+  padding-bottom: 3px;
+}
+
+.paraQuem {
+  padding: 40px clamp(24px, 4vw, 48px) 120px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.paraQuemGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+@media (min-width: 720px) {
+  .paraQuemGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.paraQuemCard {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.paraQuemImagem {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.paraQuemGradiente {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 14, 6, 0.05) 30%, rgba(20, 14, 6, 0.72));
+}
+
+.paraQuemConteudo {
+  position: relative;
+  padding: 32px;
+}
+
+.paraQuemTitulo {
+  margin: 0 0 0.8rem;
+  font: italic 400 1.6rem/1.2 var(--font-fraunces), serif;
+  color: #fdf5e5;
+}
+
+.paraQuemTexto {
+  margin: 0 0 1.4rem;
+  font: 300 0.92rem/1.65 var(--font-inter), sans-serif;
+  color: rgba(253, 245, 229, 0.88);
+}
+
+.paraQuemCta {
+  display: inline-block;
+  font: 500 0.85rem/1 var(--font-inter), sans-serif;
+  color: #2a1c08;
+  background: #f2dcae;
+  border-radius: 22px;
+  padding: 11px 22px;
+  text-decoration: none;
+}

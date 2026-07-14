@@ -1,0 +1,202 @@
+/* Ambiente escuro contemplativo (PRD seção 6) — data-ambiente="escuro" é
+   setado pelo AmbienteShell pra esta rota (e /livro-vivo/[id]). Dois
+   painéis no desktop (lista + leitura lado a lado); no mobile, cada rota
+   mostra só o painel equivalente ao que já mostrava antes (.varianteLista
+   esconde o conteúdo, .varianteDetalhe esconde a lista). */
+.scene {
+  position: relative;
+  min-height: 100dvh;
+  background-image: url("/images/sala.png");
+  background-size: cover;
+  background-position: center;
+  padding: 32px 24px 64px;
+}
+
+.scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 16, 10, 0.7), rgba(14, 10, 5, 0.92));
+  pointer-events: none;
+}
+
+.duasColunas {
+  position: relative;
+  z-index: 1;
+  max-width: clamp(1000px, 82vw, 1200px);
+  margin: 0 auto;
+}
+
+.painelLista {
+  display: block;
+}
+
+.painelConteudo {
+  display: none;
+}
+
+.varianteDetalhe .painelLista {
+  display: none;
+}
+
+.varianteDetalhe .painelConteudo {
+  display: block;
+}
+
+.voltarMobileDetalhe {
+  display: none;
+}
+
+.varianteDetalhe .voltarMobileDetalhe {
+  display: inline-block;
+  margin-bottom: 18px;
+  font: 400 13px/1 var(--font-spectral), serif;
+  color: var(--text-link-muted);
+  text-decoration: none;
+}
+
+.eyebrow {
+  font: 300 14px/1 var(--font-spectral), serif;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.titulo {
+  font: italic 400 clamp(27px, 2vw, 32px) / 1.3 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 28px;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  display: block;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.itemAtivo {
+  border-left: 2px solid var(--accent);
+  padding-left: 16px;
+  margin-left: -16px;
+}
+
+.itemTitulo {
+  font: 400 clamp(19px, 1.3vw, 21px) / 1.3 var(--font-spectral), serif;
+  color: var(--text);
+}
+
+.itemMeta {
+  font: italic 300 14px/1.3 var(--font-spectral), serif;
+  color: var(--text-subtle);
+  margin-top: 5px;
+}
+
+.tituloLeitura {
+  font: 400 clamp(28px, 2.2vw, 36px) / 1.28 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
+.corpo {
+  margin-bottom: 24px;
+}
+
+.paragrafo {
+  font: italic 400 clamp(18px, 1.2vw, 20px) / 1.7 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 18px;
+}
+
+.rodape {
+  text-align: center;
+}
+
+.guardar {
+  background: none;
+  border: none;
+  font: 400 13px/1 var(--font-spectral), serif;
+  color: var(--text-link-muted);
+  cursor: pointer;
+}
+
+.guardado {
+  font: italic 400 13px/1 var(--font-spectral), serif;
+  color: var(--accent);
+}
+
+.vazio {
+  font: italic 400 14px/1.5 var(--font-spectral), serif;
+  color: var(--text-subtle);
+}
+
+/* Estado vazio do painel de conteúdo — /livro-vivo (lista pura) nunca
+   pré-seleciona uma leitura; só /livro-vivo/[id] mostra conteúdo real. */
+.convite {
+  font: italic 400 15px/1.5 var(--font-spectral), serif;
+  color: var(--text-faint);
+}
+
+@media (min-width: 640px) {
+  .quebra {
+    display: none;
+  }
+}
+
+@media (min-width: 960px) {
+  /* Conteúdo fica numa faixa central (diferente do header, que é
+     full-bleed) — width:100% explícito evita que margin:auto seja
+     suprimido pelo align-items:stretch implícito do .scene, senão o
+     elemento encolhe pro tamanho do conteúdo em vez de centralizar. */
+  .scene {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .duasColunas {
+    display: flex;
+    align-items: flex-start;
+    gap: 56px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: clamp(32px, 4vw, 64px);
+    padding-right: clamp(32px, 4vw, 64px);
+    box-sizing: border-box;
+  }
+
+  .painelLista,
+  .varianteDetalhe .painelLista,
+  .varianteLista .painelLista {
+    display: block;
+    flex: none;
+    width: 340px;
+  }
+
+  .painelConteudo,
+  .varianteDetalhe .painelConteudo,
+  .varianteLista .painelConteudo {
+    display: block;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .voltarMobileDetalhe,
+  .varianteDetalhe .voltarMobileDetalhe {
+    display: none;
+  }
+
+  .rodape {
+    text-align: left;
+  }
+}

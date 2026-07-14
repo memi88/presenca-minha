@@ -27,9 +27,32 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+  width: 100%;
   max-width: clamp(420px, 40vw, 760px);
   margin: 0 auto;
   padding: clamp(24px, 3vw, 40px) clamp(26px, 3vw, 40px) 0;
+  box-sizing: border-box;
+}
+
+/* Agrupa saudação + nav com um gap fixo (não depende de "sobrar espaço" —
+   diferente do justify-content:space-between do .topBar, que só distribui
+   o espaço que existir e pode colar tudo se o conteúdo for largo). Só o
+   .menuAvatar fica de fora do grupo, empurrado pra ponta oposta. */
+.topBarEsquerda {
+  display: flex;
+  align-items: center;
+  gap: clamp(24px, 3vw, 48px);
+  min-width: 0;
+}
+
+/* Nav + menu de perfil ficam juntos do lado direito (igual ao mockup) —
+   no mobile isso não muda nada visualmente, já que .navDesktop some e só
+   o .menuAvatar aparece. */
+.topBarDireita {
+  display: flex;
+  align-items: center;
+  gap: 28px;
 }
 
 .greeting {
@@ -38,20 +61,134 @@
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
 }
 
-/* Menu discreto (3 pontos) — abre /perfil (dados da conta, vínculo com
-   profissional, data de nascimento). */
-.menuDots {
+/* Monograma "p." — âncora pra /home no mobile, no lugar da saudação (que
+   migrou pro lado direito, ver .topBarDireita). Some no desktop, onde a
+   wordmark completa já cumpre esse papel. */
+.monogramaLink {
   display: flex;
-  flex-direction: column;
-  gap: 3.5px;
-  padding: 6px;
+  color: #fff;
+  text-decoration: none;
 }
 
-.menuDots span {
-  width: 4px;
-  height: 4px;
+.monograma {
+  width: 20px;
+  height: 24px;
+}
+
+/* Wordmark de desktop — substitui a saudação no topo quando ela migra pro
+   bloco de baixo (junto do headline, igual ao mockup). Só existe em telas
+   largas; no mobile o topo continua mostrando a saudação normalmente. */
+.wordmarkDesktop {
+  display: none;
+}
+
+.wordmarkDot {
+  width: 16px;
+  height: 16px;
+  color: #e8b563;
+  animation: presencaRespirar 4s ease-in-out infinite;
+}
+
+@keyframes presencaRespirar {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Nav de desktop — aditiva, não substitui os pills de recomendação por
+   sinal (lib/menuHome.ts) em nenhuma largura, só dá acesso direto quando
+   há espaço de sobra (telas largas). Conversa continua stub. */
+.navDesktop {
+  display: none;
+}
+
+.navItem,
+.navItemDesabilitado {
+  font: 400 14px/1 var(--font-spectral), serif;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  text-decoration: none;
+}
+
+.navItemDesabilitado {
+  opacity: 0.6;
+}
+
+@media (min-width: 960px) {
+  /* Full-bleed de verdade — nada de coluna centralizada, só um gutter fixo
+     nas bordas (mesma filosofia da Fase 5: sem moldura em nenhuma largura).
+     margin:0 (não auto) é essencial aqui: margem automática nos lados
+     suprime o align-items:stretch do .scene e faz o elemento encolher pro
+     tamanho do conteúdo, centralizado — exatamente o bug que queremos evitar.
+     (O ajuste equivalente pro .bottom fica perto da própria regra base dele,
+     mais abaixo no arquivo — CSS resolve empate de especificidade por ordem
+     no arquivo, não por estar "dentro" de uma media query ou não.) */
+  .topBar {
+    max-width: none;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: clamp(32px, 4vw, 64px);
+    padding-right: clamp(32px, 4vw, 64px);
+    box-sizing: border-box;
+  }
+
+  .greeting {
+    display: none;
+  }
+
+  .monogramaLink {
+    display: none;
+  }
+
+  .wordmarkDesktop {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font: 300 15px/1 var(--font-spectral), serif;
+    letter-spacing: 0.32em;
+    color: rgba(255, 255, 255, 0.92);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .navDesktop {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .navItem,
+  .navItemDesabilitado {
+    font-size: 16px;
+  }
+}
+
+/* Avatar com a inicial do nome — abre /perfil (dados da conta, vínculo com
+   profissional, data de nascimento). Era um ícone de 3 pontos decorativo
+   até a Fase 5/6 existirem; agora que /perfil é uma tela real, a inicial
+   comunica melhor "isso é você" do que pontinhos genéricos. */
+.menuAvatar {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: #fff;
+  background: rgba(247, 240, 228, 0.85);
+  color: #8a6320;
+  font: 600 13px/1 var(--font-spectral), serif;
+  text-decoration: none;
+}
+
+@media (min-width: 960px) {
+  .menuAvatar {
+    display: flex;
+  }
 }
 
 /* Convite gentil de conversão (Fase 1 expandida) — nunca insiste, só adia. */
@@ -91,12 +228,41 @@
   cursor: pointer;
 }
 
+.conviteAcao {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: #b6873f;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .bottom {
   position: relative;
   z-index: 1;
   max-width: clamp(420px, 40vw, 760px);
   margin: auto auto 0;
   padding: 0 clamp(26px, 3vw, 40px) clamp(40px, 5vh, 72px);
+}
+
+@media (min-width: 960px) {
+  /* Precisa vir depois da regra base acima (mesma explicação do .topBar
+     original: margin:auto sozinho, com width:auto implícito, é suprimido
+     pelo align-items:stretch do .scene e o elemento encolhe pro tamanho do
+     conteúdo em vez de centralizar. width:100% explícito evita isso —
+     o box vira min(100%, max-width) e o margin:auto passa a centralizar
+     de verdade a sobra de espaço. Diferente do .topBar (header), que fica
+     full-bleed nas bordas — aqui é conteúdo, deve ficar numa faixa central. */
+  .bottom {
+    max-width: clamp(1000px, 82vw, 1200px);
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: clamp(32px, 4vw, 64px);
+    padding-right: clamp(32px, 4vw, 64px);
+    box-sizing: border-box;
+  }
 }
 
 /* "Recomendação textual" (não mais um card com um botão só) — o headline
@@ -109,10 +275,66 @@
   margin-bottom: 18px;
 }
 
+/* Saudação grande de desktop — substitui a do topo (que migrou pra cá,
+   junto do headline, igual ao mockup). Some no mobile. */
+.greetingDesktop {
+  display: none;
+}
+
+@media (min-width: 960px) {
+  .greetingDesktop {
+    display: block;
+    max-width: 560px;
+    font: italic 400 clamp(32px, 2.6vw, 40px) / 1.25 var(--font-spectral), serif;
+    color: #fff;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+    margin-bottom: 14px;
+  }
+
+  .headline {
+    max-width: 560px;
+    font-size: clamp(18px, 1.3vw, 20px);
+    margin-bottom: 26px;
+  }
+}
+
 .pilulas {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+/* Desktop: o nav do topo já dá acesso direto aos 4 destinos — aqui vira só
+   a recomendação em si (1 CTA + 1 link), sem repetir os pills do mobile. */
+.recomendacaoDesktop {
+  display: none;
+}
+
+@media (min-width: 960px) {
+  .pilulas {
+    display: none;
+  }
+
+  .recomendacaoDesktop {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .recomendacaoDesktop .pilulaDestaque {
+    display: inline-block;
+    padding: 18px 44px;
+    font-size: 16px;
+  }
+
+  .links {
+    align-items: flex-start;
+  }
+
+  .linkSecundario {
+    text-align: left;
+  }
 }
 
 .pilula,
@@ -161,4 +383,11 @@
   color: rgba(255, 255, 255, 0.9);
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
   text-decoration: none;
+}
+
+/* Só no mobile — no desktop o avatar (.menuAvatar) já dá acesso a /perfil. */
+@media (min-width: 960px) {
+  .linkPerfilMobile {
+    display: none;
+  }
 }

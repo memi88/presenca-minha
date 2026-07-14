@@ -7,7 +7,12 @@ declare global {
     turnstile?: {
       render: (
         container: HTMLElement,
-        options: { sitekey: string; callback: (token: string) => void; "expired-callback"?: () => void },
+        options: {
+          sitekey: string;
+          callback: (token: string) => void;
+          "expired-callback"?: () => void;
+          appearance?: "always" | "execute" | "interaction-only";
+        },
       ) => string;
       remove: (widgetId: string) => void;
     };
@@ -68,6 +73,11 @@ export function TurnstileWidget({ onVerify }: { onVerify: (token: string) => voi
         widgetIdRef.current = window.turnstile.render(ref.current, {
           sitekey: siteKey,
           callback: onVerify,
+          // "interaction-only": fica invisível na maioria das vezes, só
+          // aparece se o Cloudflare realmente precisar de um desafio
+          // interativo — em vez do quadro sempre visível (appearance
+          // "always", o padrão), que ficava deslocado na tela de bem-vindo.
+          appearance: "interaction-only",
         });
       })
       .catch((erro) => console.error("Turnstile:", erro));

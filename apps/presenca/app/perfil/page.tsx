@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
+import { PageHeader } from "../PageHeader";
+import { sair } from "./actions";
 import styles from "./page.module.css";
 
 function formatarNascimento(data: string, hora: string | null, local: string | null): string {
@@ -38,6 +40,7 @@ export default async function Perfil() {
 
   return (
     <main className={styles.scene}>
+      <PageHeader nome={profile.nome} atual={null} voltar={{ href: "/home", label: "← voltar" }} />
       <div className={styles.content}>
         <p className={styles.eyebrow}>perfil</p>
         <h1 className={styles.headline}>{profile.nome}</h1>
@@ -84,9 +87,11 @@ export default async function Perfil() {
           )}
         </div>
 
-        <a className={styles.voltar} href="/home">
-          ← voltar
-        </a>
+        <form action={sair}>
+          <button className={styles.sair} type="submit">
+            sair
+          </button>
+        </form>
       </div>
     </main>
   );

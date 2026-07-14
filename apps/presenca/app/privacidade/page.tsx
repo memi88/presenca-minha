@@ -1,3 +1,4 @@
+import { PageHeader } from "../PageHeader";
 import styles from "./page.module.css";
 
 // Página pública, sem guard de sessão — precisa ser acessível mesmo antes
@@ -5,6 +6,7 @@ import styles from "./page.module.css";
 export default function Privacidade() {
   return (
     <main className={styles.scene}>
+      <PageHeader voltar={{ href: "/home", label: "← voltar" }} />
       <div className={styles.content}>
         <p className={styles.eyebrow}>privacidade</p>
         <h1 className={styles.headline}>Política de Privacidade</h1>
@@ -85,10 +87,6 @@ export default function Privacidade() {
         <p className={styles.paragrafo}>
           Se este texto mudar de forma relevante, avisamos dentro do próprio app antes da mudança valer.
         </p>
-
-        <a className={styles.voltar} href="/home">
-          ← voltar
-        </a>
       </div>
     </main>
   );
