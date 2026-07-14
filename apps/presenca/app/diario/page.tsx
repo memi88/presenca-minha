@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
+import { PageHeader } from "../PageHeader";
 import { EntradaItem, type Entrada } from "./EntradaItem";
 import { NovaEntradaForm } from "./NovaEntradaForm";
 import styles from "./page.module.css";
@@ -23,7 +24,9 @@ export default async function Diario() {
   const [{ data: entradas }] = await Promise.all([
     supabase
       .from("caderno_entradas")
-      .select("id, autor_tipo, conteudo, revisitar, created_at, profissionais:autor_profissional_id(nome)")
+      .select(
+        "id, autor_tipo, conteudo, revisitar, created_at, tipo, biblioteca_ref_id, conexao_conteudo, profissionais:autor_profissional_id(nome)",
+      )
       .eq("paciente_id", user.id)
       .order("created_at", { ascending: false }),
     // Sinal pro "continue de onde você parou" da Home (lib/menuHome.ts).
@@ -32,22 +35,27 @@ export default async function Diario() {
 
   return (
     <main className={styles.scene}>
+      <PageHeader nome={profile.nome} atual="escrever" voltar={{ href: "/home", label: "← voltar" }} />
       <div className={styles.header}>
-        <p className={styles.eyebrow}>diário</p>
+        <p className={styles.eyebrow}>Diário</p>
         <h1 className={styles.titulo}>O que você quer guardar.</h1>
-        <a className={styles.voltar} href="/home">
-          ← voltar
-        </a>
       </div>
 
-      <NovaEntradaForm />
-      <p className={styles.legenda}>sem contagem, sem meta — só você</p>
+      <div className={styles.colunas}>
+        <div className={styles.colunaEscrever}>
+          <NovaEntradaForm />
+          <p className={styles.legenda}>sem contagem, sem meta — só você</p>
+        </div>
 
-      <div className={styles.lista}>
-        {!entradas?.length && <p className={styles.vazio}>Ainda não há nada guardado aqui.</p>}
-        {entradas?.map((entrada) => (
-          <EntradaItem key={entrada.id} entrada={entrada as unknown as Entrada} />
-        ))}
+        <div className={styles.colunaAntes}>
+          <p className={styles.antesRotulo}>antes</p>
+          <div className={styles.lista}>
+            {!entradas?.length && <p className={styles.vazio}>Ainda não há nada guardado aqui.</p>}
+            {entradas?.map((entrada) => (
+              <EntradaItem key={entrada.id} entrada={entrada as unknown as Entrada} />
+            ))}
+          </div>
+        </div>
       </div>
     </main>
   );

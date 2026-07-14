@@ -11,10 +11,19 @@ export type Entrada = {
   conteudo: string;
   revisitar: boolean;
   created_at: string;
+  tipo: string | null;
+  biblioteca_ref_id: string | null;
+  conexao_conteudo: string | null;
   profissionais: { nome: string } | null;
 };
 
 const formatoData = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short" });
+
+const TRECHO_MAX = 90;
+
+function trecho(texto: string): string {
+  return texto.length > TRECHO_MAX ? `${texto.slice(0, TRECHO_MAX).trim()}…` : texto;
+}
 
 export function EntradaItem({ entrada }: { entrada: Entrada }) {
   const [, startTransition] = useTransition();
@@ -31,6 +40,14 @@ export function EntradaItem({ entrada }: { entrada: Entrada }) {
         </div>
       )}
       <p className={ehProfissional ? styles.conteudoProfissional : styles.conteudo}>{entrada.conteudo}</p>
+      {entrada.conexao_conteudo && (
+        <p className={styles.conexao}>isso conecta com algo que você guardou: "{trecho(entrada.conexao_conteudo)}"</p>
+      )}
+      {entrada.tipo === "pagina_indicada" && entrada.biblioteca_ref_id && (
+        <a className={styles.linkOrigem} href={`/livro-vivo/${entrada.biblioteca_ref_id}`}>
+          ver no Livro Vivo →
+        </a>
+      )}
       <div className={styles.rodape}>
         <span className={styles.data}>{formatoData.format(new Date(entrada.created_at))}</span>
         {entrada.autor_tipo === "usuario" && (
