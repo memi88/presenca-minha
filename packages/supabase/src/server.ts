@@ -18,6 +18,12 @@ export async function createClient() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
+      // `secure` não vem por padrão no @supabase/ssr — o Cloudflare já força
+      // HTTPS antes de chegar aqui, mas isso adiciona a camada explícita.
+      // `httpOnly` continua false (padrão da lib): o client de navegador
+      // (browser.ts) precisa ler esse cookie via JS pro fluxo de entrada
+      // anônima funcionar.
+      cookieOptions: { secure: true },
       cookies: {
         getAll() {
           return cookieStore.getAll();
