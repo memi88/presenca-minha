@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@presenca/supabase/server";
 
 import { calcularEmbedding } from "@/lib/embed";
+import { podeCalcularEmbedding } from "@/lib/rateLimit";
 
 export type EscreverEntradaState = { erro?: string; sucesso?: boolean };
 
@@ -32,8 +33,10 @@ export async function escreverEntrada(
   if (!profissional) redirect("/");
 
   // Mesmo padrão do Presença (apps/presenca/app/diario/actions.ts): não
-  // trava a escrita se o serviço de embedding ainda não estiver no ar.
-  const embedding = await calcularEmbedding(conteudo, "passage");
+  // trava a escrita se o serviço de embedding ainda não estiver no ar, nem
+  // se o limite de uso do usuário estourou.
+  const permitido = await podeCalcularEmbedding(supabase);
+  const embedding = permitido ? await calcularEmbedding(conteudo, "passage") : null;
 
   const { error } = await supabase.from("caderno_entradas").insert({
     paciente_id: pacienteId,

@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@presenca/supabase/server";
 
 import { calcularEmbedding } from "@/lib/embed";
+import { podeCalcularEmbedding } from "@/lib/rateLimit";
 
 export async function guardarPratica(bibliotecaId: string) {
   const supabase = await createClient();
@@ -21,7 +22,8 @@ export async function guardarPratica(bibliotecaId: string) {
     .maybeSingle();
 
   const conteudo = `Guardei: ${pratica?.titulo ?? "uma prática"}`;
-  const embedding = await calcularEmbedding(conteudo, "passage");
+  const permitido = await podeCalcularEmbedding(supabase);
+  const embedding = permitido ? await calcularEmbedding(conteudo, "passage") : null;
 
   await supabase.from("caderno_entradas").insert({
     paciente_id: user.id,
