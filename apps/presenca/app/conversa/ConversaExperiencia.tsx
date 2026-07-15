@@ -7,10 +7,12 @@ import styles from "./page.module.css";
 
 type Papel = "user" | "assistant";
 type Mensagem = { id: string; role: Papel; content: string };
+type Tela = "chat" | "risco" | "fechamento";
 
 type LinhaStream =
   | { tipo: "texto"; delta: string }
   | { tipo: "risco" }
+  | { tipo: "fechamento" }
   | { tipo: "fim" }
   | { tipo: "erro"; mensagem: string };
 
@@ -20,7 +22,7 @@ export function ConversaExperiencia() {
   const [mensagens, setMensagens] = useState<Mensagem[]>([]);
   const [texto, setTexto] = useState("");
   const [enviando, setEnviando] = useState(false);
-  const [risco, setRisco] = useState(false);
+  const [tela, setTela] = useState<Tela>("chat");
   const [erro, setErro] = useState<string | null>(null);
   const [guardadas, setGuardadas] = useState<Set<string>>(new Set());
   const listaRef = useRef<HTMLDivElement>(null);
@@ -80,7 +82,9 @@ export function ConversaExperiencia() {
               atual.map((m) => (m.id === assistenteId ? { ...m, content: m.content + evento.delta } : m)),
             );
           } else if (evento.tipo === "risco") {
-            setRisco(true);
+            setTela("risco");
+          } else if (evento.tipo === "fechamento") {
+            setTela("fechamento");
           } else if (evento.tipo === "erro") {
             setErro(evento.mensagem);
           }
@@ -99,8 +103,12 @@ export function ConversaExperiencia() {
     await guardarNoDiario(mensagem.content);
   }
 
-  if (risco) {
+  if (tela === "risco") {
     return <CardTransicaoRisco />;
+  }
+
+  if (tela === "fechamento") {
+    return <TelaFechamento onContinuar={() => setTela("chat")} />;
   }
 
   const aguardandoPrimeiroToken = enviando && mensagens.at(-1)?.content === "";
@@ -108,6 +116,12 @@ export function ConversaExperiencia() {
   return (
     <>
       <div className={styles.lista} ref={listaRef}>
+        {mensagens.length > 0 && (
+          <button className={styles.encerrarManual} type="button" onClick={() => setTela("fechamento")}>
+            encerrar por hoje
+          </button>
+        )}
+
         {mensagens.length === 0 && <p className={styles.vazio}>Chegou. Pode começar por onde conseguir.</p>}
 
         {mensagens.map((mensagem) => (
@@ -187,6 +201,49 @@ function CardTransicaoRisco() {
       <a className={styles.cta} href="/recursos">
         ir para recursos →
       </a>
+    </div>
+  );
+}
+
+/**
+ * Diferente do card de risco, esta tela é reversível — "ainda quero
+ * continuar" volta pro chat sem navegar, sem perder o histórico em
+ * memória (a conversa em si nunca é persistida, mas o estado do
+ * componente continua vivo enquanto a pessoa não sair de /conversa).
+ */
+function TelaFechamento({ onContinuar }: { onContinuar: () => void }) {
+  const [palavra, setPalavra] = useState("");
+  const [salvando, setSalvando] = useState(false);
+
+  async function encerrar() {
+    if (salvando) return;
+    setSalvando(true);
+    const texto = palavra.trim();
+    if (texto) {
+      await guardarNoDiario(texto);
+    }
+    window.location.href = "/home";
+  }
+
+  return (
+    <div className={styles.cardFechamento}>
+      <p className={styles.fechamentoEyebrow}>até logo</p>
+      <h1 className={styles.fechamentoTitulo}>Por hoje, é o bastante.</h1>
+      <p className={styles.fechamentoLegenda}>Guarde uma palavra deste encontro:</p>
+      <input
+        className={styles.fechamentoInput}
+        type="text"
+        value={palavra}
+        onChange={(e) => setPalavra(e.target.value)}
+        placeholder="uma palavra…"
+        disabled={salvando}
+      />
+      <button className={styles.ctaContornado} type="button" onClick={encerrar} disabled={salvando}>
+        encerrar por hoje
+      </button>
+      <button className={styles.fechamentoVoltar} type="button" onClick={onContinuar} disabled={salvando}>
+        ainda quero continuar
+      </button>
     </div>
   );
 }

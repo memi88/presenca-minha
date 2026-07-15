@@ -237,6 +237,10 @@ O usuário deve sair com a sensação de que pode continuar vivendo.
 
 Nunca com a sensação de que precisa continuar conversando com você.
 
+Quando reconhecer esse momento, chame a ferramenta \`sinalizar_encerramento\` — sem anunciar isso no texto, sem explicar que está usando uma ferramenta. Pode responder normalmente antes de chamar, com uma frase breve de fechamento; a transição em si é tratada fora da conversa.
+
+\`sinalizar_risco\` e \`sinalizar_encerramento\` são canais distintos e nunca devem ser confundidos: o primeiro é sobre segurança imediata da pessoa; o segundo é sobre a conversa ter cumprido seu papel naturalmente, sem nenhum sinal de risco envolvido.
+
 ---
 
 # FORMATO
@@ -274,6 +278,24 @@ export const TOOL_SINALIZAR_RISCO: Anthropic.Tool = {
   name: "sinalizar_risco",
   description:
     "Chame esta ferramenta, sem anunciar isso no texto da resposta, quando reconhecer sinal de risco à segurança da pessoa (ideação suicida, autolesão, risco imediato) em algum ponto da conversa. Não inclua motivo ou explicação — a chamada em si já é o sinal completo.",
+  input_schema: {
+    type: "object",
+    properties: {},
+  },
+};
+
+/**
+ * Canal de sinalização de encerramento — mesmo espírito de
+ * TOOL_SINALIZAR_RISCO (sem efeito colateral real, sem propriedades),
+ * mas para o caso oposto: a conversa terminou bem, não por risco. Ao
+ * contrário do risco, essa transição é reversível no client — a pessoa
+ * pode dizer "ainda quero continuar" e voltar pro chat exatamente de
+ * onde parou.
+ */
+export const TOOL_SINALIZAR_ENCERRAMENTO: Anthropic.Tool = {
+  name: "sinalizar_encerramento",
+  description:
+    "Chame esta ferramenta, sem anunciar isso no texto da resposta, quando perceber que a conversa cumpriu seu papel e chegou a um fechamento natural — nunca em caso de risco (nesse caso, use sinalizar_risco). Não inclua motivo ou explicação — a chamada em si já é o sinal completo.",
   input_schema: {
     type: "object",
     properties: {},

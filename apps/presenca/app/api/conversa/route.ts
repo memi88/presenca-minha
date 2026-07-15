@@ -4,7 +4,12 @@ import { createClient } from "@presenca/supabase/server";
 
 import { anthropic } from "@/lib/anthropic";
 import { podeConversar } from "@/lib/rateLimit";
-import { MODELO_CONVERSA, SYSTEM_PROMPT_CONVERSA, TOOL_SINALIZAR_RISCO } from "@/lib/systemPromptConversa";
+import {
+  MODELO_CONVERSA,
+  SYSTEM_PROMPT_CONVERSA,
+  TOOL_SINALIZAR_ENCERRAMENTO,
+  TOOL_SINALIZAR_RISCO,
+} from "@/lib/systemPromptConversa";
 
 type MensagemEntrada = { role: "user" | "assistant"; content: string };
 
@@ -60,11 +65,12 @@ export async function POST(request: NextRequest) {
           model: MODELO_CONVERSA,
           max_tokens: 4096,
           system: SYSTEM_PROMPT_CONVERSA,
-          tools: [TOOL_SINALIZAR_RISCO],
+          tools: [TOOL_SINALIZAR_RISCO, TOOL_SINALIZAR_ENCERRAMENTO],
           messages: mensagens,
         });
 
         let riscoSinalizado = false;
+        let encerramentoSinalizado = false;
 
         for await (const event of anthropicStream) {
           if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
@@ -80,6 +86,18 @@ export async function POST(request: NextRequest) {
             // encerrada aqui; a próxima visita a /conversa começa do zero.
             riscoSinalizado = true;
             emitir({ tipo: "risco" });
+          } else if (
+            !riscoSinalizado &&
+            !encerramentoSinalizado &&
+            event.type === "content_block_start" &&
+            event.content_block.type === "tool_use" &&
+            event.content_block.name === "sinalizar_encerramento"
+          ) {
+            // Mesmo canal estrutural do risco, mas reversível do lado do
+            // client — risco sempre prevalece se as duas chegarem no
+            // mesmo turno (checagem !riscoSinalizado acima).
+            encerramentoSinalizado = true;
+            emitir({ tipo: "fechamento" });
           }
         }
 
