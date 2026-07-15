@@ -16,3 +16,8 @@ NEXT_PUBLIC_TURNSTILE_SITE_KEY=
 # no ambiente do serviço (ver services/ia/.env.example).
 IA_SERVICE_URL=
 IA_SERVICE_API_KEY=
+
+# API Anthropic — conversa (Claude Sonnet 5) e, no futuro, microcopy (Haiku
+# 4.5). SEM prefixo NEXT_PUBLIC_: só server-side (lib/anthropic.ts), nunca
+# chega no bundle do browser. Gere em https://console.anthropic.com/settings/keys.
+ANTHROPIC_API_KEY=

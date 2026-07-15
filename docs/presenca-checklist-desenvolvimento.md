@@ -19,8 +19,13 @@
 - [x] Login anônimo (`signInAnonymously()`) habilitado, disparado silenciosamente na Entrada.
 - [x] CAPTCHA/Turnstile configurado no login anônimo. Widget oficial da Cloudflare, site key em `.env.local`, secret key só no dashboard do Supabase (Attack Protection).
 - [x] Fluxo de conversão pra conta permanente (e-mail/senha), preservando o mesmo UUID. `/conta` — `supabase.auth.updateUser({email, password})`, testado (mesmo `auth.uid()` antes/depois).
+- [ ] Adicionar OAuth como opção alternativa no fluxo de conversão (hoje só e-mail/senha).
 - [x] Conversão obrigatória disparando no momento de conectar profissional. `/terapia` (Fase 4): usuário anônimo que tenta conectar vê o `ContaForm` (com `next="/terapia"`) antes de poder digitar o código de convite — nunca chega ao formulário de código sem antes converter.
 - [x] Convite de conversão gentil e recorrente pro resto dos casos (não só uma vez). Banner discreto na Home + "agora não" (adia 7 dias via `profiles.lembrete_conversao_em`), testado.
+- [ ] Checagem de sessão local na Entrada: sessão válida → pula onboarding, vai direto pra Home.
+- [ ] Link discreto "já tem conta? entrar" na tela de Entrada, pra quem tem conta permanente sem sessão local.
+- [ ] Tela de login (e-mail/senha ou magic link) pra esse caso.
+- [ ] Logout: comportamento normal pra conta permanente; aviso forte (ou ausência do botão) pra conta anônima, por risco de perda permanente de dado.
 - [x] Tela de Entrada/Landing (ambiente claro).
 - [x] Tela de Chegada — entrada enxuta, sem pedir nascimento.
 - [x] Home básica funcionando (mesmo sem personalização ainda).
@@ -37,6 +42,7 @@
 
 - [x] Estrutura de conteúdo curado (`biblioteca`) funcionando. `/livro-vivo` lista páginas publicadas (`tipo = 'pagina_livro_vivo'`); leitura via `authenticated`, escrita continua só via `service_role`/SQL Editor (nunca client-side), conforme PRD.
 - [x] Ao menos as primeiras páginas/práticas reais cadastradas (curadoria manual no banco está OK pro piloto). Uma página semente (texto que já existia no mockup de referência) cadastrada e testada; `scripts/cadastrar-biblioteca.mjs` pronto pra curadoria futura (calcula embedding, gera o SQL — você roda).
+- [ ] **Portão de qualidade: nenhuma prática entra sem ter sido vivida** — cada item cadastrado precisa ter sido genuinamente experimentado por quem o escreveu antes de virar página.
 - [ ] Embedding calculado ao cadastrar cada item. Mecanismo pronto (script + `lib/embed.ts`) e `services/ia` já no ar. **Script de recálculo pronto** (`scripts/recalcular-embeddings-biblioteca.mjs`, precisa de `SUPABASE_SERVICE_ROLE_KEY` — só você roda, credencial nunca passa por um agente de IA); falta só rodar uma vez pra corrigir a página semente (`embedding = null`) e, separadamente, cadastrar o restante do conteúdo curado com `scripts/cadastrar-biblioteca.mjs` — isso depende de escrever o conteúdo em si (decisão de voz/curadoria, não código).
 - [x] Tela de leitura — sem contagem, sem meta, sem "marcar como concluído". `/livro-vivo/[id]` — só título, texto, e "guardar esta leitura" (cria referência no Diário, `biblioteca_ref_id`). Testado.
 
@@ -52,14 +58,14 @@
 - [x] Tokens de tema (CSS variables) para os dois ambientes. `app/globals.css` — `:root` (claro) + `[data-ambiente="escuro"]`, valores claro = hex já em uso antes da Fase 5, escuro = hex reais do mockup (`docs/Presenca Jornada em Telas.dc.html`, tela "H · LIVRO VIVO").
 - [x] Transição em fade entre rotas (~400–600ms). `AmbienteShell.tsx` — `key={pathname}` + animação CSS de opacidade (500ms), sem biblioteca de animação (PRD seção 6).
 - [x] Mapeamento fixo por tela — **parcial por decisão consciente:** Livro Vivo = escuro (único "cômodo escuro" já construído, reskin completo com `sala.png`). Diário e Meditação continuam claros porque essas telas ainda não existem — mapeá-las é trabalho da fase que as construir, não desta.
-- [ ] Respiração 4-7-8 — **adiado deliberadamente**, junto com a tela de Meditação em si (não existe ainda; construir isso junto teria envolvido desenhar UX que o PRD não detalha). Fica para quando Meditação for escopada.
+- [ ] Respiração 4-7-8 — **adiado deliberadamente**, junto com a tela de Meditação em si (não existe ainda; construir isso junto teria envolvido desenhar UX que o PRD não detalha). Fica para quando Meditação for escopada. Espec já definida pra quando entrar: movimento contínuo (sem corte de tela), saída a qualquer momento, retomada exata da conversa ao voltar.
 - [x] **Responsividade desktop — retrabalhada em cima do que o checklist original pedia.** A ideia inicial (coluna fixa de 480px com fundo discreto ao redor) foi implementada, testada pelo usuário e rejeitada na prática: parecia "uma faixa de conteúdo" mesmo maior. Substituída por responsividade de verdade por categoria de tela — sem moldura nenhuma, full-bleed em qualquer largura: **A** (Landing/Chegada/Home, imagem de cena) — imagem cobre a janela inteira, bloco de texto/CTA escala fluidamente via `clamp()`; **B** (Conta/Terapia, formulário) — cartão centralizado com `clamp()` mais discreto; **C** (Diário/Livro Vivo, leitura) — coluna de leitura alarga moderadamente (560→~720px) pra não virar parede de texto. Quebras de linha manuais (`<br/>`) nos títulos viravam quebra estranha em tela larga — corrigido com uma classe `.quebra` que só quebra abaixo de 640px, em texto flui naturalmente acima disso. Aplica a todas as 8 telas do app (não só as 4 originais da Fase 1).
 
 ## Fase 6 — Onboarding (revelação contextual)
 
 - [x] Fluxo de entrada sem pedir nascimento. Já satisfeito desde a Fase 1 — `/chegada` só pede nome.
 - [x] Check-in "como está sua presença hoje?" funcionando e mudando a estrutura da tela seguinte. `/hoje` — 5 opções (Confuso/Em paz/Cansado/Curioso/Não sei responder), guardadas em `profiles.presenca_hoje`/`presenca_hoje_em` (`precisaCheckin`, `lib/checkin.ts`, gatilho de 12h). Quem responde "confuso" cai numa Home sem o link de Terapia — o PRD só detalha esse recorte pra essa resposta; as outras 4 mantêm a Home cheia (não inventei estrutura reduzida pra elas).
-- [ ] Convite de nascimento surgindo só dentro da conversa, quando o tema pedir (nunca em tela fixa). **Bloqueado, não esquecido:** depende da Conversa (chat com a IA companheira) existir — hoje é só um botão "conversar" desabilitado na Home. Só dá pra fazer de verdade depois de parte da Fase 7 (pipeline de conversa).
+- [ ] Convite de nascimento surgindo só dentro da conversa, quando o tema pedir (nunca em tela fixa). **Desbloqueado** — a Conversa já existe (Fase 10) —, mas a lógica específica desse convite contextual dentro da conversa ainda não foi implementada.
 - [x] Convite de nascimento pelas outras 2 formas do PRD §5 (ação própria + gatilho contextual espontâneo). `/perfil/nascimento` — formulário (data obrigatória, local/hora opcionais, com a saída "não sabe a hora? sem problema"), alcançável a qualquer momento por `/perfil`. Gatilho espontâneo: `lib/streak.ts` conta dias consecutivos de visita (sinal interno, nunca exibido como contador — voz-de-marca pilar 3, sem streak/gamificação); a partir de 3 dias seguidos sem `data_nascimento` preenchida, a Home mostra o mesmo convite dispensável de sempre ("Quer personalizar sua presença?"), "agora não" adia 7 dias (`profiles.lembrete_nascimento_em`, mesmo padrão do convite de conversão).
 - [x] Conexão com profissional como ação dentro de "Terapia", nunca no cadastro inicial. Já satisfeito pela Fase 4 — `/terapia` é tela separada, alcançada por link na Home, nunca faz parte de `/chegada`.
 
@@ -88,12 +94,25 @@
 - [x] Encarregado nomeado + canal de contato visível no app. Guilherme (pessoa física) é o responsável e o encarregado (DPO); contato `guilhermemsts88@gmail.com` em `/privacidade`. Nome de família não incluído (não foi fornecido) — considerar completar com nome completo/CPF antes de publicar oficialmente.
 - [x] Processo de exclusão de dados sob pedido (manual está OK pro piloto). `/privacidade`, seção "Seus direitos" — link `mailto:` direto, processo manual (você executa via SQL), conforme o piloto permite.
 
+## Fase 10 — Conversa (chat com IA companheira)
+
+- [x] Rota `/conversa` funcionando — chat com Claude Sonnet 5, streaming NDJSON via Route Handler (`app/api/conversa/route.ts`, primeiro Route Handler do projeto — resto do app é só Server Actions). System prompt validado no comparativo (`docs/testes-modelo/comparacao-modelos-2026-07-15.md`), vive em `lib/systemPromptConversa.ts`. Testado localmente (`next dev`) pelo usuário — funcionou.
+- [x] Conversa é efêmera por decisão — nunca persiste mensagens; sempre começa do zero a cada visita (sem retomar sessão anterior).
+- [x] "Guardar no Diário" — botão por bubble (usuário e assistente), insere em `caderno_entradas` via Server Action `guardarNoDiario` (`app/conversa/actions.ts`), mesmo pipeline de embedding assíncrono de `criarEntrada`. Testado pelo usuário — funcionou.
+- [x] Protocolo de risco — tool `sinalizar_risco` (canal estrutural, nunca texto do modelo) aciona um card de transição fixo no código (nunca copy gerada pela IA) com botão "ir para recursos →" + redirect automático em ~5s. Destino sempre `/recursos`, nunca variando. **Ainda não confirmado pelo usuário** — construído, gatilho de teste sugerido, mas falta confirmação de que o comportamento saiu como esperado.
+- [x] Rate limit próprio da conversa (`conversa_rate_limit` + RPC `pode_conversar`, 40 msgs/10min) — migration `20260715150000_rate_limit_conversa.sql` criada e **aplicada no banco remoto**.
+- [x] UI reservada ativada — nav desktop (`PageHeader.tsx`, `home/page.tsx`) e pills mobile (via `lib/menuHome.ts`) que mostravam "Conversa (em breve)" agora linkam de verdade pra `/conversa`. "Continue de onde você parou" reconhece Conversa como último destino.
+- [ ] Validar em `cf:preview` (runtime real do Cloudflare Workers) antes de considerar pronto pra produção — só foi testado em `next dev` até agora. Build pro Workers (`opennextjs-cloudflare build`) já foi validado sem erros durante o desenvolvimento, mas falta rodar a preview completa e testar o streaming de ponta a ponta nesse runtime.
+- [ ] Ajustes de design pra ficar "mais acolhedor" — anotado pelo usuário como próximo passo, incluindo consistência do espaçamento do header entre telas (pré-existente, não específico da Conversa). Fica pra uma sessão futura, não bloqueia o uso atual.
+- [ ] Fast-follow (fora do escopo desta v1, por decisão consciente): Llama Guard 3 rodando em paralelo como segunda camada de verificação de risco; busca semântica no núcleo Presença pra sugerir prática/página concreta durante a conversa; Human Design no prompt (ainda depende do cálculo, que é stub).
+
 ---
 
 ## Pendências externas (não bloqueiam o código, mas precisam de decisão)
 
 - [x] Microsserviço Python — código pronto em `services/ia` (FastAPI, autenticado por `IA_API_KEY` compartilhada, nunca aberto). **Deployado no Railway** (`presenca-minha-production.up.railway.app`, Dockerfile builda a imagem com o modelo já cacheado). Endpoint `/embed` testado de ponta a ponta contra produção (multilingual-e5-small, 384 dim, prefixo passage/query). `IA_SERVICE_URL` preenchido nos `.env.local` do Presença e do Cuida. Endpoint `/human-design` continua stub — retorna `pendente: true` até a decisão de biblioteca.
-- [ ] LLM de entrega a usar (personalização de tom/saudação).
+- [x] LLM de conversa/entrega: Claude via API Anthropic — Sonnet 5 (conversa principal) + Haiku 4.5 (todo microcopy: home, reentrada, convite, encerramento, resumo, notificações). Decidido depois de comparativo lado a lado com Llama (Cloudflare) e GPT (OpenAI), rodando cada cenário 3x contra o `voz-de-marca.md` — resultado completo em `docs/testes-modelo/comparacao-modelos-2026-07-15.md`. Llama descartado (não seguiu instrução explícita de gênero neutro de forma confiável); GPT descartado por verbosidade sistemática e um uso de linguagem técnica banida.
+- [ ] Confirmar termos atuais da API Anthropic sobre uso de conteúdo para treino; documentar como operador no inventário LGPD.
 - [x] ~~Texto final de consentimento + política de privacidade~~ — já coberto pelo item da Fase 9 acima (checkboxes de consentimento + `/privacidade` publicada). Mesma ressalva: rascunho técnico meu, recomendo revisão por advogado antes de valer pra pacientes reais.
 - [x] Cadastrar os 3 terapeutas do piloto com `scripts/cadastrar-profissional.mjs`. **Feito, os 3.** Senhas usadas foram temporárias e previsíveis (nome+número) — `/perfil` no Cuida agora tem tela de trocar senha; recomendo cada terapeuta trocar a própria antes de dado real de paciente entrar.
 - [x] Migração da Fase 6 (`supabase/migrations/20260710174036_fase6_checkin_presenca.sql`) aplicada no banco. **Feito**, testado de ponta a ponta.

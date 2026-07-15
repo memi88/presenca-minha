@@ -45,11 +45,12 @@ export function PageHeader({ voltar, nome, atual }: Props) {
           </a>
           <div className={styles.topBarDireita}>
             <nav className={styles.navDesktop}>
-              <span
-                className={`${styles.navItemDesabilitado} ${atual === "conversa" ? styles.navItemAtual : ""}`}
+              <a
+                className={`${styles.navItem} ${atual === "conversa" ? styles.navItemAtual : ""}`}
+                href="/conversa"
               >
-                Conversa (em breve)
-              </span>
+                Conversa
+              </a>
               <a
                 className={`${styles.navItem} ${atual === "livro" ? styles.navItemAtual : ""}`}
                 href="/livro-vivo"

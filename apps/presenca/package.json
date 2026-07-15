@@ -12,6 +12,7 @@
     "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.111.0",
     "@presenca/supabase": "workspace:*",
     "@supabase/ssr": "latest",
     "next": "latest",

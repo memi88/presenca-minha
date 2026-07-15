@@ -6,10 +6,7 @@ const DESTINOS: Record<DestinoId, Destino> = {
   livro: { id: "livro", rota: "/livro-vivo", rotulo: "uma página do livro" },
   pratica: { id: "pratica", rota: "/meditacao", rotulo: "uma prática" },
   escrever: { id: "escrever", rota: "/diario", rotulo: "escrever algo" },
-  // Conversa ainda é stub (sem pipeline de IA) — sempre aparece, nunca
-  // clicável, nunca "em destaque" (não dá pra "continuar de onde parou"
-  // num lugar que não existe de verdade ainda).
-  conversar: { id: "conversar", rota: null, rotulo: "conversar (em breve)" },
+  conversar: { id: "conversar", rota: "/conversa", rotulo: "conversar" },
 };
 
 const ORDEM_CURIOSO: DestinoId[] = ["livro", "pratica", "escrever", "conversar"];
@@ -48,6 +45,8 @@ export function destinoIdDeUltimoDestino(ultimoDestino: string | null): DestinoI
     case "folego":
     case "meditacao":
       return "pratica";
+    case "conversa":
+      return "conversar";
     default:
       return null;
   }

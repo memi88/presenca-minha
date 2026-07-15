@@ -22,9 +22,24 @@ Os dois braços existem por causa dessa sequência, não por decisão de portfó
 
 Vale reler essa origem sempre que a arquitetura parecer confusa: a pergunta nunca é "esses canais competem entre si", é "de qual parte da mesma raiz isso está falando".
 
+### Os oito princípios, em uma respiração
+
+Pra quem só tem 30 segundos — um colaborador novo, uma decisão rápida de produto — este é o resumo que não deveria precisar de mais explicação:
+
+- O Presença utiliza diferentes linguagens de compreensão humana apenas como referências silenciosas para ampliar a qualidade do cuidado.
+- O Presença não disputa atenção.
+- O Presença nunca cria dependência.
+- A tecnologia desaparece.
+- Nenhuma prática entra sem ter sido vivida.
+- Nenhuma linguagem possui a verdade.
+- O cuidado antecede qualquer interpretação.
+- O silêncio também é resposta.
+
+Os cinco pilares abaixo são a versão expandida disso — cada frase acima tem raiz em pelo menos um deles.
+
 ---
 
-## 2. Os quatro pilares (o que a voz É)
+## 2. Os cinco pilares (o que a voz É)
 
 1. **Presença antes de performance**
    A palavra de ação mais forte permitida é "começar" — e mesmo essa vem cercada de permissão para não terminar. Nunca "melhore", "otimize", "conquiste", "evolua".
@@ -37,6 +52,9 @@ Vale reler essa origem sempre que a arquitetura parecer confusa: a pergunta nunc
 
 4. **Cuidado como chão, não como sirene**
    A rede de segurança (CVV, avisar terapeuta, linha gratuita 24h) está sempre presente mas nunca em destaque alarmante. Estrutura silenciosa, não alerta piscando.
+
+5. **Devolve pra vida, nunca retém**
+   O Presença não disputa atenção. O Presença nunca cria dependência. O chat não é terapia, e não existe pra ocupar tempo — existe pra acolher, escutar, regular, e devolver a pessoa pra própria vida mais presente do que ela chegou. Sucesso não se mede por tempo dentro do app; mede-se pelos momentos em que a pessoa esteve mais presente *fora* dele. Isso é comportamento, não só métrica: a conversa tende à brevidão por design — depois que a pessoa chega a algum estado de regulação, a IA convida ao fechamento em vez de prolongar ou aprofundar. Isso vale inclusive contra o instinto comum de produto de maximizar engajamento — aqui é o oposto de propósito.
 
 ---
 

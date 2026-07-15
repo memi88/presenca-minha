@@ -22,3 +22,24 @@ export async function podeCalcularEmbedding(
   }
   return data === true;
 }
+
+/**
+ * Rate limit por usuário nas chamadas de conversa (Claude Sonnet 5) — ver
+ * migration `rate_limit_conversa`. Mesmo espírito gracioso de
+ * `podeCalcularEmbedding` (libera se a própria checagem falhar, pra não
+ * travar quem está usando o app por causa de infra auxiliar) — mas aqui a
+ * consequência de liberar demais é bem mais cara por chamada (LLM de
+ * conversa, não embedding), então essa é uma escolha deliberada, não um
+ * padrão copiado sem pensar: vale revisitar pra fail-closed se o volume
+ * real do piloto mostrar abuso.
+ */
+export async function podeConversar(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+): Promise<boolean> {
+  const { data, error } = await supabase.rpc("pode_conversar");
+  if (error) {
+    console.error("podeConversar: falha ao checar rate limit", error);
+    return true;
+  }
+  return data === true;
+}

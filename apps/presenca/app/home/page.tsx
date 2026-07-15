@@ -151,7 +151,9 @@ export default async function Home() {
             {saudacao()}, {profile.nome}
           </p>
           <nav className={styles.navDesktop}>
-            <span className={styles.navItemDesabilitado}>Conversa (em breve)</span>
+            <a className={styles.navItem} href="/conversa">
+              Conversa
+            </a>
             <a className={styles.navItem} href="/livro-vivo">
               Livro Vivo
             </a>
@@ -206,7 +208,8 @@ export default async function Home() {
             const emDestaque = destino.id === destaqueId;
             const classe = emDestaque ? styles.pilulaDestaque : styles.pilula;
             if (!destino.rota) {
-              // Conversa ainda é stub — sempre presente, nunca clicável.
+              // Fallback pra um destino futuro sem rota ainda — hoje os 4
+              // destinos já têm rota real, nenhum cai aqui.
               return (
                 <span key={destino.id} className={`${classe} ${styles.pilulaDesabilitada}`}>
                   {destino.rotulo}
