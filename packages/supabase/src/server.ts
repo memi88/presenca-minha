@@ -35,8 +35,10 @@ export async function createClient() {
             }
           } catch {
             // Called from a Server Component that can't set cookies (no
-            // active response) — safe to ignore when middleware also
-            // refreshes the session.
+            // active response) — safe to ignore, já que a sessão é
+            // refrescada de qualquer forma pelo getUser() de cada Server
+            // Component/Route Handler a cada request (o app não usa
+            // middleware.ts).
           }
         },
       },

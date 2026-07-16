@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@presenca/supabase/server";
 
 import { PageHeader } from "../PageHeader";
-import { sair } from "./actions";
+import { SairButton } from "./SairButton";
 import styles from "./page.module.css";
 
 function formatarNascimento(data: string, hora: string | null, local: string | null): string {
@@ -87,11 +87,7 @@ export default async function Perfil() {
           )}
         </div>
 
-        <form action={sair}>
-          <button className={styles.sair} type="submit">
-            sair
-          </button>
-        </form>
+        <SairButton anonimo={user.is_anonymous === true} />
       </div>
     </main>
   );

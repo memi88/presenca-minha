@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
-export type LoginState = { erro?: string; recuperacaoEnviada?: boolean };
+export type LoginState = { erro?: string; recuperacaoEnviada?: boolean; linkMagicoEnviado?: boolean };
 
 export async function entrarComSenha(_prev: LoginState, formData: FormData): Promise<LoginState> {
   const email = String(formData.get("email") ?? "").trim();
@@ -43,4 +43,21 @@ export async function enviarLinkRecuperacao(_prev: LoginState, formData: FormDat
   await supabase.auth.resetPasswordForEmail(email);
 
   return { recuperacaoEnviada: true };
+}
+
+export async function enviarLinkMagico(_prev: LoginState, formData: FormData): Promise<LoginState> {
+  const email = String(formData.get("email") ?? "").trim();
+  if (!email) {
+    return { erro: "Digite seu e-mail." };
+  }
+
+  const supabase = await createClient();
+  // Mesmo motivo de não tratar erro em enviarLinkRecuperacao: a resposta é
+  // sempre a mesma, pra não confirmar se aquele e-mail tem conta ou não.
+  await supabase.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback` },
+  });
+
+  return { linkMagicoEnviado: true };
 }

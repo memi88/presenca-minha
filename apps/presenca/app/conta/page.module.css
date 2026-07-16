@@ -66,6 +66,30 @@
   cursor: default;
 }
 
+.separador {
+  text-align: center;
+  margin: 20px 0;
+  font: italic 400 13px/1 var(--font-spectral), serif;
+  color: var(--text-faint);
+}
+
+.ctaSecundario {
+  width: 100%;
+  background: none;
+  color: var(--text);
+  font: 500 clamp(17px, 1vw, 18px) / 1 var(--font-spectral), serif;
+  padding: clamp(16px, 1.1vw, 19px);
+  border-radius: 30px;
+  text-align: center;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.ctaSecundario:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 .agoraNao {
   display: block;
   text-align: center;
