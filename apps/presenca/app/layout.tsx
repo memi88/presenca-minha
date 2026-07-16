@@ -15,7 +15,7 @@ const spectral = Spectral({
 export const metadata: Metadata = {
   title: "Presença",
   description:
-    "Presença é um espaço digital de bem-estar emocional: diário guiado, conversas com IA, meditações e práticas de respiração, com a opção de compartilhar o acompanhamento com seu terapeuta.",
+    "Presença é um espaço digital de bem-estar emocional e autoconhecimento — um diário guiado pra registrar sua jornada, podendo ser uma jornada acompanhada por quem já cuida de você.",
 };
 
 export default function RootLayout({

@@ -32,9 +32,8 @@ export default async function MarketingHome() {
             para se encontrar.
           </h1>
           <p className={styles.heroTexto}>
-            Presença é um espaço digital de bem-estar emocional — com diário guiado, conversas com IA,
-            meditações e práticas de respiração — para quem deseja cultivar mais presença no dia a dia,
-            com a opção de compartilhar esse acompanhamento com seu terapeuta.
+            Presença é um espaço digital de bem-estar emocional e autoconhecimento — um diário guiado pra
+            registrar sua jornada, podendo ser uma jornada acompanhada por quem já cuida de você.
           </p>
           <div className={styles.heroCtas}>
             <a className={styles.ctaPreenchido} href="/para-voce">
