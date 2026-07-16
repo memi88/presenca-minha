@@ -15,7 +15,7 @@ export default async function Nascimento() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("nome, data_nascimento, hora_nascimento, local_nascimento")
+    .select("nome, data_nascimento, hora_nascimento, local_nascimento, nascimento_latitude, nascimento_longitude")
     .eq("id", user.id)
     .maybeSingle();
   if (!profile?.nome) redirect("/chegada");
@@ -34,6 +34,8 @@ export default async function Nascimento() {
           data={profile.data_nascimento}
           hora={profile.hora_nascimento}
           local={profile.local_nascimento}
+          latitude={profile.nascimento_latitude}
+          longitude={profile.nascimento_longitude}
         />
       </div>
     </main>

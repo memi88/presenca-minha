@@ -30,6 +30,45 @@
   margin-bottom: 14px;
 }
 
+.autocompleteWrapper {
+  position: relative;
+}
+
+.sugestoes {
+  position: absolute;
+  z-index: 2;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(90, 60, 20, 0.1);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.sugestao,
+.sugestaoAtiva {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font: 400 14px/1.3 var(--font-spectral), serif;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.sugestaoAtiva {
+  background: var(--bg);
+}
+
 .rotulo {
   display: block;
   font: 300 12px/1 var(--font-spectral), serif;
