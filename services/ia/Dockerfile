@@ -2,6 +2,12 @@ FROM python:3.13-slim
 
 WORKDIR /app
 
+# pyswisseph não tem wheel pré-compilada pra essa combinação de plataforma/
+# Python — pip precisa compilar a extensão C na hora do build, o que exige
+# um compilador (a imagem slim não vem com um).
+RUN apt-get update && apt-get install -y --no-install-recommends gcc \
+    && rm -rf /var/lib/apt/lists/*
+
 # CPU-only wheel do torch — o build padrão do PyPI inclui suporte CUDA que
 # não serve pra nada em Render/Railway (sem GPU) e infla a imagem em vários
 # GB à toa.
