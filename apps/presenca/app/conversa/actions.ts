@@ -15,7 +15,7 @@ import { podeCalcularEmbedding } from "@/lib/rateLimit";
  * `criarEntrada` em app/diario/actions.ts. A conversa em si nunca é
  * persistida; só o que a pessoa escolhe guardar vira registro permanente.
  */
-export async function guardarNoDiario(conteudo: string) {
+export async function guardarNoDiario(conteudo: string, compartilhar: boolean = false) {
   const texto = conteudo.trim();
   if (!texto) return;
 
@@ -27,7 +27,7 @@ export async function guardarNoDiario(conteudo: string) {
 
   const { data: entrada, error } = await supabase
     .from("caderno_entradas")
-    .insert({ paciente_id: user.id, autor_tipo: "usuario", tipo: "reflexao", conteudo: texto })
+    .insert({ paciente_id: user.id, autor_tipo: "usuario", tipo: "reflexao", conteudo: texto, compartilhar })
     .select("id")
     .single();
   if (error) {

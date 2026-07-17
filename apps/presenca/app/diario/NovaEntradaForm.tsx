@@ -5,7 +5,7 @@ import { useActionState, useRef } from "react";
 import { criarEntrada } from "./actions";
 import styles from "./page.module.css";
 
-export function NovaEntradaForm() {
+export function NovaEntradaForm({ temProfissional }: { temProfissional: boolean }) {
   const [state, action, pending] = useActionState(criarEntrada, {});
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -23,6 +23,12 @@ export function NovaEntradaForm() {
         placeholder="o que você quer guardar hoje…"
         required
       />
+      {temProfissional && (
+        <label className={styles.compartilharLabel}>
+          <input type="checkbox" name="compartilhar" />
+          também compartilhar com meu terapeuta
+        </label>
+      )}
       <div>
         <button className={styles.cta} type="submit" disabled={pending}>
           guardar

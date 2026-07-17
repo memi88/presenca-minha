@@ -244,6 +244,30 @@
   color: var(--accent);
 }
 
+.compartilhar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: italic 400 12.5px/1 var(--font-spectral), serif;
+  color: var(--text-link-muted);
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.compartilharAtivo {
+  color: var(--accent);
+}
+
+.compartilharLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 400 13px/1.4 var(--font-spectral), serif;
+  color: var(--text-muted);
+  margin: 4px 0;
+}
+
 .apagar {
   font: 400 12px/1 var(--font-spectral), serif;
   color: var(--text-faint);

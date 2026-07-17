@@ -18,7 +18,7 @@ type LinhaStream =
 
 const SEGUNDOS_ATE_REDIRECT = 5;
 
-export function ConversaExperiencia() {
+export function ConversaExperiencia({ temProfissional }: { temProfissional: boolean }) {
   const [mensagens, setMensagens] = useState<Mensagem[]>([]);
   const [texto, setTexto] = useState("");
   const [enviando, setEnviando] = useState(false);
@@ -108,7 +108,7 @@ export function ConversaExperiencia() {
   }
 
   if (tela === "fechamento") {
-    return <TelaFechamento onContinuar={() => setTela("chat")} />;
+    return <TelaFechamento onContinuar={() => setTela("chat")} temProfissional={temProfissional} />;
   }
 
   const aguardandoPrimeiroToken = enviando && mensagens.at(-1)?.content === "";
@@ -211,8 +211,15 @@ function CardTransicaoRisco() {
  * memória (a conversa em si nunca é persistida, mas o estado do
  * componente continua vivo enquanto a pessoa não sair de /conversa).
  */
-function TelaFechamento({ onContinuar }: { onContinuar: () => void }) {
+function TelaFechamento({
+  onContinuar,
+  temProfissional,
+}: {
+  onContinuar: () => void;
+  temProfissional: boolean;
+}) {
   const [palavra, setPalavra] = useState("");
+  const [compartilhar, setCompartilhar] = useState(false);
   const [salvando, setSalvando] = useState(false);
 
   async function encerrar() {
@@ -220,7 +227,7 @@ function TelaFechamento({ onContinuar }: { onContinuar: () => void }) {
     setSalvando(true);
     const texto = palavra.trim();
     if (texto) {
-      await guardarNoDiario(texto);
+      await guardarNoDiario(texto, compartilhar);
     }
     window.location.href = "/home";
   }
@@ -238,6 +245,17 @@ function TelaFechamento({ onContinuar }: { onContinuar: () => void }) {
         placeholder="uma palavra…"
         disabled={salvando}
       />
+      {temProfissional && (
+        <label className={styles.fechamentoCompartilhar}>
+          <input
+            type="checkbox"
+            checked={compartilhar}
+            onChange={(e) => setCompartilhar(e.target.checked)}
+            disabled={salvando}
+          />
+          compartilhar esse registro com meu terapeuta
+        </label>
+      )}
       <button className={styles.ctaContornado} type="button" onClick={encerrar} disabled={salvando}>
         encerrar por hoje
       </button>

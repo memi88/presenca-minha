@@ -37,13 +37,23 @@ export default async function DetalhePaciente({ params }: { params: Promise<{ id
     .maybeSingle();
   if (!paciente) notFound();
 
-  const [{ data: entradas }, { data: ultimoAlerta }] = await Promise.all([
+  const [{ data: entradas }, { data: compartilhadas }, { data: ultimoAlerta }] = await Promise.all([
     supabase
       .from("caderno_entradas")
       .select("id, tipo, conteudo, created_at")
       .eq("paciente_id", id)
       .eq("autor_tipo", "profissional")
       .eq("autor_profissional_id", profissional.id)
+      .order("created_at", { ascending: false }),
+    // RLS já restringe isso ao profissional certo (só vê o que o paciente
+    // marcou compartilhar E tem vínculo ativo) — o filtro explícito aqui é
+    // só consistência com a query vizinha, não uma proteção adicional.
+    supabase
+      .from("caderno_entradas")
+      .select("id, tipo, conteudo, created_at")
+      .eq("paciente_id", id)
+      .eq("autor_tipo", "usuario")
+      .eq("compartilhar", true)
       .order("created_at", { ascending: false }),
     supabase
       .from("alertas_risco")
@@ -70,6 +80,17 @@ export default async function DetalhePaciente({ params }: { params: Promise<{ id
       )}
 
       <EntradaForm pacienteId={id} />
+
+      <div className={styles.historico}>
+        <p className={styles.historicoTitulo}>o que {paciente.nome} compartilhou com você</p>
+        {!compartilhadas?.length && <p className={styles.vazio}>nada compartilhado ainda.</p>}
+        {compartilhadas?.map((entrada) => (
+          <div key={entrada.id} className={styles.entrada}>
+            <p className={styles.entradaTipo}>{rotuloTipo[entrada.tipo] ?? entrada.tipo}</p>
+            <p className={styles.entradaConteudo}>{entrada.conteudo}</p>
+          </div>
+        ))}
+      </div>
 
       <div className={styles.historico}>
         <p className={styles.historicoTitulo}>o que você já escreveu</p>

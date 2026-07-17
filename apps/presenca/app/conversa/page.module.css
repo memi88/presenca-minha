@@ -289,6 +289,16 @@
   color: #b3a488;
 }
 
+.fechamentoCompartilhar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font: 400 13px/1.4 var(--font-spectral), serif;
+  color: #7a6a52;
+  margin-bottom: 12px;
+}
+
 .ctaContornado {
   width: 100%;
   border: 1.5px solid var(--accent-strong);

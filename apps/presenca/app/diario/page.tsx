@@ -16,16 +16,18 @@ export default async function Diario() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("nome")
+    .select("nome, profissional_id")
     .eq("id", user.id)
     .maybeSingle();
   if (!profile?.nome) redirect("/chegada");
+
+  const temProfissional = !!profile.profissional_id;
 
   const [{ data: entradas }] = await Promise.all([
     supabase
       .from("caderno_entradas")
       .select(
-        "id, autor_tipo, conteudo, revisitar, created_at, tipo, biblioteca_ref_id, conexao_conteudo, profissionais:autor_profissional_id(nome)",
+        "id, autor_tipo, conteudo, revisitar, compartilhar, created_at, tipo, biblioteca_ref_id, conexao_conteudo, profissionais:autor_profissional_id(nome)",
       )
       .eq("paciente_id", user.id)
       .order("created_at", { ascending: false }),
@@ -43,7 +45,7 @@ export default async function Diario() {
 
       <div className={styles.colunas}>
         <div className={styles.colunaEscrever}>
-          <NovaEntradaForm />
+          <NovaEntradaForm temProfissional={temProfissional} />
           <p className={styles.legenda}>sem contagem, sem meta — só você</p>
         </div>
 
@@ -52,7 +54,11 @@ export default async function Diario() {
           <div className={styles.lista}>
             {!entradas?.length && <p className={styles.vazio}>Ainda não há nada guardado aqui.</p>}
             {entradas?.map((entrada) => (
-              <EntradaItem key={entrada.id} entrada={entrada as unknown as Entrada} />
+              <EntradaItem
+                key={entrada.id}
+                entrada={entrada as unknown as Entrada}
+                temProfissional={temProfissional}
+              />
             ))}
           </div>
         </div>

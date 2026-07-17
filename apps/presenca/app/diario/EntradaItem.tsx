@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 
-import { alternarRevisitar, apagarEntrada } from "./actions";
+import { alternarCompartilhar, alternarRevisitar, apagarEntrada } from "./actions";
 import styles from "./page.module.css";
 
 export type Entrada = {
@@ -10,6 +10,7 @@ export type Entrada = {
   autor_tipo: "usuario" | "profissional";
   conteudo: string;
   revisitar: boolean;
+  compartilhar: boolean;
   created_at: string;
   tipo: string | null;
   biblioteca_ref_id: string | null;
@@ -25,7 +26,7 @@ function trecho(texto: string): string {
   return texto.length > TRECHO_MAX ? `${texto.slice(0, TRECHO_MAX).trim()}…` : texto;
 }
 
-export function EntradaItem({ entrada }: { entrada: Entrada }) {
+export function EntradaItem({ entrada, temProfissional }: { entrada: Entrada; temProfissional: boolean }) {
   const [, startTransition] = useTransition();
   const ehProfissional = entrada.autor_tipo === "profissional";
 
@@ -59,6 +60,15 @@ export function EntradaItem({ entrada }: { entrada: Entrada }) {
             >
               {entrada.revisitar ? "revisitar ✓" : "revisitar"}
             </button>
+            {temProfissional && (
+              <button
+                type="button"
+                className={`${styles.compartilhar} ${entrada.compartilhar ? styles.compartilharAtivo : ""}`}
+                onClick={() => startTransition(() => alternarCompartilhar(entrada.id, entrada.compartilhar))}
+              >
+                {entrada.compartilhar ? "compartilhado ✓" : "compartilhar com terapeuta"}
+              </button>
+            )}
             <button
               type="button"
               className={styles.apagar}

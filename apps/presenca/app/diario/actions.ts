@@ -17,6 +17,7 @@ export async function criarEntrada(
 ): Promise<CriarEntradaState> {
   const conteudo = String(formData.get("conteudo") ?? "").trim();
   if (!conteudo) return { erro: "Escreva alguma coisa antes de guardar." };
+  const compartilhar = formData.get("compartilhar") === "on";
 
   const supabase = await createClient();
   const {
@@ -26,7 +27,7 @@ export async function criarEntrada(
 
   const { data: entrada, error } = await supabase
     .from("caderno_entradas")
-    .insert({ paciente_id: user.id, autor_tipo: "usuario", conteudo })
+    .insert({ paciente_id: user.id, autor_tipo: "usuario", conteudo, compartilhar })
     .select("id")
     .single();
   if (error) return { erro: error.message };
@@ -79,6 +80,17 @@ export async function alternarRevisitar(id: string, valorAtual: boolean) {
   if (!user) redirect("/");
 
   await supabase.from("caderno_entradas").update({ revisitar: !valorAtual }).eq("id", id);
+  revalidatePath("/diario");
+}
+
+export async function alternarCompartilhar(id: string, valorAtual: boolean) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/");
+
+  await supabase.from("caderno_entradas").update({ compartilhar: !valorAtual }).eq("id", id);
   revalidatePath("/diario");
 }
 
