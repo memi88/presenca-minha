@@ -77,12 +77,8 @@ export default async function Home() {
     profile.streak_atualizado_em,
     new Date(),
   );
-  const mostrarConviteNascimento =
-    streak >= DIAS_PARA_CONVITE_NASCIMENTO &&
-    !profile.data_nascimento &&
-    (!profile.lembrete_nascimento_em || new Date(profile.lembrete_nascimento_em) <= new Date());
 
-  const [{ data: ultimaEntrada }, { data: entradasRevisitar }] = await Promise.all([
+  const [{ data: ultimaEntrada }, { data: entradasRevisitar }, { data: entradaPropria }] = await Promise.all([
     supabase
       .from("caderno_entradas")
       .select("autor_tipo, tipo")
@@ -99,10 +95,26 @@ export default async function Home() {
           .eq("revisitar", true)
           .limit(1)
           .maybeSingle(),
+    supabase
+      .from("caderno_entradas")
+      .select("id")
+      .eq("paciente_id", user.id)
+      .eq("autor_tipo", "usuario")
+      .limit(1)
+      .maybeSingle(),
   ]);
 
   const perguntaEmAberto = ultimaEntrada?.autor_tipo === "profissional" && ultimaEntrada?.tipo === "pergunta";
   const temRevisitar = !!entradasRevisitar;
+
+  // Gatilho de nascimento: streak de 3 dias OU já escreveu ao menos uma
+  // entrada própria no Diário, o que vier primeiro — sinal de que a pessoa
+  // já está investindo em refletir, então o convite de personalizar cai
+  // natural, em vez de mais fricção logo no cadastro.
+  const mostrarConviteNascimento =
+    (streak >= DIAS_PARA_CONVITE_NASCIMENTO || !!entradaPropria) &&
+    !profile.data_nascimento &&
+    (!profile.lembrete_nascimento_em || new Date(profile.lembrete_nascimento_em) <= new Date());
 
   // As três categorias que decidem o menu — nunca rotulam a pessoa de
   // volta, só escolhem qual convite mostrar (PRD §7).
