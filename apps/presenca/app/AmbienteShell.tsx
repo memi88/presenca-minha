@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 import styles from "./AmbienteShell.module.css";
@@ -16,6 +17,16 @@ function ambienteDaRota(pathname: string): "claro" | "escuro" {
 export function AmbienteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const ambiente = ambienteDaRota(pathname);
+
+  // Registra o service worker mínimo (public/sw.js) — sem ele, o Chrome
+  // nunca dispara beforeinstallprompt (InstalarPWABanner.tsx fica sem
+  // botão, só a instrução manual de iOS). Roda uma vez só: este componente
+  // não desmonta entre navegações (só o pathname muda a key da div interna).
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
+    }
+  }, []);
 
   return (
     <div className={styles.fundo}>
