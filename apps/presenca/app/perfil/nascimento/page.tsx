@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@presenca/supabase/server";
 
 import { PageHeader } from "../../PageHeader";
+import { salvarNascimento } from "./actions";
 import { NascimentoForm } from "./NascimentoForm";
 import styles from "./page.module.css";
 
@@ -36,6 +37,7 @@ export default async function Nascimento() {
           local={profile.local_nascimento}
           latitude={profile.nascimento_latitude}
           longitude={profile.nascimento_longitude}
+          action={salvarNascimento}
         />
       </div>
     </main>
