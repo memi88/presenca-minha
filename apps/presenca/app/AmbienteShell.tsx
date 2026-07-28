@@ -7,7 +7,7 @@ import styles from "./AmbienteShell.module.css";
 
 // Mapeamento fixo por tela (PRD seção 6) — Livro Vivo, Meditação (+ Fôlego,
 // sua prática interativa) e Diário são os "cômodos escuros".
-const PREFIXOS_ESCUROS = ["/livro-vivo", "/meditacao", "/folego", "/diario"];
+const PREFIXOS_ESCUROS = ["/livro-vivo", "/praticas", "/folego", "/diario"];
 
 function ambienteDaRota(pathname: string): "claro" | "escuro" {
   const escuro = PREFIXOS_ESCUROS.some((p) => pathname === p || pathname.startsWith(`${p}/`));

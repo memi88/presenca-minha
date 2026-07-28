@@ -133,9 +133,6 @@ export default async function Home() {
   }
   const destaqueId = ordemIds[0];
   const destinos = listaDestinos(ordemIds);
-  // listaDestinos(ordemIds) sempre recebe os 4 ids (ordemPorMood/ordemComDestaque
-  // nunca retornam menos que isso) — index sempre em bounds.
-  const destinoPrincipal = destinos[0]!;
 
   await supabase
     .from("profiles")
@@ -172,7 +169,7 @@ export default async function Home() {
             <a className={styles.navItem} href="/diario">
               Diário
             </a>
-            <a className={styles.navItem} href="/meditacao">
+            <a className={styles.navItem} href="/praticas">
               Práticas
             </a>
           </nav>
@@ -236,21 +233,6 @@ export default async function Home() {
           })}
         </div>
 
-        {/* Desktop: o nav do topo já dá acesso direto aos 4 destinos, então
-            aqui vira só a recomendação em si — uma única opção (o destino
-            em destaque), sem repetir os 4 pills do mobile. */}
-        <div className={styles.recomendacaoDesktop}>
-          {destinoPrincipal.rota ? (
-            <a className={styles.pilulaDestaque} href={destinoPrincipal.rota}>
-              {destinoPrincipal.rotulo}
-            </a>
-          ) : (
-            <span className={`${styles.pilulaDestaque} ${styles.pilulaDesabilitada}`}>
-              {destinoPrincipal.rotulo}
-            </span>
-          )}
-        </div>
-
         <div className={styles.links}>
           {temRevisitar && (
             <a className={styles.linkSecundario} href="/diario">
@@ -261,9 +243,6 @@ export default async function Home() {
               exige que nunca suma, nem no estado "confuso". */}
           <a className={styles.linkSecundario} href="/recursos">
             recursos de cuidado →
-          </a>
-          <a className={`${styles.linkSecundario} ${styles.linkPerfilMobile}`} href="/perfil">
-            seu perfil →
           </a>
         </div>
       </div>

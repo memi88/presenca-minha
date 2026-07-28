@@ -34,5 +34,5 @@ export async function guardarPratica(bibliotecaId: string) {
     embedding,
   });
 
-  revalidatePath(`/meditacao/${bibliotecaId}`);
+  revalidatePath(`/praticas/${bibliotecaId}`);
 }

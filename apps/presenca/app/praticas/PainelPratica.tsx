@@ -9,7 +9,7 @@ const SLUGS_INTERATIVOS: Record<string, string> = {
 };
 
 export function rotaDePratica(pratica: ItemPratica): string {
-  return (pratica.slug && SLUGS_INTERATIVOS[pratica.slug]) || `/meditacao/${pratica.id}`;
+  return (pratica.slug && SLUGS_INTERATIVOS[pratica.slug]) || `/praticas/${pratica.id}`;
 }
 
 type Props = {
@@ -20,21 +20,56 @@ type Props = {
   jaGuardada: boolean;
 };
 
-// Dois painéis sempre visíveis no desktop (lista + prática lado a lado,
-// igual ao mockup) — mesmo padrão do PainelLeitura (Livro Vivo). Fôlego é a
-// única prática interativa hoje: em vez de embutir o círculo de respiração
-// aqui dentro, o painel de conteúdo mostra só um convite pra abrir a
-// experiência de tela cheia em /folego. `praticaAtiva` só vem preenchida
-// vindo de `/meditacao/[id]` — a rota de lista pura nunca pré-seleciona.
-export function PainelPratica({ variante, nome, praticas, praticaAtiva, jaGuardada }: Props) {
-  const rotaAtiva = praticaAtiva ? rotaDePratica(praticaAtiva) : null;
-  const interativa = rotaAtiva === "/folego";
-  const paragrafos =
-    praticaAtiva && !interativa ? praticaAtiva.conteudo.split(/\n{2,}/).filter(Boolean) : [];
-  const varianteClasse = variante === "detalhe" ? styles.varianteDetalhe : styles.varianteLista;
+// Estado de seleção (nenhuma prática ativa) — coluna única centralizada na
+// tela, título grande, cada prática como card clicável. Sem texto de apoio:
+// o item disponível é o elemento dominante da tela. `.listaGrande` já
+// aceita 1 ou N itens sem quebrar visualmente — quando o catálogo passar de
+// ~3-4 práticas, isso migra pra um padrão de lista/grade com ordenação por
+// recomendação (não implementado ainda, ver instruções de UX).
+function TelaSelecao({ nome, praticas }: { nome: string; praticas: ItemPratica[] }) {
+  return (
+    <main className={styles.scene}>
+      <PageHeader nome={nome} atual="pratica" voltar={{ href: "/home", label: "← voltar" }} />
+      <div className={styles.selecaoCentro}>
+        <p className={styles.eyebrow}>Práticas</p>
+        <h1 className={styles.tituloSelecao}>
+          Pequenas práticas,{" "}
+          <br className={styles.quebra} />à vontade.
+        </h1>
+        <p className={styles.subtitulo}>escolha pelo tempo que você tem</p>
+
+        <div className={styles.listaGrande}>
+          {praticas.map((pratica) => (
+            <a key={pratica.id} href={rotaDePratica(pratica)} className={styles.itemGrande}>
+              <span className={styles.itemGrandeIcone} aria-hidden="true" />
+              <span className={styles.itemGrandeTitulo}>{pratica.titulo}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </main>
+  );
+}
+
+// Dois painéis lado a lado no desktop (lista + prática, igual ao Livro
+// Vivo) — só existe quando já há uma prática ativa; o estado de escolha
+// (nada selecionado ainda) é a TelaSelecao acima, não este componente.
+function TelaDetalhe({
+  nome,
+  praticas,
+  praticaAtiva,
+  jaGuardada,
+}: {
+  nome: string;
+  praticas: ItemPratica[];
+  praticaAtiva: ItemPratica;
+  jaGuardada: boolean;
+}) {
+  const interativa = rotaDePratica(praticaAtiva) === "/folego";
+  const paragrafos = !interativa ? praticaAtiva.conteudo.split(/\n{2,}/).filter(Boolean) : [];
 
   return (
-    <main className={`${styles.scene} ${varianteClasse}`}>
+    <main className={styles.scene}>
       <PageHeader nome={nome} atual="pratica" voltar={{ href: "/home", label: "← voltar" }} />
       <div className={styles.duasColunas}>
         <div className={styles.painelLista}>
@@ -47,7 +82,7 @@ export function PainelPratica({ variante, nome, praticas, praticaAtiva, jaGuarda
 
           <div className={styles.lista}>
             {praticas.map((pratica) => {
-              const ativa = pratica.id === praticaAtiva?.id;
+              const ativa = pratica.id === praticaAtiva.id;
               return (
                 <a
                   key={pratica.id}
@@ -63,11 +98,9 @@ export function PainelPratica({ variante, nome, praticas, praticaAtiva, jaGuarda
         </div>
 
         <div className={styles.painelConteudo}>
-          {!praticaAtiva ? (
-            <p className={styles.convite}>escolha uma prática ao lado.</p>
-          ) : interativa ? (
+          {interativa ? (
             <>
-              <a className={styles.voltarMobileDetalhe} href="/meditacao">
+              <a className={styles.voltarMobileDetalhe} href="/praticas">
                 ‹ Práticas
               </a>
               <div className={styles.cartaoInterativo}>
@@ -80,7 +113,7 @@ export function PainelPratica({ variante, nome, praticas, praticaAtiva, jaGuarda
             </>
           ) : (
             <>
-              <a className={styles.voltarMobileDetalhe} href="/meditacao">
+              <a className={styles.voltarMobileDetalhe} href="/praticas">
                 ‹ Práticas
               </a>
               <h2 className={styles.tituloLeitura}>{praticaAtiva.titulo}</h2>
@@ -108,4 +141,9 @@ export function PainelPratica({ variante, nome, praticas, praticaAtiva, jaGuarda
       </div>
     </main>
   );
+}
+
+export function PainelPratica({ nome, praticas, praticaAtiva, jaGuardada }: Props) {
+  if (!praticaAtiva) return <TelaSelecao nome={nome} praticas={praticas} />;
+  return <TelaDetalhe nome={nome} praticas={praticas} praticaAtiva={praticaAtiva} jaGuardada={jaGuardada} />;
 }
