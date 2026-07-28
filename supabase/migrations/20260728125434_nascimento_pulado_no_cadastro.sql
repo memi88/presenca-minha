@@ -1,0 +1,11 @@
+-- Convite de nascimento agora também aparece como modal logo após o
+-- cadastro (app/chegada), além do banner existente em /home que já usava
+-- `lembrete_nascimento_em`. Esta coluna registra quando a pessoa clica
+-- "pular por enquanto" nesse modal — não bloqueia nada, é só um sinal pra
+-- medir quantas pessoas recusam informar os dados nessa primeira
+-- oportunidade (o banner em /home continua podendo convidar de novo depois,
+-- ver DIAS_PARA_CONVITE_NASCIMENTO em app/home/page.tsx).
+--
+-- Sem policy nova: a policy já existente "usuário lê e edita o próprio
+-- perfil" (auth.uid() = id, for all) em `profiles` já cobre.
+alter table profiles add column if not exists nascimento_pulado_no_cadastro_em timestamptz;

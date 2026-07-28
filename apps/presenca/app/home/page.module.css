@@ -46,9 +46,9 @@
   min-width: 0;
 }
 
-/* Nav + menu de perfil ficam juntos do lado direito (igual ao mockup) —
-   no mobile isso não muda nada visualmente, já que .navDesktop some e só
-   o .menuAvatar aparece. */
+/* Nav + avatar ficam juntos do lado direito (igual ao mockup) — no mobile
+   .navDesktop some e sobra saudação + avatar; no desktop a saudação
+   também some (migra pra .greetingDesktop lá embaixo) e sobra nav + avatar. */
 .topBarDireita {
   display: flex;
   align-items: center;
@@ -170,9 +170,11 @@
 /* Avatar com a inicial do nome — abre /perfil (dados da conta, vínculo com
    profissional, data de nascimento). Era um ícone de 3 pontos decorativo
    até a Fase 5/6 existirem; agora que /perfil é uma tela real, a inicial
-   comunica melhor "isso é você" do que pontinhos genéricos. */
+   comunica melhor "isso é você" do que pontinhos genéricos. Visível em
+   qualquer largura — mesmo tratamento no mobile e no desktop, em vez de um
+   link de texto separado enterrado lá embaixo (ver .linkSecundario). */
 .menuAvatar {
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   flex: none;
@@ -183,12 +185,6 @@
   color: #8a6320;
   font: 600 13px/1 var(--font-spectral), serif;
   text-decoration: none;
-}
-
-@media (min-width: 960px) {
-  .menuAvatar {
-    display: flex;
-  }
 }
 
 /* Convite gentil de conversão (Fase 1 expandida) — nunca insiste, só adia. */
@@ -304,27 +300,23 @@
   gap: 10px;
 }
 
-/* Desktop: o nav do topo já dá acesso direto aos 4 destinos — aqui vira só
-   a recomendação em si (1 CTA + 1 link), sem repetir os pills do mobile. */
-.recomendacaoDesktop {
-  display: none;
-}
-
 @media (min-width: 960px) {
+  /* Mesmas 4 pílulas do mobile, só reorganizadas em linha — o nav do topo
+     é um atalho adicional, não substitui essas ações (paridade real de
+     ações entre desktop/mobile, não só rota alternativa). */
   .pilulas {
-    display: none;
-  }
-
-  .recomendacaoDesktop {
-    display: flex;
-    align-items: center;
-    gap: 24px;
+    flex-direction: row;
     flex-wrap: wrap;
+    gap: 16px;
   }
 
-  .recomendacaoDesktop .pilulaDestaque {
-    display: inline-block;
-    padding: 18px 44px;
+  .pilula,
+  .pilulaDestaque {
+    flex: 1 1 220px;
+  }
+
+  .pilulaDestaque {
+    padding: 18px 28px;
     font-size: 16px;
   }
 
@@ -383,11 +375,4 @@
   color: rgba(255, 255, 255, 0.9);
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
   text-decoration: none;
-}
-
-/* Só no mobile — no desktop o avatar (.menuAvatar) já dá acesso a /perfil. */
-@media (min-width: 960px) {
-  .linkPerfilMobile {
-    display: none;
-  }
 }

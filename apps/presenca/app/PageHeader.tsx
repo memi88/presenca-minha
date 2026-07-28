@@ -65,7 +65,7 @@ export function PageHeader({ voltar, nome, atual }: Props) {
               </a>
               <a
                 className={`${styles.navItem} ${atual === "pratica" ? styles.navItemAtual : ""}`}
-                href="/meditacao"
+                href="/praticas"
               >
                 Práticas
               </a>

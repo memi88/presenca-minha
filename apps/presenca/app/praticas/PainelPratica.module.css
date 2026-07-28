@@ -1,7 +1,13 @@
 /* Ambiente escuro (PRD seção 6) — data-ambiente="escuro" é setado pelo
-   AmbienteShell pra esta rota (e /meditacao/[id]). Mesmo padrão de dois
-   painéis do Livro Vivo (ver PainelLeitura.module.css). */
+   AmbienteShell pra esta rota (e /praticas/[id]). Mesmo padrão de dois
+   painéis do Livro Vivo (ver PainelLeitura.module.css) quando há uma
+   prática ativa; sem seleção, é a TelaSelecao (coluna única centralizada,
+   ver .selecaoCentro) — por isso .scene precisa ser flex column, pra
+   `.selecaoCentro` conseguir se centralizar verticalmente no espaço que
+   sobra abaixo do header. */
 .scene {
+  display: flex;
+  flex-direction: column;
   min-height: 100dvh;
   background: var(--bg);
   padding: 32px 24px 64px;
@@ -10,31 +16,22 @@
 .duasColunas {
   position: relative;
   z-index: 1;
-  max-width: clamp(1000px, 82vw, 1200px);
+  max-width: clamp(1000px, 82vw, 1360px);
   margin: 0 auto;
 }
 
+/* Painéis do estado "detalhe" (prática ativa) — mobile mostra só o
+   conteúdo (a lista completa fica a um toque em "‹ Práticas"); desktop
+   mostra os dois lado a lado (ver media query abaixo). */
 .painelLista {
-  display: block;
+  display: none;
 }
 
 .painelConteudo {
-  display: none;
-}
-
-.varianteDetalhe .painelLista {
-  display: none;
-}
-
-.varianteDetalhe .painelConteudo {
   display: block;
 }
 
 .voltarMobileDetalhe {
-  display: none;
-}
-
-.varianteDetalhe .voltarMobileDetalhe {
   display: inline-block;
   margin-bottom: 18px;
   font: 400 13px/1 var(--font-spectral), serif;
@@ -122,7 +119,7 @@
 }
 
 .paragrafo {
-  font: italic 400 clamp(18px, 1.2vw, 20px) / 1.7 var(--font-spectral), serif;
+  font: 400 clamp(18px, 1.2vw, 20px) / 1.7 var(--font-spectral), serif;
   color: var(--text);
   margin-bottom: 18px;
 }
@@ -174,12 +171,77 @@
   color: var(--text-subtle);
 }
 
-/* Estado vazio do painel de conteúdo — /meditacao (lista pura) nunca
-   pré-seleciona uma prática; só /meditacao/[id] (ou /folego) mostra
-   conteúdo real. */
-.convite {
-  font: italic 400 15px/1.5 var(--font-spectral), serif;
-  color: var(--text-faint);
+/* TelaSelecao — coluna única centralizada na tela (vertical e
+   horizontalmente) enquanto nada foi escolhido ainda. flex:1 dentro do
+   .scene (flex column) é o que permite o justify-content:center abaixo. */
+.selecaoCentro {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.tituloSelecao {
+  font: italic 400 clamp(34px, 4vw, 52px) / 1.15 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.listaGrande {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.itemGrande {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: clamp(20px, 2.5vw, 26px) clamp(22px, 2.5vw, 28px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--bg-elevated);
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.itemGrande:hover,
+.itemGrande:active {
+  background: rgba(217, 164, 65, 0.12);
+  border-color: rgba(217, 164, 65, 0.4);
+}
+
+.itemGrandeIcone {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(217, 164, 65, 0.55);
+  position: relative;
+}
+
+.itemGrandeIcone::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-40%, -50%);
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 11px solid var(--accent);
+}
+
+.itemGrandeTitulo {
+  font: 500 clamp(18px, 1.4vw, 21px) / 1.3 var(--font-spectral), serif;
+  color: var(--text);
 }
 
 @media (min-width: 640px) {
@@ -198,6 +260,12 @@
     padding-right: 0;
   }
 
+  .selecaoCentro {
+    padding-left: clamp(32px, 4vw, 64px);
+    padding-right: clamp(32px, 4vw, 64px);
+    box-sizing: border-box;
+  }
+
   .duasColunas {
     display: flex;
     align-items: flex-start;
@@ -210,24 +278,19 @@
     box-sizing: border-box;
   }
 
-  .painelLista,
-  .varianteDetalhe .painelLista,
-  .varianteLista .painelLista {
+  .painelLista {
     display: block;
     flex: none;
     width: 340px;
   }
 
-  .painelConteudo,
-  .varianteDetalhe .painelConteudo,
-  .varianteLista .painelConteudo {
+  .painelConteudo {
     display: block;
     flex: 1;
     min-width: 0;
   }
 
-  .voltarMobileDetalhe,
-  .varianteDetalhe .voltarMobileDetalhe {
+  .voltarMobileDetalhe {
     display: none;
   }
 

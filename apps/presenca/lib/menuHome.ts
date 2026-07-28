@@ -4,7 +4,7 @@ export type Destino = { id: DestinoId; rota: string | null; rotulo: string };
 
 const DESTINOS: Record<DestinoId, Destino> = {
   livro: { id: "livro", rota: "/livro-vivo", rotulo: "uma página do livro" },
-  pratica: { id: "pratica", rota: "/meditacao", rotulo: "uma prática" },
+  pratica: { id: "pratica", rota: "/praticas", rotulo: "uma prática" },
   escrever: { id: "escrever", rota: "/diario", rotulo: "escrever algo" },
   conversar: { id: "conversar", rota: "/conversa", rotulo: "conversar" },
 };
@@ -43,7 +43,8 @@ export function destinoIdDeUltimoDestino(ultimoDestino: string | null): DestinoI
     case "diario":
       return "escrever";
     case "folego":
-    case "meditacao":
+    case "meditacao": // valor legado, gravado antes da rota virar /praticas
+    case "praticas":
       return "pratica";
     case "conversa":
       return "conversar";

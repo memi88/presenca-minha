@@ -2,7 +2,8 @@
 
 import { useActionState } from "react";
 
-import { salvarNascimento } from "./actions";
+import { type SalvarNascimentoState } from "@/lib/nascimento";
+
 import { CampoLocalidade } from "./CampoLocalidade";
 import styles from "./page.module.css";
 
@@ -12,13 +13,15 @@ type Props = {
   local: string | null;
   latitude: number | null;
   longitude: number | null;
+  action: (state: SalvarNascimentoState, formData: FormData) => Promise<SalvarNascimentoState>;
+  textoBotao?: string;
 };
 
-export function NascimentoForm({ data, hora, local, latitude, longitude }: Props) {
-  const [state, action, pending] = useActionState(salvarNascimento, {});
+export function NascimentoForm({ data, hora, local, latitude, longitude, action, textoBotao = "salvar" }: Props) {
+  const [state, formAction, pending] = useActionState(action, {});
 
   return (
-    <form action={action}>
+    <form action={formAction}>
       {state.erro && <p className={styles.erro}>{state.erro}</p>}
 
       <label className={styles.campo}>
@@ -41,7 +44,7 @@ export function NascimentoForm({ data, hora, local, latitude, longitude }: Props
       </p>
 
       <button className={styles.cta} type="submit" disabled={pending}>
-        salvar
+        {textoBotao}
       </button>
     </form>
   );
