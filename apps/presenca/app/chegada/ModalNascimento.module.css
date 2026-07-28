@@ -28,6 +28,25 @@
   box-shadow: 0 24px 60px rgba(20, 14, 8, 0.35);
 }
 
+/*
+ * Tamanhos próprios pro conteúdo do modal — as classes .eyebrow/.headline de
+ * page.module.css usam clamp(...vw) pensado pra ocupar uma página inteira
+ * (container de até 640px, relativo à viewport). Dentro do card de 440px o
+ * mesmo clamp exagera o tamanho em telas largas e força scroll no modal.
+ */
+.eyebrow {
+  font: 300 clamp(14px, 0.9vw, 16px) / 1 var(--font-spectral), serif;
+  letter-spacing: 0.28em;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.headline {
+  font: italic 400 clamp(26px, 2vw, 32px) / 1.32 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
 .pular {
   display: block;
   width: 100%;

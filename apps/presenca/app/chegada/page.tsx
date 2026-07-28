@@ -4,7 +4,8 @@ import { createClient } from "@presenca/supabase/server";
 
 import { PageHeader } from "../PageHeader";
 import { NascimentoForm } from "../perfil/nascimento/NascimentoForm";
-import { pularNascimentoCadastro, salvarNascimentoCadastro, salvarNome } from "./actions";
+import { pularNascimentoCadastro, salvarNascimentoCadastro } from "./actions";
+import { CadastroForm } from "./CadastroForm";
 import modalStyles from "./ModalNascimento.module.css";
 import styles from "./page.module.css";
 
@@ -14,13 +15,16 @@ export default async function Chegada() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/");
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("nome, data_nascimento, nascimento_pulado_no_cadastro_em")
-    .eq("id", user.id)
-    .maybeSingle();
+  // Sem sessão nenhuma ainda (visita nova) cai direto na etapa 1 abaixo —
+  // diferente de antes, a conta anônima só é criada quando o formulário de
+  // apelido/e-mail/senha for enviado (ver actions.ts:cadastrar), não antes.
+  const { data: profile } = user
+    ? await supabase
+        .from("profiles")
+        .select("nome, data_nascimento, nascimento_pulado_no_cadastro_em")
+        .eq("id", user.id)
+        .maybeSingle()
+    : { data: null };
 
   // Etapa de nascimento já resolvida (informou ou pulou) — não volta pra
   // esse fluxo à toa.
@@ -46,11 +50,9 @@ export default async function Chegada() {
         </div>
         <div className={modalStyles.backdrop}>
           <div className={modalStyles.dialogo} role="dialog" aria-modal="true" aria-labelledby="titulo-nascimento">
-            <p className={styles.eyebrow}>quer uma experiência melhor?</p>
-            <h1 id="titulo-nascimento" className={styles.headline}>
-              Esses dados ajudam a calibrar{" "}
-              <br className={styles.quebra} />
-              como esse espaço te acompanha.
+            <p className={modalStyles.eyebrow}>quer uma experiência melhor?</p>
+            <h1 id="titulo-nascimento" className={modalStyles.headline}>
+              Esses dados ajudam a calibrar como esse espaço te acompanha.
             </h1>
             <NascimentoForm
               data={null}
@@ -84,23 +86,7 @@ export default async function Chegada() {
           você aqui.
         </h1>
         <p className={styles.subtext}>Como você gostaria de ser chamado?</p>
-        <form action={salvarNome}>
-          <input
-            className={styles.input}
-            type="text"
-            name="nome"
-            placeholder="seu nome ou apelido"
-            autoComplete="given-name"
-            required
-          />
-          <button className={styles.cta} type="submit">
-            começar
-          </button>
-        </form>
-        <p className={styles.disclaimer}>
-          Ao entrar, você concorda com nossos{" "}
-          <br className={styles.quebra} /> <a href="/limites-de-cuidado">limites de cuidado</a>.
-        </p>
+        <CadastroForm />
       </div>
     </main>
   );

@@ -160,17 +160,19 @@ create policy "profissional insere apenas em pacientes vinculados"
 ## 5. Onboarding (revelação contextual)
 
 ### Identidade também é revelada contextualmente
-Cadastro de verdade (e-mail/senha) não acontece na entrada. Usa **login anônimo do Supabase** (`signInAnonymously()`) de forma silenciosa, assim que a pessoa entra — isso já cria um usuário real em `auth.users`, então o apelido e todas as entradas seguintes (Caderno, conversa) são persistidas de verdade desde o primeiro toque, com RLS funcionando normalmente. A pessoa não vê nem sabe que isso aconteceu.
+O único dado obrigatório na entrada é o apelido. E-mail/senha aparecem já na mesma tela (`/chegada`), logo abaixo do apelido, mas como campos **opcionais** com uma mensagem explícita de que dá pra preencher depois — não é mais um convite só posterior, mas também nunca é um formulário-portão: quem não quiser parar pra pensar em e-mail/senha, não para.
 
-A conversão pra conta permanente (e-mail/senha, ou OAuth) acontece depois, como convite contextual — mesma lógica da data de nascimento:
+Por baixo dos panos continua sendo **login anônimo do Supabase** (`signInAnonymously()`) que sustenta tudo isso: acontece de forma silenciosa no momento em que o formulário de apelido é enviado (`app/chegada/actions.ts:cadastrar`), sessão nova ou não — isso já cria um usuário real em `auth.users`, então o apelido e todas as entradas seguintes (Caderno, conversa) são persistidas de verdade desde o primeiro toque, com RLS funcionando normalmente. Se a pessoa preencheu e-mail/senha nesse mesmo formulário, o código chama `updateUser({ email, password })` logo em seguida, em cima dessa sessão recém-criada — nunca `signUp()` direto: `signUp()` deixaria a pessoa sem sessão nenhuma até confirmar o e-mail (se "Confirm email" estiver ligado no projeto), travando exatamente o momento em que ela mais precisa continuar sem fricção. `updateUser()` em cima de uma sessão já ativa não tem esse problema — a conta vira permanente sem nenhum intervalo sem acesso.
+
+Pra quem pula e-mail/senha na entrada, a conversão pra conta permanente (e-mail/senha, ou OAuth) continua disponível depois, como convite contextual — mesma lógica da data de nascimento:
 - **Obrigatória** no momento de conectar um profissional (perder esse vínculo por não ter convertido seria grave demais pra deixar opcional).
 - **Convite gentil e recorrente** pro resto — não uma vez só e nunca mais, porque usuário anônimo perde acesso **permanentemente** se sair/limpar dados/trocar de aparelho antes de converter. Isso é risco real de perda de dado emocionalmente significativo, não só inconveniência.
-- Conversão preserva o mesmo UUID — nada do que a pessoa já escreveu se perde ao criar e-mail/senha depois.
+- Conversão preserva o mesmo UUID — nada do que a pessoa já escreveu se perde ao criar e-mail/senha depois (mesmo mecanismo de `updateUser()` descrito acima, só que rodando mais tarde, a partir de `/conta`).
 
-Recomendação de segurança do próprio Supabase: habilitar CAPTCHA (ou Cloudflare Turnstile) no login anônimo pra evitar abuso — sem isso, o endpoint pode ser usado pra inflar o banco artificialmente.
+Recomendação de segurança do próprio Supabase: habilitar CAPTCHA (ou Cloudflare Turnstile) no login anônimo pra evitar abuso — sem isso, o endpoint pode ser usado pra inflar o banco artificialmente. O widget roda no mesmo formulário de apelido/e-mail/senha, já que é ali que `signInAnonymously()` de fato acontece agora.
 
 ### Fluxo
-1. **Entrada** (ambiente claro) — Landing + saudação, sem pedir decisão. Login anônimo acontece aqui, silenciosamente.
+1. **Entrada** (ambiente claro) — Landing + saudação, sem pedir decisão além do apelido. E-mail/senha aparecem opcionais na mesma tela, com escape explícito ("pode preencher depois"). Login anônimo acontece no envio desse formulário, silenciosamente.
 2. **Conversa inicial** (ambiente claro ou transição suave para escuro) — primeira interação real, sem pedir dado de nascimento.
 3. **Fechamento leve** — pequeno encerramento, sem cobrança.
 4. **Convite contextual posterior** — dentro da própria conversa, se o tema pedir (nunca ao entrar numa tela específica — isso reintroduziria formulário-portão). Quando o assunto tocar em algo que se beneficiaria de calibragem, surge o convite: *"posso te acompanhar de um jeito mais calibrado se você quiser me contar sobre sua chegada ao mundo — sem pressa, quando quiser."* Campo de hora tem escape explícito: *"não sabe a hora? sem problema — alguns insights ficam menos precisos, mas você ainda é bem-vindo aqui."*

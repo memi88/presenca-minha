@@ -6,20 +6,57 @@ import { createClient } from "@presenca/supabase/server";
 
 import { type SalvarNascimentoState, lerDadosNascimentoDoForm, salvarESagendarNascimento } from "@/lib/nascimento";
 
-export async function salvarNome(formData: FormData) {
+export type CadastroState = { erro?: string };
+
+// Etapa 1 do cadastro — apelido, com e-mail/senha opcionais na mesma tela.
+// A sessão anônima (signInAnonymously) acontece aqui, silenciosamente, na
+// primeira vez que alguém chega sem sessão nenhuma — igual sempre foi,
+// só que agora unificada com o passo do apelido em vez de acontecer antes,
+// no clique de /bem-vindo. Se e-mail/senha vierem preenchidos, viram conta
+// permanente por cima dessa mesma sessão via updateUser (mesma função que
+// /conta usa pra converter depois) — nunca signUp() direto, porque isso
+// deixaria a pessoa sem sessão nenhuma até confirmar o e-mail (ver
+// docs/presenca-prd.md seção 5: login anônimo existe exatamente pra nunca
+// ter esse intervalo sem sessão).
+export async function cadastrar(_prev: CadastroState, formData: FormData): Promise<CadastroState> {
   const nome = String(formData.get("nome") ?? "").trim();
-  if (!nome) return;
+  const email = String(formData.get("email") ?? "").trim();
+  const senha = String(formData.get("senha") ?? "");
+  const captchaToken = String(formData.get("captchaToken") ?? "").trim() || undefined;
+
+  if (!nome) return { erro: "Diz pra gente como te chamar." };
+  if ((email && !senha) || (!email && senha)) {
+    return { erro: "Preencha e-mail e senha juntos, ou deixe os dois em branco por enquanto." };
+  }
+  if (email && senha.length < 8) {
+    return { erro: "A senha precisa ter pelo menos 8 caracteres." };
+  }
 
   const supabase = await createClient();
   const {
-    data: { user },
+    data: { user: existente },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+
+  let user = existente;
+  if (!user) {
+    const { data, error } = await supabase.auth.signInAnonymously(
+      captchaToken ? { options: { captchaToken } } : undefined,
+    );
+    if (error || !data.user) {
+      return { erro: error?.message ?? "Não foi possível abrir seu espaço agora. Tenta de novo?" };
+    }
+    user = data.user;
+  }
 
   // Sem trigger de auto-criação (decisão da Fase 0): esta é a primeira
   // escrita em `profiles`, por isso upsert em vez de update.
-  const { error } = await supabase.from("profiles").upsert({ id: user.id, nome });
-  if (error) throw error;
+  const { error: erroPerfil } = await supabase.from("profiles").upsert({ id: user.id, nome });
+  if (erroPerfil) throw erroPerfil;
+
+  if (email && senha) {
+    const { error: erroConta } = await supabase.auth.updateUser({ email, password: senha });
+    if (erroConta) return { erro: erroConta.message };
+  }
 
   // Redireciona pra /chegada (não direto pra /home): com o nome já salvo,
   // a própria página passa a mostrar a etapa 2 (modal de nascimento).

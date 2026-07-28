@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { createClient } from "@presenca/supabase/server";
 
 import { PageHeader } from "../PageHeader";
-import { CriarEspacoButton } from "./CriarEspacoButton";
 import styles from "./page.module.css";
 
 export default async function BemVindo() {
@@ -33,7 +32,14 @@ export default async function BemVindo() {
           você aqui.
         </h1>
         <div className={styles.opcoes}>
-          <CriarEspacoButton />
+          {/*
+            A conta só é criada de fato (sessão anônima, silenciosa) quando o
+            formulário de apelido/e-mail/senha em /chegada é enviado — este
+            link não faz nenhuma chamada ao Supabase.
+          */}
+          <a className={styles.ctaSolido} href="/chegada">
+            Quero criar meu espaço
+          </a>
           <a className={styles.ctaContorno} href="/login">
             Já possuo meu espaço
           </a>

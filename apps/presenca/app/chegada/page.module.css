@@ -51,6 +51,7 @@
 
 .input {
   width: 100%;
+  margin-bottom: 12px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -62,6 +63,18 @@
 
 .input::placeholder {
   color: var(--text-faint);
+}
+
+.erro {
+  font: 400 13px/1.4 var(--font-spectral), serif;
+  color: var(--error);
+  margin-bottom: 10px;
+}
+
+.escape {
+  font: italic 300 12.5px/1.4 var(--font-spectral), serif;
+  color: var(--text-faint);
+  margin: 4px 0 4px;
 }
 
 .cta {
@@ -83,14 +96,25 @@
   cursor: default;
 }
 
-.disclaimer {
-  margin-top: 30px;
-  text-align: center;
-  font: 400 11px/1.4 var(--font-spectral), serif;
-  color: var(--text-subtle);
+.consentimento {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+  cursor: pointer;
 }
 
-.disclaimer a {
+.consentimento input {
+  margin-top: 3px;
+  flex: none;
+}
+
+.consentimentoTexto {
+  font: 400 13px/1.4 var(--font-spectral), serif;
+  color: var(--text-muted);
+}
+
+.consentimentoTexto a {
   color: var(--accent);
   text-decoration: underline;
 }

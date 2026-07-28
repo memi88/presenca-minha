@@ -16,7 +16,7 @@
 
 ## Fase 1 — Autenticação e perfil
 
-- [x] Login anônimo (`signInAnonymously()`) habilitado, disparado silenciosamente na Entrada.
+- [x] Login anônimo (`signInAnonymously()`) habilitado, disparado silenciosamente no envio do formulário de apelido em `/chegada` (antes disparava antes mesmo disso, no clique de "Quero criar meu espaço" em `/bem-vindo` — movido pra unificar com o passo de e-mail/senha opcional).
 - [x] CAPTCHA/Turnstile configurado no login anônimo. Widget oficial da Cloudflare, site key em `.env.local`, secret key só no dashboard do Supabase (Attack Protection).
 - [x] Fluxo de conversão pra conta permanente (e-mail/senha), preservando o mesmo UUID. `/conta` — `supabase.auth.updateUser({email, password})`, testado (mesmo `auth.uid()` antes/depois).
 - [x] Adicionar OAuth (Google) como opção alternativa no fluxo de conversão. `/conta` — `linkIdentity({provider:"google"})` (preserva `auth.uid()` da sessão anônima), retorno via `/auth/callback` (`exchangeCodeForSession`). Depende de "Allow manual linking" + provider Google habilitados no dashboard do Supabase (config do usuário, fora do código).
@@ -63,7 +63,7 @@
 
 ## Fase 6 — Onboarding (revelação contextual)
 
-- [x] Fluxo de entrada sem pedir nascimento. Já satisfeito desde a Fase 1 — `/chegada` só pede nome.
+- [x] Fluxo de entrada sem pedir nascimento. `/chegada` pede apelido (obrigatório) e, na mesma tela, e-mail/senha (opcionais, com saída explícita "pode preencher depois") — nunca data de nascimento.
 - [x] Check-in "como está sua presença hoje?" funcionando e mudando a estrutura da tela seguinte. `/hoje` — 5 opções (Confuso/Em paz/Cansado/Curioso/Não sei responder), guardadas em `profiles.presenca_hoje`/`presenca_hoje_em` (`precisaCheckin`, `lib/checkin.ts`, gatilho de 12h). Quem responde "confuso" cai numa Home sem o link de Terapia — o PRD só detalha esse recorte pra essa resposta; as outras 4 mantêm a Home cheia (não inventei estrutura reduzida pra elas).
 - [ ] Convite de nascimento surgindo só dentro da conversa, quando o tema pedir (nunca em tela fixa). **Desbloqueado** — a Conversa já existe (Fase 10) —, mas a lógica específica desse convite contextual dentro da conversa ainda não foi implementada.
 - [x] Convite de nascimento pelas outras 2 formas do PRD §5 (ação própria + gatilho contextual espontâneo). `/perfil/nascimento` — formulário (data obrigatória, local/hora opcionais, com a saída "não sabe a hora? sem problema"), alcançável a qualquer momento por `/perfil`. Gatilho espontâneo: `lib/streak.ts` conta dias consecutivos de visita (sinal interno, nunca exibido como contador — voz-de-marca pilar 3, sem streak/gamificação); a partir de 3 dias seguidos sem `data_nascimento` preenchida, a Home mostra o mesmo convite dispensável de sempre ("Quer personalizar sua presença?"), "agora não" adia 7 dias (`profiles.lembrete_nascimento_em`, mesmo padrão do convite de conversão).
@@ -90,7 +90,7 @@
 
 ## Fase 9 — Segurança e conformidade
 
-- [x] Consentimento específico e destacado (app em geral + conexão com profissional, separados). Dois checkboxes reais (não só link em letra miúda): `CriarEspacoButton.tsx` (criar espaço — obrigatório, linka `/privacidade` + `/limites-de-cuidado`) e `ConectarForm.tsx` (conectar com profissional — obrigatório, específico da conexão, texto próprio). Contas já convertidas (login) não repetem o consentimento geral — já foi dado na criação.
+- [x] Consentimento específico e destacado (app em geral + conexão com profissional, separados). Dois checkboxes reais (não só link em letra miúda): `chegada/CadastroForm.tsx` (criar espaço — obrigatório, linka `/privacidade` + `/limites-de-cuidado`; antes vivia em `bem-vindo/CriarEspacoButton.tsx`, movido junto com o formulário de apelido/e-mail/senha quando o login anônimo passou a disparar em `/chegada`) e `ConectarForm.tsx` (conectar com profissional — obrigatório, específico da conexão, texto próprio). Contas já convertidas (login) não repetem o consentimento geral — já foi dado na criação.
 - [x] Política de privacidade publicada. `/privacidade` — dados coletados, finalidade, base legal (LGPD, dado sensível de saúde art. 11), compartilhamento (Supabase + profissional conectado, nunca terceiros), segurança (RLS), retenção, direitos do titular. **Conteúdo é rascunho técnico meu, não assessoria jurídica — recomendo revisão por advogado antes de valer pra pacientes reais**, dado que é dado de saúde mental.
 - [x] Encarregado nomeado + canal de contato visível no app. Guilherme (pessoa física) é o responsável e o encarregado (DPO); contato `guilhermemsts88@gmail.com` em `/privacidade`. Nome de família não incluído (não foi fornecido) — considerar completar com nome completo/CPF antes de publicar oficialmente.
 - [x] Processo de exclusão de dados sob pedido (manual está OK pro piloto). `/privacidade`, seção "Seus direitos" — link `mailto:` direto, processo manual (você executa via SQL), conforme o piloto permite.
