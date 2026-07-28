@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "presenca",
+  "name": "presenca-minha",
   "main": ".open-next/worker.js",
   "workers_dev": false,
   "preview_urls": false,
