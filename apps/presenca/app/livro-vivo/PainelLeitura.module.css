@@ -13,7 +13,10 @@
   background-image: url("/images/sala.png");
   background-size: cover;
   background-position: center;
-  padding: 32px 24px 64px;
+  /* Sem padding-top: o PageHeader já traz seu próprio espaçamento
+     (clamp(20px,3vw,28px)) — duplicar aqui criava inconsistência de
+     espaço acima do header entre telas diferentes do app. */
+  padding: 0 24px 64px;
 }
 
 .scene::after {
