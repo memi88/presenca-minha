@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { Capacitor } from "@capacitor/core";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
+import { AcessoBloqueado } from "./AcessoBloqueado";
 import styles from "./AmbienteShell.module.css";
 
 // Mapeamento fixo por tela (PRD seção 6) — Livro Vivo, Meditação (+ Fôlego,
@@ -14,7 +16,13 @@ function ambienteDaRota(pathname: string): "claro" | "escuro" {
   return escuro ? "escuro" : "claro";
 }
 
-export function AmbienteShell({ children }: { children: React.ReactNode }) {
+type Props = {
+  children: React.ReactNode;
+  // Vem do layout raiz (checagem server-side, ver lib/acessoMobile.ts).
+  acessoLiberado: boolean;
+};
+
+export function AmbienteShell({ children, acessoLiberado }: Props) {
   const pathname = usePathname();
   const ambiente = ambienteDaRota(pathname);
 
@@ -28,10 +36,20 @@ export function AmbienteShell({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // O bloqueio (docs/presenca-extensao-app-mobile.md §2) só existe dentro
+  // do app empacotado — o site continua aberto normalmente pra quem acessa
+  // pelo navegador. `isNativePlatform()` só é confiável depois de montado,
+  // por isso começa "não bloqueado" e só muda depois do efeito (evita
+  // divergência entre o HTML do servidor e a primeira renderização).
+  const [bloqueado, setBloqueado] = useState(false);
+  useEffect(() => {
+    setBloqueado(Capacitor.isNativePlatform() && !acessoLiberado);
+  }, [acessoLiberado]);
+
   return (
     <div className={styles.fundo}>
       <div data-ambiente={ambiente} key={pathname} className={styles.coluna}>
-        {children}
+        {bloqueado ? <AcessoBloqueado /> : children}
       </div>
     </div>
   );

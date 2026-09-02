@@ -1,6 +1,7 @@
 import { CirculoRespirando } from "./CirculoRespirando";
 import { MonogramaP } from "./MonogramaP";
 import styles from "./PageHeader.module.css";
+import { VoltarLink } from "./VoltarLink";
 
 type Secao = "conversa" | "livro" | "escrever" | "pratica" | null;
 
@@ -32,9 +33,7 @@ export function PageHeader({ voltar, nome, atual }: Props) {
         <a className={styles.monogramaLink} href="/home" aria-label="Página inicial">
           <MonogramaP className={styles.monograma} />
         </a>
-        <a className={styles.voltarLink} href={voltar.href}>
-          {voltar.label}
-        </a>
+        <VoltarLink href={voltar.href} label={voltar.label} />
       </div>
 
       {temNav && (
