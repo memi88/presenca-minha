@@ -21,3 +21,9 @@ IA_SERVICE_API_KEY=
 # 4.5). SEM prefixo NEXT_PUBLIC_: só server-side (lib/anthropic.ts), nunca
 # chega no bundle do browser. Gere em https://console.anthropic.com/settings/keys.
 ANTHROPIC_API_KEY=
+
+# Motor Presente (repositório separado, Railway) — lente do dia na Home e
+# na Conversa (lib/present.ts). SEM prefixo NEXT_PUBLIC_: só server-side.
+# Endpoint genérico não exige autenticação — sem essa variável, a lente
+# some silenciosamente (fail-open).
+PRESENTE_SERVICE_URL=

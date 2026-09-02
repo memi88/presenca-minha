@@ -38,6 +38,8 @@ export default async function Perfil() {
     nomeProfissional = profissional?.nome ?? null;
   }
 
+  const { data: admin } = await supabase.from("admins").select("user_id").eq("user_id", user.id).maybeSingle();
+
   return (
     <main className={styles.scene}>
       <PageHeader nome={profile.nome} atual={null} voltar={{ href: "/home", label: "← voltar" }} />
@@ -86,6 +88,15 @@ export default async function Perfil() {
             </a>
           )}
         </div>
+
+        {admin && (
+          <div className={styles.secao}>
+            <p className={styles.rotulo}>admin</p>
+            <a className={styles.link} href="/admin/biblioteca">
+              painel de aprovação da biblioteca →
+            </a>
+          </div>
+        )}
 
         <SairButton anonimo={user.is_anonymous === true} />
       </div>

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
+import { IntroEspaco } from "../IntroEspaco";
 import { PageHeader } from "../PageHeader";
 import { PainelPratica } from "./PainelPratica";
 import styles from "./PainelPratica.module.css";
@@ -14,7 +15,11 @@ export default async function Praticas() {
   if (!user) redirect("/");
 
   const [{ data: profile }, { data: praticas }] = await Promise.all([
-    supabase.from("profiles").select("nome").eq("id", user.id).maybeSingle(),
+    supabase
+      .from("profiles")
+      .select("nome, intro_praticas_vista_em, profissional_id")
+      .eq("id", user.id)
+      .maybeSingle(),
     supabase
       .from("biblioteca")
       .select("id, titulo, slug, conteudo")
@@ -26,12 +31,18 @@ export default async function Praticas() {
   ]);
   if (!profile?.nome) redirect("/chegada");
 
+  const primeiraEntrada = !profile.intro_praticas_vista_em;
+  if (primeiraEntrada) {
+    await supabase.from("profiles").update({ intro_praticas_vista_em: new Date().toISOString() }).eq("id", user.id);
+  }
+
   if (!praticas?.length) {
     return (
       <main className={styles.scene}>
         <PageHeader nome={profile.nome} atual="pratica" voltar={{ href: "/home", label: "← voltar" }} />
         <div className={styles.duasColunas}>
           <div className={styles.painelLista}>
+            <IntroEspaco espaco="praticas" expandidaInicialmente={primeiraEntrada} />
             <p className={styles.eyebrow}>Práticas</p>
             <h1 className={styles.titulo}>
               Pequenas práticas,{" "}
@@ -48,6 +59,14 @@ export default async function Praticas() {
   // A rota de lista nunca pré-seleciona uma prática — só /praticas/[id]
   // (navegação explícita) mostra conteúdo de verdade no painel direito.
   return (
-    <PainelPratica variante="lista" nome={profile.nome} praticas={praticas} praticaAtiva={null} jaGuardada={false} />
+    <PainelPratica
+      variante="lista"
+      nome={profile.nome}
+      praticas={praticas}
+      praticaAtiva={null}
+      jaGuardada={false}
+      introExpandidaInicialmente={primeiraEntrada}
+      mostrarCtaConectar={!profile.profissional_id}
+    />
   );
 }

@@ -3,12 +3,15 @@ import type { NextRequest } from "next/server";
 import { createClient } from "@presenca/supabase/server";
 
 import { anthropic } from "@/lib/anthropic";
+import { avaliarRiscoLlamaGuard } from "@/lib/llamaGuard";
+import { buscarLenteGenerica } from "@/lib/present";
+import { decidirProtocoloRisco } from "@/lib/protocoloRisco";
 import { podeConversar } from "@/lib/rateLimit";
 import {
   MODELO_CONVERSA,
-  SYSTEM_PROMPT_CONVERSA,
   TOOL_SINALIZAR_ENCERRAMENTO,
   TOOL_SINALIZAR_RISCO,
+  montarSystemPromptConversa,
 } from "@/lib/systemPromptConversa";
 
 type MensagemEntrada = { role: "user" | "assistant"; content: string };
@@ -61,13 +64,27 @@ export async function POST(request: NextRequest) {
       }
 
       try {
+        // P4 — contexto opcional pro chat (docs/integracao-presente-
+        // presenca-decisoes.md, item 7): a lente do dia entra no system
+        // prompt só quando existe (fail-open — buscarLenteGenerica nunca
+        // lança, degrada pra null). Precisa terminar antes de montar o
+        // prompt, então não roda em paralelo ao Sonnet como o Llama Guard
+        // roda — é a única espera sequencial nova que o P4 introduz.
+        const dailyPresent = await buscarLenteGenerica();
+
         const anthropicStream = anthropic.messages.stream({
           model: MODELO_CONVERSA,
           max_tokens: 4096,
-          system: SYSTEM_PROMPT_CONVERSA,
+          system: montarSystemPromptConversa(dailyPresent),
           tools: [TOOL_SINALIZAR_RISCO, TOOL_SINALIZAR_ENCERRAMENTO],
           messages: mensagens,
         });
+        // Roda em paralelo à resposta do Sonnet, não depois dela — por
+        // isso disparado aqui, antes do loop de streaming, e só aguardado
+        // no fim. Verifica a conversa da própria pessoa (mensagens), nunca
+        // a resposta do turno atual (docs/integracao-presente-presenca-
+        // decisoes.md, item 5.1).
+        const llamaGuardPromise = avaliarRiscoLlamaGuard(mensagens);
 
         let riscoSinalizado = false;
         let encerramentoSinalizado = false;
@@ -99,6 +116,14 @@ export async function POST(request: NextRequest) {
             encerramentoSinalizado = true;
             emitir({ tipo: "fechamento" });
           }
+        }
+
+        const { sinalizouRisco: llamaSinalizouRisco } = await llamaGuardPromise;
+        const decisaoRisco = decidirProtocoloRisco(riscoSinalizado, llamaSinalizouRisco);
+        if (decisaoRisco.log) console.warn(decisaoRisco.log);
+        if (decisaoRisco.forcarRecursos) {
+          riscoSinalizado = true;
+          emitir({ tipo: "risco" });
         }
 
         emitir({ tipo: "fim" });

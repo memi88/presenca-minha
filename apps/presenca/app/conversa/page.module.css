@@ -50,6 +50,16 @@
   z-index: 1;
 }
 
+/* Mesma coluna do .lista/.form abaixo — a intro precisa alinhar com o
+   conteúdo, não com o header (que é full-bleed). */
+.introAlinhamento {
+  max-width: clamp(560px, 34vw, 720px);
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
 .lista {
   flex: 1;
   /* min-height:0 sobrescreve o auto padrão de flex item — sem isso, a

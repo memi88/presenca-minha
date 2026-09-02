@@ -294,6 +294,63 @@
   }
 }
 
+/* Lente do dia (motor Presente, P1-P3) — mesma superfície translúcida do
+   .convite, mas é conteúdo, não um convite dispensável: sem botão "agora
+   não". Fica entre o headline e as pílulas (docs/integracao-presente-
+   presenca-auditoria.md, seção E). */
+.lente {
+  position: relative;
+  z-index: 1;
+  background: rgba(247, 240, 228, 0.82);
+  backdrop-filter: blur(6px);
+  border-radius: 18px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+
+.lenteRotulo {
+  font: italic 400 12.5px/1 var(--font-spectral), serif;
+  color: #8a6320;
+  margin: 0 0 4px;
+}
+
+.lenteRotulo:not(:first-child) {
+  margin-top: 14px;
+}
+
+.lenteTexto {
+  font: 400 15px/1.5 var(--font-spectral), serif;
+  color: #4a3f2c;
+  margin: 0;
+}
+
+.lenteAcoes {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 16px;
+}
+
+.lenteConversar {
+  padding-top: 1px;
+  font: 500 14px/1 var(--font-spectral), serif;
+  color: #b6873f;
+  text-decoration: underline;
+}
+
+.lenteDetalhes summary {
+  cursor: pointer;
+  font: italic 400 13px/1 var(--font-spectral), serif;
+  color: #9a8b72;
+}
+
+.lenteDetalhes p {
+  font: 400 13.5px/1.5 var(--font-spectral), serif;
+  color: #4a3f2c;
+  margin: 10px 0 0;
+}
+
 .pilulas {
   display: flex;
   flex-direction: column;
@@ -375,4 +432,17 @@
   color: rgba(255, 255, 255, 0.9);
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
   text-decoration: none;
+}
+
+/* Convite pro fechamento do dia (P6) — mesmo tratamento visual do
+   .linkSecundario (discreto, sobre a cena), só que fica logo abaixo do
+   bloco da lente, antes das pílulas, não lá embaixo com os outros. */
+.fechamentoConvite {
+  display: block;
+  text-align: center;
+  font: italic 400 clamp(13px, 1vw, 15px) / 1 var(--font-spectral), serif;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  text-decoration: none;
+  margin-bottom: 20px;
 }

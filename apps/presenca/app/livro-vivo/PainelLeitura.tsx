@@ -1,8 +1,16 @@
+import { AutoriaBiblioteca } from "../AutoriaBiblioteca";
+import { IntroEspaco } from "../IntroEspaco";
 import { PageHeader } from "../PageHeader";
 import { guardarLeitura } from "./[id]/actions";
 import styles from "./PainelLeitura.module.css";
 
-export type ItemPagina = { id: string; titulo: string; conteudo: string };
+export type ItemPagina = {
+  id: string;
+  titulo: string;
+  conteudo: string;
+  profissional_autor_id?: string | null;
+  profissionais?: { nome: string; tipo: string; forma_de_trabalho: string | null } | null;
+};
 
 type Props = {
   variante: "lista" | "detalhe";
@@ -10,6 +18,8 @@ type Props = {
   paginas: ItemPagina[];
   paginaAtiva: ItemPagina | null;
   jaGuardada: boolean;
+  introExpandidaInicialmente: boolean;
+  mostrarCtaConectar: boolean;
 };
 
 const PALAVRAS_POR_MINUTO = 200;
@@ -42,11 +52,20 @@ function IconeLivro({ className }: { className?: string }) {
 // aceita 1 ou N itens sem quebrar visualmente — quando o catálogo passar de
 // ~3-4 páginas, isso migra pra um padrão de lista/grade com ordenação por
 // recomendação (não implementado ainda, ver instruções de UX).
-function TelaSelecao({ nome, paginas }: { nome: string; paginas: ItemPagina[] }) {
+function TelaSelecao({
+  nome,
+  paginas,
+  introExpandidaInicialmente,
+}: {
+  nome: string;
+  paginas: ItemPagina[];
+  introExpandidaInicialmente: boolean;
+}) {
   return (
     <main className={styles.scene}>
       <PageHeader nome={nome} atual="livro" voltar={{ href: "/home", label: "← voltar" }} />
       <div className={styles.selecaoCentro}>
+        <IntroEspaco espaco="livroVivo" expandidaInicialmente={introExpandidaInicialmente} />
         <p className={styles.eyebrow}>Livro Vivo</p>
         <h1 className={styles.tituloSelecao}>
           Leituras para{" "}
@@ -80,11 +99,15 @@ function TelaDetalhe({
   paginas,
   paginaAtiva,
   jaGuardada,
+  introExpandidaInicialmente,
+  mostrarCtaConectar,
 }: {
   nome: string;
   paginas: ItemPagina[];
   paginaAtiva: ItemPagina;
   jaGuardada: boolean;
+  introExpandidaInicialmente: boolean;
+  mostrarCtaConectar: boolean;
 }) {
   const paragrafos = paginaAtiva.conteudo.split(/\n{2,}/).filter(Boolean);
 
@@ -128,6 +151,7 @@ function TelaDetalhe({
           <a className={styles.voltarMobileDetalhe} href="/livro-vivo">
             ‹ Livro Vivo
           </a>
+          <IntroEspaco espaco="livroVivo" expandidaInicialmente={introExpandidaInicialmente} />
           <h2 className={styles.tituloLeitura}>{paginaAtiva.titulo}</h2>
           <div className={styles.corpo}>
             {paragrafos.map((paragrafo, i) => (
@@ -147,13 +171,39 @@ function TelaDetalhe({
               </form>
             )}
           </div>
+          {paginaAtiva.profissional_autor_id && paginaAtiva.profissionais && (
+            <AutoriaBiblioteca
+              nome={paginaAtiva.profissionais.nome}
+              tipo={paginaAtiva.profissionais.tipo}
+              formaDeTrabalho={paginaAtiva.profissionais.forma_de_trabalho}
+              mostrarCta={mostrarCtaConectar}
+            />
+          )}
         </div>
       </div>
     </main>
   );
 }
 
-export function PainelLeitura({ nome, paginas, paginaAtiva, jaGuardada }: Props) {
-  if (!paginaAtiva) return <TelaSelecao nome={nome} paginas={paginas} />;
-  return <TelaDetalhe nome={nome} paginas={paginas} paginaAtiva={paginaAtiva} jaGuardada={jaGuardada} />;
+export function PainelLeitura({
+  nome,
+  paginas,
+  paginaAtiva,
+  jaGuardada,
+  introExpandidaInicialmente,
+  mostrarCtaConectar,
+}: Props) {
+  if (!paginaAtiva) {
+    return <TelaSelecao nome={nome} paginas={paginas} introExpandidaInicialmente={introExpandidaInicialmente} />;
+  }
+  return (
+    <TelaDetalhe
+      nome={nome}
+      paginas={paginas}
+      paginaAtiva={paginaAtiva}
+      jaGuardada={jaGuardada}
+      introExpandidaInicialmente={introExpandidaInicialmente}
+      mostrarCtaConectar={mostrarCtaConectar}
+    />
+  );
 }

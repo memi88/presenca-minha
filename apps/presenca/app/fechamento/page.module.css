@@ -1,0 +1,104 @@
+.scene {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+}
+
+.content {
+  width: 100%;
+  max-width: clamp(420px, 26vw, 560px);
+  margin: 0 auto;
+  padding: clamp(24px, 3vw, 40px);
+}
+
+.eyebrow {
+  font: 300 clamp(16px, 1vw, 18px) / 1 var(--font-spectral), serif;
+  letter-spacing: 0.32em;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+
+.headline {
+  font: italic 400 clamp(30px, 2.2vw, 38px) / 1.28 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 32px;
+}
+
+.opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.opcao {
+  width: 100%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: clamp(15px, 1.1vw, 18px);
+  font: 400 clamp(16px, 1vw, 17px) / 1 var(--font-spectral), serif;
+  color: var(--text);
+  text-align: center;
+  cursor: pointer;
+}
+
+.opcao:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.opcaoSelecionada {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: var(--cta-text);
+}
+
+.campoLivre {
+  width: 100%;
+  min-height: 96px;
+  resize: vertical;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+  font: 400 15px/1.5 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
+.campoLivre::placeholder {
+  color: var(--text-muted);
+}
+
+.acoes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.cta {
+  width: 100%;
+  background: var(--accent-strong);
+  color: var(--cta-text);
+  border: none;
+  border-radius: 30px;
+  padding: clamp(15px, 1.1vw, 18px);
+  font: 500 clamp(16px, 1vw, 17px) / 1 var(--font-spectral), serif;
+  cursor: pointer;
+}
+
+.cta:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.pular {
+  font: italic 400 14px/1 var(--font-spectral), serif;
+  color: var(--text-muted);
+  text-decoration: none;
+}

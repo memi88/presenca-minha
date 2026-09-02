@@ -13,6 +13,7 @@ import {
   ordemComDestaque,
   ordemPorMood,
 } from "@/lib/menuHome";
+import { montarPresenceDailyContext } from "@/lib/presenceDailyContext";
 import { atualizarStreak } from "@/lib/streak";
 
 import { CirculoRespirando } from "../CirculoRespirando";
@@ -78,31 +79,34 @@ export default async function Home() {
     new Date(),
   );
 
-  const [{ data: ultimaEntrada }, { data: entradasRevisitar }, { data: entradaPropria }] = await Promise.all([
-    supabase
-      .from("caderno_entradas")
-      .select("autor_tipo, tipo")
-      .eq("paciente_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle(),
-    reduzido
-      ? Promise.resolve({ data: null })
-      : supabase
-          .from("caderno_entradas")
-          .select("id")
-          .eq("paciente_id", user.id)
-          .eq("revisitar", true)
-          .limit(1)
-          .maybeSingle(),
-    supabase
-      .from("caderno_entradas")
-      .select("id")
-      .eq("paciente_id", user.id)
-      .eq("autor_tipo", "usuario")
-      .limit(1)
-      .maybeSingle(),
-  ]);
+  const [{ data: ultimaEntrada }, { data: entradasRevisitar }, { data: entradaPropria }, presenceDailyContext] =
+    await Promise.all([
+      supabase
+        .from("caderno_entradas")
+        .select("autor_tipo, tipo")
+        .eq("paciente_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      reduzido
+        ? Promise.resolve({ data: null })
+        : supabase
+            .from("caderno_entradas")
+            .select("id")
+            .eq("paciente_id", user.id)
+            .eq("revisitar", true)
+            .limit(1)
+            .maybeSingle(),
+      supabase
+        .from("caderno_entradas")
+        .select("id")
+        .eq("paciente_id", user.id)
+        .eq("autor_tipo", "usuario")
+        .limit(1)
+        .maybeSingle(),
+      montarPresenceDailyContext(profile.presenca_hoje),
+    ]);
+  const dailyPresent = presenceDailyContext.dailyPresent;
 
   const perguntaEmAberto = ultimaEntrada?.autor_tipo === "profissional" && ultimaEntrada?.tipo === "pergunta";
   const temRevisitar = !!entradasRevisitar;
@@ -212,6 +216,40 @@ export default async function Home() {
           {saudacao()}, {profile.nome}.
         </p>
         <p className={styles.headline}>{headline}</p>
+
+        {dailyPresent && (
+          <section className={styles.lente} aria-label="Uma lente para hoje">
+            <p className={styles.lenteRotulo}>Uma lente para hoje</p>
+            <p className={styles.lenteTexto}>{dailyPresent.reflection}</p>
+            <p className={styles.lenteRotulo}>Uma pergunta</p>
+            <p className={styles.lenteTexto}>{dailyPresent.question}</p>
+            <div className={styles.lenteAcoes}>
+              <a className={styles.lenteConversar} href="/conversa">
+                Conversar sobre isso
+              </a>
+              <details className={styles.lenteDetalhes}>
+                <summary>Entender de onde vem</summary>
+                <p>
+                  <strong>{dailyPresent.derivationSummary.tomHoje}</strong> —{" "}
+                  {dailyPresent.derivationSummary.textoCuradoTom}
+                </p>
+                <p>
+                  <strong>{dailyPresent.derivationSummary.seloHoje}</strong> —{" "}
+                  {dailyPresent.derivationSummary.textoCuradoSelo}
+                </p>
+              </details>
+            </div>
+          </section>
+        )}
+
+        {/* Convite pro fechamento do dia (P6) — mesmo contexto visual da
+            lente, mas decoplado dela: aparece independente de dailyPresent
+            existir (docs/integracao-presente-presenca-decisoes.md). Nunca
+            um gate — só um convite discreto, sem obrigatoriedade. */}
+        <a className={styles.fechamentoConvite} href="/fechamento">
+          Como foi seu dia? →
+        </a>
+
         <div className={styles.pilulas}>
           {destinos.map((destino) => {
             const emDestaque = destino.id === destaqueId;

@@ -1,8 +1,17 @@
+import { AutoriaBiblioteca } from "../AutoriaBiblioteca";
+import { IntroEspaco } from "../IntroEspaco";
 import { PageHeader } from "../PageHeader";
 import { guardarPratica } from "./[id]/actions";
 import styles from "./PainelPratica.module.css";
 
-export type ItemPratica = { id: string; titulo: string; slug: string | null; conteudo: string };
+export type ItemPratica = {
+  id: string;
+  titulo: string;
+  slug: string | null;
+  conteudo: string;
+  profissional_autor_id?: string | null;
+  profissionais?: { nome: string; tipo: string; forma_de_trabalho: string | null } | null;
+};
 
 const SLUGS_INTERATIVOS: Record<string, string> = {
   "respiracao-4-7-8": "/folego",
@@ -18,6 +27,8 @@ type Props = {
   praticas: ItemPratica[];
   praticaAtiva: ItemPratica | null;
   jaGuardada: boolean;
+  introExpandidaInicialmente: boolean;
+  mostrarCtaConectar: boolean;
 };
 
 // Estado de seleção (nenhuma prática ativa) — coluna única centralizada na
@@ -26,11 +37,20 @@ type Props = {
 // aceita 1 ou N itens sem quebrar visualmente — quando o catálogo passar de
 // ~3-4 práticas, isso migra pra um padrão de lista/grade com ordenação por
 // recomendação (não implementado ainda, ver instruções de UX).
-function TelaSelecao({ nome, praticas }: { nome: string; praticas: ItemPratica[] }) {
+function TelaSelecao({
+  nome,
+  praticas,
+  introExpandidaInicialmente,
+}: {
+  nome: string;
+  praticas: ItemPratica[];
+  introExpandidaInicialmente: boolean;
+}) {
   return (
     <main className={styles.scene}>
       <PageHeader nome={nome} atual="pratica" voltar={{ href: "/home", label: "← voltar" }} />
       <div className={styles.selecaoCentro}>
+        <IntroEspaco espaco="praticas" expandidaInicialmente={introExpandidaInicialmente} />
         <p className={styles.eyebrow}>Práticas</p>
         <h1 className={styles.tituloSelecao}>
           Pequenas práticas,{" "}
@@ -59,11 +79,15 @@ function TelaDetalhe({
   praticas,
   praticaAtiva,
   jaGuardada,
+  introExpandidaInicialmente,
+  mostrarCtaConectar,
 }: {
   nome: string;
   praticas: ItemPratica[];
   praticaAtiva: ItemPratica;
   jaGuardada: boolean;
+  introExpandidaInicialmente: boolean;
+  mostrarCtaConectar: boolean;
 }) {
   const interativa = rotaDePratica(praticaAtiva) === "/folego";
   const paragrafos = !interativa ? praticaAtiva.conteudo.split(/\n{2,}/).filter(Boolean) : [];
@@ -103,6 +127,7 @@ function TelaDetalhe({
               <a className={styles.voltarMobileDetalhe} href="/praticas">
                 ‹ Práticas
               </a>
+              <IntroEspaco espaco="praticas" expandidaInicialmente={introExpandidaInicialmente} />
               <div className={styles.cartaoInterativo}>
                 <h2 className={styles.tituloLeitura}>{praticaAtiva.titulo}</h2>
                 <p className={styles.descricaoInterativa}>Uma prática guiada, no seu ritmo.</p>
@@ -116,6 +141,7 @@ function TelaDetalhe({
               <a className={styles.voltarMobileDetalhe} href="/praticas">
                 ‹ Práticas
               </a>
+              <IntroEspaco espaco="praticas" expandidaInicialmente={introExpandidaInicialmente} />
               <h2 className={styles.tituloLeitura}>{praticaAtiva.titulo}</h2>
               <div className={styles.corpo}>
                 {paragrafos.map((paragrafo, i) => (
@@ -135,6 +161,14 @@ function TelaDetalhe({
                   </form>
                 )}
               </div>
+              {praticaAtiva.profissional_autor_id && praticaAtiva.profissionais && (
+                <AutoriaBiblioteca
+                  nome={praticaAtiva.profissionais.nome}
+                  tipo={praticaAtiva.profissionais.tipo}
+                  formaDeTrabalho={praticaAtiva.profissionais.forma_de_trabalho}
+                  mostrarCta={mostrarCtaConectar}
+                />
+              )}
             </>
           )}
         </div>
@@ -143,7 +177,25 @@ function TelaDetalhe({
   );
 }
 
-export function PainelPratica({ nome, praticas, praticaAtiva, jaGuardada }: Props) {
-  if (!praticaAtiva) return <TelaSelecao nome={nome} praticas={praticas} />;
-  return <TelaDetalhe nome={nome} praticas={praticas} praticaAtiva={praticaAtiva} jaGuardada={jaGuardada} />;
+export function PainelPratica({
+  nome,
+  praticas,
+  praticaAtiva,
+  jaGuardada,
+  introExpandidaInicialmente,
+  mostrarCtaConectar,
+}: Props) {
+  if (!praticaAtiva) {
+    return <TelaSelecao nome={nome} praticas={praticas} introExpandidaInicialmente={introExpandidaInicialmente} />;
+  }
+  return (
+    <TelaDetalhe
+      nome={nome}
+      praticas={praticas}
+      praticaAtiva={praticaAtiva}
+      jaGuardada={jaGuardada}
+      introExpandidaInicialmente={introExpandidaInicialmente}
+      mostrarCtaConectar={mostrarCtaConectar}
+    />
+  );
 }

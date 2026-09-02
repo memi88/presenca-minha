@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
+import { IntroEspaco } from "../IntroEspaco";
 import { PageHeader } from "../PageHeader";
 import { EntradaItem, type Entrada } from "./EntradaItem";
 import { NovaEntradaForm } from "./NovaEntradaForm";
@@ -16,12 +17,16 @@ export default async function Diario() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("nome, profissional_id")
+    .select("nome, profissional_id, intro_diario_vista_em")
     .eq("id", user.id)
     .maybeSingle();
   if (!profile?.nome) redirect("/chegada");
 
   const temProfissional = !!profile.profissional_id;
+  const primeiraEntrada = !profile.intro_diario_vista_em;
+  if (primeiraEntrada) {
+    await supabase.from("profiles").update({ intro_diario_vista_em: new Date().toISOString() }).eq("id", user.id);
+  }
 
   const [{ data: entradas }] = await Promise.all([
     supabase
@@ -30,6 +35,9 @@ export default async function Diario() {
         "id, autor_tipo, conteudo, revisitar, compartilhar, created_at, tipo, biblioteca_ref_id, conexao_conteudo, profissionais:autor_profissional_id(nome)",
       )
       .eq("paciente_id", user.id)
+      // Fechamento do dia (P6) tem tela própria (/fechamento) — não
+      // misturado ao Diário genérico, por decisão explícita.
+      .neq("tipo", "fechamento_dia")
       .order("created_at", { ascending: false }),
     // Sinal pro "continue de onde você parou" da Home (lib/menuHome.ts).
     supabase.from("profiles").update({ ultimo_destino: "diario" }).eq("id", user.id),
@@ -39,6 +47,7 @@ export default async function Diario() {
     <main className={styles.scene}>
       <PageHeader nome={profile.nome} atual="escrever" voltar={{ href: "/home", label: "← voltar" }} />
       <div className={styles.header}>
+        <IntroEspaco espaco="diario" expandidaInicialmente={primeiraEntrada} />
         <p className={styles.eyebrow}>Diário</p>
         <h1 className={styles.titulo}>O que você quer guardar.</h1>
       </div>

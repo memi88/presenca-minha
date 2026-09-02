@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
+import { IntroEspaco } from "../IntroEspaco";
 import { PageHeader } from "../PageHeader";
 import { PainelLeitura } from "./PainelLeitura";
 import styles from "./PainelLeitura.module.css";
@@ -22,7 +23,11 @@ export default async function LivroVivo() {
   if (!user) redirect("/");
 
   const [{ data: profile }, { data: paginas }] = await Promise.all([
-    supabase.from("profiles").select("nome, presenca_hoje").eq("id", user.id).maybeSingle(),
+    supabase
+      .from("profiles")
+      .select("nome, presenca_hoje, intro_livro_vivo_vista_em, profissional_id")
+      .eq("id", user.id)
+      .maybeSingle(),
     supabase
       .from("biblioteca")
       .select("id, titulo, conteudo, tags_momento_vida")
@@ -32,6 +37,14 @@ export default async function LivroVivo() {
     supabase.from("profiles").update({ ultimo_destino: "livro_vivo" }).eq("id", user.id),
   ]);
   if (!profile?.nome) redirect("/chegada");
+
+  const primeiraEntrada = !profile.intro_livro_vivo_vista_em;
+  if (primeiraEntrada) {
+    await supabase
+      .from("profiles")
+      .update({ intro_livro_vivo_vista_em: new Date().toISOString() })
+      .eq("id", user.id);
+  }
 
   // Filtro por tag (Fase 7): nunca esconde conteúdo, só prioriza o que
   // combina com o momento de hoje — o resto continua visível depois. Com
@@ -52,6 +65,7 @@ export default async function LivroVivo() {
         <PageHeader nome={profile.nome} atual="livro" voltar={{ href: "/home", label: "← voltar" }} />
         <div className={styles.duasColunas}>
           <div className={styles.painelLista}>
+            <IntroEspaco espaco="livroVivo" expandidaInicialmente={primeiraEntrada} />
             <p className={styles.eyebrow}>Livro Vivo</p>
             <h1 className={styles.titulo}>
               Leituras para{" "}
@@ -74,6 +88,8 @@ export default async function LivroVivo() {
       paginas={paginasOrdenadas}
       paginaAtiva={null}
       jaGuardada={false}
+      introExpandidaInicialmente={primeiraEntrada}
+      mostrarCtaConectar={!profile.profissional_id}
     />
   );
 }
