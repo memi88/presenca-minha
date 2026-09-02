@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
-import { logout } from "../actions";
+import { adiarLembretePerfil, logout } from "../actions";
 import styles from "./page.module.css";
 
 type VinculoComPaciente = {
@@ -32,10 +32,17 @@ export default async function Pacientes() {
 
   const { data: profissional } = await supabase
     .from("profissionais")
-    .select("id, nome, codigo_convite")
+    .select("id, nome, codigo_convite, tipo, lembrete_perfil_em")
     .eq("user_id", user.id)
     .maybeSingle();
   if (!profissional) redirect("/");
+
+  // Gate do pré-cadastro (docs/presenca-extensao-terapeutas-biblioteca copy.md
+  // §2/§3) — código de convite genérico continua liberado sem essa exigência.
+  const perfilIncompleto = !profissional.tipo;
+  const mostrarBannerPerfil =
+    perfilIncompleto &&
+    (!profissional.lembrete_perfil_em || new Date(profissional.lembrete_perfil_em) <= new Date());
 
   const [{ data: vinculos }, { data: alertas }, { data: entradas }] = await Promise.all([
     supabase
@@ -73,6 +80,9 @@ export default async function Pacientes() {
       <div className={styles.topBar}>
         <p className={styles.greeting}>{profissional.nome}</p>
         <div className={styles.acoesTopo}>
+          <a className={styles.perfil} href="/biblioteca/nova">
+            propor conteúdo
+          </a>
           <a className={styles.perfil} href="/perfil">
             meu perfil
           </a>
@@ -90,8 +100,30 @@ export default async function Pacientes() {
         <p className={styles.codigoAjuda}>passe esse código pro paciente conectar em "Terapia"</p>
       </div>
 
+      {perfilIncompleto ? (
+        <div className={styles.acaoBloqueada}>
+          <span className={styles.acaoBloqueadaIcone} aria-hidden="true">
+            🔒
+          </span>
+          <div className={styles.acaoBloqueadaCopy}>
+            <p className={styles.acaoBloqueadaTitulo}>Pré-cadastrar um paciente</p>
+            <p className={styles.acaoBloqueadaSub}>Complete seu perfil pra liberar — leva menos de um minuto.</p>
+          </div>
+          <a className={styles.acaoBloqueadaBtn} href="/perfil/completar?next=/pacientes/novo">
+            completar perfil →
+          </a>
+        </div>
+      ) : null}
+
       <div className={styles.lista}>
-        <p className={styles.listaTitulo}>pacientes</p>
+        <div className={styles.listaTopo}>
+          <p className={styles.listaTitulo}>pacientes</p>
+          {!perfilIncompleto && (
+            <a className={styles.preCadastrarLink} href="/pacientes/novo">
+              + pré-cadastrar paciente
+            </a>
+          )}
+        </div>
         {!vinculos?.length && <p className={styles.vazio}>ninguém conectado ainda.</p>}
         {vinculos?.map((v) => {
           const ultimaEntrada = ultimaEntradaPorPaciente.get(v.paciente_id);
@@ -109,6 +141,25 @@ export default async function Pacientes() {
           );
         })}
       </div>
+
+      {mostrarBannerPerfil && (
+        <div className={styles.banner}>
+          <div className={styles.bannerMsg}>
+            Complete seu perfil
+            <span className={styles.bannerSub}>Ajuda a calibrar como seus pacientes chegam até você</span>
+          </div>
+          <div className={styles.bannerAcoes}>
+            <a className={styles.bannerPrimaria} href="/perfil/completar?next=/pacientes">
+              completar
+            </a>
+            <form action={adiarLembretePerfil}>
+              <button className={styles.bannerDispensar} type="submit">
+                agora não
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

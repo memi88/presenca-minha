@@ -2,11 +2,10 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
-import { LoginForm } from "./LoginForm";
+import { CadastroForm } from "./CadastroForm";
 import styles from "./page.module.css";
-import { Stitch } from "./Stitch";
 
-export default async function Login() {
+export default async function Cadastro() {
   const supabase = await createClient();
   const {
     data: { user },
@@ -25,19 +24,14 @@ export default async function Login() {
     <main className={styles.scene}>
       <div className={styles.content}>
         <div className={styles.card}>
-          <p className={styles.mark}>
-            <b>Cuida</b> · presença
-          </p>
-          <p className={styles.eyebrow}>para profissionais</p>
-          <h1 className={styles.headline}>Portal do profissional</h1>
+          <p className={styles.eyebrow}>cuida</p>
+          <h1 className={styles.headline}>Só o essencial pra começar</h1>
           <p className={styles.subtext}>
-            Seus pacientes continuam vivendo entre as sessões. O Cuida te deixa presente nesse
-            intervalo — sem virar mais uma ferramenta pra gerenciar.
+            O resto — abordagem, forma de trabalho — a gente pergunta quando fizer sentido, não agora.
           </p>
-          <Stitch />
-          <LoginForm />
-          <a className={styles.voltarLogin} href="/cadastro">
-            ainda não tem conta? criar conta
+          <CadastroForm />
+          <a className={styles.voltarLogin} href="/">
+            já tenho conta
           </a>
         </div>
       </div>

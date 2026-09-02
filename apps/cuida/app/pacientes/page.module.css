@@ -62,12 +62,127 @@
   margin-top: 6px;
 }
 
+/* Estado bloqueado do pré-cadastro (docs/cuida-onboarding-mockup.html,
+   .locked-action) — reaproveita os tokens de "atenção" já existentes em vez
+   de introduzir uma cor nova: mesma família âmbar discreta, não alarmante
+   (voz-de-marca pilar 4). */
+.acaoBloqueada {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--card-bg);
+  border: 1px dashed var(--atencao-border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+
+.acaoBloqueadaIcone {
+  font-size: 16px;
+  flex: none;
+  opacity: 0.7;
+}
+
+.acaoBloqueadaCopy {
+  flex: 1;
+}
+
+.acaoBloqueadaTitulo {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.acaoBloqueadaSub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.acaoBloqueadaBtn {
+  flex: none;
+  background: var(--atencao-bg);
+  color: var(--atencao-text);
+  border: 1px solid var(--atencao-border);
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Banner dispensável "complete seu perfil" — mesmo padrão do banner de
+   conversão/nascimento já usado no Presença (apps/presenca/app/home). */
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 22px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.bannerMsg {
+  color: var(--text);
+}
+
+.bannerSub {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.bannerAcoes {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: none;
+}
+
+.bannerPrimaria {
+  background: none;
+  border: none;
+  color: var(--cta-bg);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.bannerDispensar {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.listaTopo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
 .listaTitulo {
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text-muted);
-  margin-bottom: 10px;
+}
+
+.preCadastrarLink {
+  font-size: 13px;
+  color: var(--cta-bg);
+  text-decoration: none;
 }
 
 .vazio {
