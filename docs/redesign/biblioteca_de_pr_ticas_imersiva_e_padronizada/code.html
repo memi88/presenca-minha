@@ -1,0 +1,341 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Biblioteca de Práticas - Presença</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&amp;family=Bitter:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "background": "#fff8f3",
+                      "surface-dim": "#e2d9cf",
+                      "surface-container-highest": "#eae1d7",
+                      "error": "#ba1a1a",
+                      "inverse-surface": "#343029",
+                      "surface-container": "#fcebdc",
+                      "tertiary-fixed-dim": "#d5c4a9",
+                      "surface": "#fff8f4",
+                      "on-secondary-fixed-variant": "#5f4100",
+                      "on-primary-container": "#b5905c",
+                      "on-surface": "#1f1b15",
+                      "on-primary-fixed-variant": "#5d4214",
+                      "primary-fixed": "#ffddb1",
+                      "surface-container-low": "#fcf2e8",
+                      "on-tertiary-container": "#a3947b",
+                      "on-secondary-container": "#795506",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-fixed-variant": "#514530",
+                      "on-primary-fixed": "#291800",
+                      "on-secondary-fixed": "#271900",
+                      "primary-fixed-dim": "#e8c087",
+                      "error-container": "#ffdad6",
+                      "on-background": "#1f1b15",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "secondary-container": "#fecd77",
+                      "tertiary-fixed": "#f2e0c4",
+                      "inverse-on-surface": "#f9efe5",
+                      "ink-warm": "#221a11",
+                      "inverse-primary": "#e8c087",
+                      "surface-variant": "#eae1d7",
+                      "on-tertiary": "#ffffff",
+                      "surface-bright": "#fff8f3",
+                      "outline-warm": "#817567",
+                      "on-tertiary-fixed": "#231a09",
+                      "outline": "#807569",
+                      "tertiary-container": "#372d1a",
+                      "surface-container-high": "#f0e7dd",
+                      "secondary-fixed-dim": "#efbf6b",
+                      "tertiary": "#211807",
+                      "secondary": "#7c580a",
+                      "surface-tint": "#77592a",
+                      "primary": "#271700",
+                      "on-error-container": "#93000a",
+                      "primary-container": "#422a00",
+                      "on-error": "#ffffff",
+                      "outline-variant": "#d2c4b6",
+                      "secondary-fixed": "#ffdeaa",
+                      "on-surface-variant": "#4e453a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter-mobile": "16px",
+                      "section-gap": "64px",
+                      "card-padding": "20px",
+                      "element-gap": "16px",
+                      "margin-mobile": "24px",
+                      "max-content-width": "1120px"
+              },
+              "fontFamily": {
+                      "display-lg": [
+                              "Fraunces"
+                      ],
+                      "navigation": [
+                              "Bitter"
+                      ],
+                      "button": [
+                              "Bitter"
+                      ],
+                      "headline-lg": [
+                              "Fraunces"
+                      ],
+                      "label-md": [
+                              "Bitter"
+                      ],
+                      "body-md": [
+                              "Fraunces"
+                      ],
+                      "label-sm": [
+                              "Bitter"
+                      ],
+                      "body-lg": [
+                              "Fraunces"
+                      ],
+                      "display-lg-mobile": [
+                              "Fraunces"
+                      ],
+                      "title-lg": [
+                              "Fraunces"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg": [
+                              "56px",
+                              {
+                                      "lineHeight": "64px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "300"
+                              }
+                      ],
+                      "navigation": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "button": [
+                              "15px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "fontWeight": "300"
+                              }
+                      ],
+                      "title-lg": [
+                              "22px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Custom scrollbar for filters */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Safe area padding for modern mobile browsers */
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 16px); }
+    </style>
+</head>
+<body class="bg-[#f7f0e4] text-[#2a2118] antialiased min-h-screen relative font-body-md overflow-x-hidden selection:bg-surface-tint selection:text-white pb-[100px]">
+<!-- Main Content Canvas -->
+<main class="relative z-10 pb-32">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-[#f7f0e4] border-b-0 shadow-[0_4px_24px_-12px_rgba(0,0,0,0.05)] z-40">
+<div class="flex items-center justify-between px-margin-mobile py-4 max-w-[1120px] mx-auto w-full h-[64px]">
+<!-- Leading Icon -->
+<button aria-label="Voltar" class="text-on-surface-variant hover:bg-surface-bright transition-colors duration-300 rounded-full p-2 scale-95 active:scale-90 flex items-center justify-center -ml-2">
+<span class="material-symbols-outlined text-[#2a2118]">arrow_back</span>
+</button>
+<!-- Headline -->
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary tracking-tight">Práticas</h1>
+<!-- Trailing Empty space to balance -->
+<div class="w-10"></div>
+</div>
+</header>
+<div class="max-w-[1120px] mx-auto px-margin-mobile md:px-[64px]">
+<!-- Filters -->
+<section class="mt-8 mb-10 overflow-x-auto hide-scrollbar -mx-margin-mobile px-margin-mobile">
+<div class="flex gap-3 min-w-max pb-2">
+<button class="px-6 py-2 rounded-full bg-[#2a2118] text-[#fffdf9] font-label-md transition-colors shadow-sm">
+                        Todas
+                    </button>
+<button class="px-6 py-2 rounded-full bg-transparent border border-outline-variant text-[#7a6a52] font-label-md hover:bg-[#2a2118]/5 transition-colors">
+                        Respiração
+                    </button>
+<button class="px-6 py-2 rounded-full bg-transparent border border-outline-variant text-[#7a6a52] font-label-md hover:bg-[#2a2118]/5 transition-colors">
+                        Meditação
+                    </button>
+<button class="px-6 py-2 rounded-full bg-transparent border border-outline-variant text-[#7a6a52] font-label-md hover:bg-[#2a2118]/5 transition-colors">
+                        Movimento
+                    </button>
+<button class="px-6 py-2 rounded-full bg-transparent border border-outline-variant text-[#7a6a52] font-label-md hover:bg-[#2a2118]/5 transition-colors">
+                        Sono
+                    </button>
+</div>
+</section>
+<!-- Practice List -->
+<section class="flex flex-col gap-6 md:grid md:grid-cols-2 lg:grid-cols-2">
+<!-- Practice Card 1 -->
+<article class="relative rounded-[1rem] border border-outline-variant overflow-hidden hover:opacity-90 transition-opacity cursor-pointer group shadow-sm flex-1 min-h-[220px]">
+<img class="w-full h-full object-cover absolute inset-0 mix-blend-multiply opacity-80" data-alt="Abstract smooth waves representing breath" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDl1rs4X3_0-6elX65K0FWG7j_MOqSgXrptbhiXG7ynA9hnOwC8WJXl_rGblv4tbYVrFbiJe1cfqnuev4dczaTadE-Sq9OCVPrgMoBv2-JZIFcXhR7ow9sDJ5d-MepX5xBQCQJQ_H3BEvgsWuGLULa0sOh8yvKz3i_wW5qLoAAJlLXRuD4rNh5qyQ33EDQD3mlv1hkvMEFJvp4-7CkoDP5Q_KQNLc2NY2IGDq3q0XYerTEROz10AnwPQA">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+<div class="relative z-10 p-[24px] flex flex-col h-full justify-end gap-2 text-white">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-white/80 tracking-widest uppercase drop-shadow-sm flex items-center gap-2"><span class="material-symbols-outlined text-lg">air</span> Respiração • 5 min</span>
+</div>
+<h4 class="font-headline-lg text-headline-lg font-medium drop-shadow-md text-white">Respiração Quadrada</h4>
+<p class="font-body-md text-white/90 line-clamp-2 drop-shadow-sm max-w-[85%]">Uma técnica simples para reduzir a ansiedade e ancorar o corpo no momento presente.</p>
+<span class="font-label-md text-label-md flex items-center gap-2 mt-2 group-hover:translate-x-1 transition-transform w-fit bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+<img alt="Seta" class="w-4 h-4 invert" src="https://lh3.googleusercontent.com/aida/AEtjO1W_SIDxufpVjVfrz5HHrzEKsGVBUc_Z-Vz07ibVER7m2fUBFaQD2p4StLuDsSQ8e9l3ffUKxOO1LwyLNBvM34eycPveALlvelb94ZlSEuNBqiwsQj5WZNaZt6YHXb0dHleeshUIbtBgmWYOufTxsWbVJAwvPoWL3jv6CUF-404_LsnoOmPyXkUHMsZcZGlcfCM17Md5N0tMvbbft-2Rr6tdxtoehri7y8iQM3hjeCoxEPtSneJGGI1ivRU"> Iniciar
+</span>
+</div>
+</article>
+<!-- Practice Card 2 -->
+<article class="relative rounded-[1rem] border border-outline-variant overflow-hidden hover:opacity-90 transition-opacity cursor-pointer group shadow-sm flex-1 min-h-[220px]">
+<img class="w-full h-full object-cover absolute inset-0 mix-blend-multiply opacity-80" data-alt="Calm water surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANl-q_Bj0RsBG7RFde4Govmk3a6G_yZUyNBsp0P86dlMX74KUZNEfmNCZgSd3kAJnSYWVIzBLPH0rWvarz97166p37-UX-rrZK4ZTc-GJXWrMiw6JzuHJa4wW9hucyK6n8RUjGtuYuPxXgDKfBScq5_rid751Y6O792TxCC42yVwn3eRtgWJbRhNNL5xYr_v7xgnONbWIrjaOHMeRDIfm18fskiE_tkPLUpGyJlqiwhZcoyRp_jx3M1g">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+<div class="relative z-10 p-[24px] flex flex-col h-full justify-end gap-2 text-white">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-white/80 tracking-widest uppercase drop-shadow-sm flex items-center gap-2"><span class="material-symbols-outlined text-lg">self_improvement</span> Meditação • 15 min</span>
+</div>
+<h4 class="font-headline-lg text-headline-lg font-medium drop-shadow-md text-white">Atenção Plena Diária</h4>
+<p class="font-body-md text-white/90 line-clamp-2 drop-shadow-sm max-w-[85%]">Cultive a observação silenciosa dos pensamentos sem julgamento.</p>
+<span class="font-label-md text-label-md flex items-center gap-2 mt-2 group-hover:translate-x-1 transition-transform w-fit bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+<img alt="Seta" class="w-4 h-4 invert" src="https://lh3.googleusercontent.com/aida/AEtjO1W_SIDxufpVjVfrz5HHrzEKsGVBUc_Z-Vz07ibVER7m2fUBFaQD2p4StLuDsSQ8e9l3ffUKxOO1LwyLNBvM34eycPveALlvelb94ZlSEuNBqiwsQj5WZNaZt6YHXb0dHleeshUIbtBgmWYOufTxsWbVJAwvPoWL3jv6CUF-404_LsnoOmPyXkUHMsZcZGlcfCM17Md5N0tMvbbft-2Rr6tdxtoehri7y8iQM3hjeCoxEPtSneJGGI1ivRU"> Iniciar
+</span>
+</div>
+</article>
+<!-- Practice Card 3 -->
+<article class="relative rounded-[1rem] border border-outline-variant overflow-hidden hover:opacity-90 transition-opacity cursor-pointer group shadow-sm flex-1 min-h-[220px]">
+<img class="w-full h-full object-cover absolute inset-0 mix-blend-multiply opacity-80" data-alt="Night sky and soft clouds" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMa3-2xF0IyCBGTUeKLnehXZSDgpuos0qVH2-PhYx0-I5o640jwhLNRD_I8nDPqC0n1PyuqbF8TakVqERoZbpSliRIzxuqGv9HL96ptGDfC2Zj986ysi2GxBSrRbqmg0gmbcAAM0rbAHJvBLfZl-S70Xfw6QbUFHoGB96tVDNhe6SYSU6NJcJmNijx2-xIbzeTksPdkTYNmQ_T0v-QNpKwgAK0zS79JN7O8Bm6vYWcdIHw4O6xPpnpwQ">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+<div class="relative z-10 p-[24px] flex flex-col h-full justify-end gap-2 text-white">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-white/80 tracking-widest uppercase drop-shadow-sm flex items-center gap-2"><span class="material-symbols-outlined text-lg">nights_stay</span> Sono • 20 min</span>
+</div>
+<h4 class="font-headline-lg text-headline-lg font-medium drop-shadow-md text-white">Relaxamento Profundo</h4>
+<p class="font-body-md text-white/90 line-clamp-2 drop-shadow-sm max-w-[85%]">Escaneamento corporal guiado para preparar a mente e o corpo para um descanso restaurador.</p>
+<span class="font-label-md text-label-md flex items-center gap-2 mt-2 group-hover:translate-x-1 transition-transform w-fit bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+<img alt="Seta" class="w-4 h-4 invert" src="https://lh3.googleusercontent.com/aida/AEtjO1W_SIDxufpVjVfrz5HHrzEKsGVBUc_Z-Vz07ibVER7m2fUBFaQD2p4StLuDsSQ8e9l3ffUKxOO1LwyLNBvM34eycPveALlvelb94ZlSEuNBqiwsQj5WZNaZt6YHXb0dHleeshUIbtBgmWYOufTxsWbVJAwvPoWL3jv6CUF-404_LsnoOmPyXkUHMsZcZGlcfCM17Md5N0tMvbbft-2Rr6tdxtoehri7y8iQM3hjeCoxEPtSneJGGI1ivRU"> Iniciar
+</span>
+</div>
+</article>
+<!-- Practice Card 4 -->
+<article class="relative rounded-[1rem] border border-outline-variant overflow-hidden hover:opacity-90 transition-opacity cursor-pointer group shadow-sm flex-1 min-h-[220px]">
+<img class="w-full h-full object-cover absolute inset-0 mix-blend-multiply opacity-80" data-alt="Forest path" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7tk3GiLsvdo_SlARdsFUfo5RL98zS1aebQ1_pzC3uQSSpjx9AAsr8Igrs7qfGAp91wsSgAXNSWNw-ERc5OrxYX0DFKubEdERewLKJRc7f0ZEMLJiT8FJWyagewknb7KF5qHUDNWAoGh3iZYGPvBqhB8Bu1a_xFhQqxI09_TawfWUceyrwcegIGo5AXXB_MmLZUMXKO84vhxWXUSgMscQVC3wa5ABXcCG4H4LNEPft2d8PyoBe3uKneA">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+<div class="relative z-10 p-[24px] flex flex-col h-full justify-end gap-2 text-white">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-white/80 tracking-widest uppercase drop-shadow-sm flex items-center gap-2"><span class="material-symbols-outlined text-lg">directions_walk</span> Movimento • 10 min</span>
+</div>
+<h4 class="font-headline-lg text-headline-lg font-medium drop-shadow-md text-white">Caminhada Contemplativa</h4>
+<p class="font-body-md text-white/90 line-clamp-2 drop-shadow-sm max-w-[85%]">Prática de atenção voltada para os passos e a conexão com o ambiente.</p>
+<span class="font-label-md text-label-md flex items-center gap-2 mt-2 group-hover:translate-x-1 transition-transform w-fit bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+<img alt="Seta" class="w-4 h-4 invert" src="https://lh3.googleusercontent.com/aida/AEtjO1W_SIDxufpVjVfrz5HHrzEKsGVBUc_Z-Vz07ibVER7m2fUBFaQD2p4StLuDsSQ8e9l3ffUKxOO1LwyLNBvM34eycPveALlvelb94ZlSEuNBqiwsQj5WZNaZt6YHXb0dHleeshUIbtBgmWYOufTxsWbVJAwvPoWL3jv6CUF-404_LsnoOmPyXkUHMsZcZGlcfCM17Md5N0tMvbbft-2Rr6tdxtoehri7y8iQM3hjeCoxEPtSneJGGI1ivRU"> Iniciar
+</span>
+</div>
+</article>
+</section>
+</div>
+</main>
+<!-- BottomNavBar (Matches Home Screen Structure) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 bg-surface-container-low dark:bg-surface-dim border-t border-outline-variant/20 z-50 pb-safe shadow-[0_-4px_24px_-12px_rgba(0,0,0,0.05)]">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-all duration-200 tap-highlight-transparent active:scale-95" href="#">
+<svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="w-6 h-6 opacity-70"><circle cx="14" cy="14" r="10.5" opacity="0.4"></circle><circle cx="14" cy="14" r="6.6" opacity="0.75"></circle><circle cx="14" cy="14" r="2.4" fill="currentColor" stroke="none"></circle></svg>
+<span class="font-label-sm text-[11px] mt-1 hidden">Home</span>
+</a>
+<!-- Livro Vivo -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-all duration-200 tap-highlight-transparent active:scale-95" href="#">
+<svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 opacity-70"><path d="M4.5 6.5c3.2-1.4 6-.6 9.5 1.4 3.2-2.2 6.3-2.4 9.5-1v14c-3.2-1.4-6.3-1.2-9.5 1-3.5-2-6.3-2.8-9.5-1.4z"></path><path d="M14 7.9v14"></path></svg>
+<span class="font-label-sm text-[11px] mt-1 hidden">Livro Vivo</span>
+</a>
+<!-- Diário -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-all duration-200 tap-highlight-transparent active:scale-95" href="#">
+<svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 opacity-70"><path d="M6 22c5.5-1 10-4.8 14.5-13.2"></path><path d="M17.3 6.2c1.6.3 2.9 1.5 3.3 3.1-1.7.4-3.4-.1-4.6-1.3"></path><circle cx="6" cy="22" r="1.15" fill="currentColor" stroke="none"></circle></svg>
+<span class="font-label-sm text-[11px] mt-1 hidden">Diário</span>
+</a>
+<!-- Práticas (Active) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1.5 tap-highlight-transparent active:scale-95 transition-transform" href="#">
+<svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="w-6 h-6"><path d="M14 4.5c5.6 1 8.7 5 8.7 9.5s-3.6 8.2-8.7 9.5c-5.6-1-8.7-5-8.7-9.5 2.6 3 5.4 3.9 8 2.8 2.7-1.1 3.3-3.9 1.6-6.2-1-1.3-2.6-1.6-3.7-.7"></path></svg>
+<span class="font-label-sm text-[11px] mt-1 text-primary">Práticas</span>
+</a>
+<!-- Conversa -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-all duration-200 tap-highlight-transparent active:scale-95" href="#">
+<svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round" class="w-6 h-6 opacity-70"><path d="M5 9.8c0-3.1 3.2-5.3 9-5.3s9 2.2 9 5.3-3.2 5.2-9 5.2c-.7 0-1.4 0-2.1-.15l-4.3 2.9.6-3.8C6.1 12.8 5 11.4 5 9.8z"></path></svg>
+<span class="font-label-sm text-[11px] mt-1 hidden">Conversa</span>
+</a>
+</nav>
+
+
+</body></html>

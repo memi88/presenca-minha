@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Presença - Prática Ativa</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;600;700&amp;family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#271700",
+                        "primary-fixed": "#ffddb1",
+                        "on-surface-variant": "#4e453a",
+                        "outline": "#807569",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#eae1d7",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#422a00",
+                        "outline-variant": "#d2c4b6",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#e8c087",
+                        "on-secondary-container": "#795506",
+                        "on-primary-fixed": "#291800",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#fff8f3",
+                        "secondary-fixed-dim": "#efbf6b",
+                        "surface-container-low": "#fcf2e8",
+                        "outline-warm": "#817567",
+                        "secondary": "#7c580a",
+                        "inverse-primary": "#e8c087",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#271900",
+                        "surface-dim": "#e2d9cf",
+                        "surface-container-highest": "#eae1d7",
+                        "background": "#fff8f3",
+                        "surface-container": "#f6ece2",
+                        "surface": "#fff8f4",
+                        "on-tertiary-fixed-variant": "#514530",
+                        "secondary-container": "#fecd77",
+                        "on-surface": "#1f1b15",
+                        "secondary-fixed": "#ffdeaa",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#231a09",
+                        "tertiary-container": "#372d1a",
+                        "inverse-on-surface": "#f9efe5",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "surface-tint": "#77592a",
+                        "ink-warm": "#221a11",
+                        "tertiary-fixed-dim": "#d5c4a9",
+                        "surface-container-high": "#f0e7dd",
+                        "inverse-surface": "#343029",
+                        "on-background": "#1f1b15",
+                        "tertiary-fixed": "#f2e0c4",
+                        "on-tertiary-container": "#a3947b",
+                        "on-primary-fixed-variant": "#5d4214",
+                        "on-primary-container": "#b5905c",
+                        "tertiary": "#211807"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "card-padding": "20px",
+                        "gutter-mobile": "16px",
+                        "margin-mobile": "24px",
+                        "element-gap": "16px",
+                        "section-gap": "64px",
+                        "max-content-width": "1120px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Bitter"],
+                        "navigation": ["Bitter"],
+                        "headline-lg": ["Fraunces"],
+                        "display-lg": ["Fraunces"],
+                        "button": ["Bitter"],
+                        "display-lg-mobile": ["Fraunces"],
+                        "title-lg": ["Fraunces"],
+                        "body-md": ["Fraunces"],
+                        "label-md": ["Bitter"],
+                        "body-lg": ["Fraunces"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "navigation": ["16px", { "lineHeight": "24px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "500" }],
+                        "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "300" }],
+                        "button": ["15px", { "lineHeight": "20px", "fontWeight": "700" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "48px", "fontWeight": "300" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    },
+                    "animation": {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #f7f0e4; /* Requested light environment color */
+        }
+    </style>
+</head>
+<body class="min-h-screen text-on-surface antialiased flex flex-col items-center justify-center relative overflow-hidden">
+<!-- Top Navigation Area (Close Button Only) -->
+<header class="fixed top-0 w-full flex items-center justify-between px-margin-mobile h-16 w-full z-50 bg-transparent no-border tonal-layering flat no shadows transition-transform">
+<!-- Spacer to push close button to right if needed, or leave left-aligned based on JSON but JSON requested leading icon close -->
+<button aria-label="Close Practice" class="text-primary dark:text-primary-fixed-dim hover:opacity-80 transition-opacity active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">close</span>
+</button>
+<!-- The headline "Presença" is omitted here to maintain total focus on instruction, as requested: "Sem barras de progresso, sem contadores, sem menus. Foco total na instrução e na marca pulsante." -->
+</header>
+<!-- Main Content Canvas -->
+<main class="w-full max-w-max-content-width px-margin-mobile flex flex-col items-center justify-center flex-grow">
+<!-- Pulsing Brand Logo -->
+<div class="mb-section-gap flex items-center justify-center w-[120px] h-[120px]">
+<img alt="Presença logo" class="w-full h-full object-contain animate-pulse-slow" src="https://lh3.googleusercontent.com/aida/AEtjO1XnMs34lDrNmllIa87K3X_qXBK8bEWVJTikq3l9X6e8ZgFXK8a4HG_14pUKaA6LB1oRkVNITxVor8WZzQIIciqU3qzgvTcphYesJbGfooQEgLSAIyutYxx6uW6wsg5iADllMwbrKref0a6RqoBz67sb_aDPTlWgJaYs1nENaxFrkZgIdwaI69ZWDzuOdcCnepjaq1fBV7FpLMq41B7g4pJod4zSV3MR5I8MkSO3SEIKuObSShtQbWdp5arM"/>
+</div>
+<!-- Practice Instruction -->
+<div class="text-center max-w-lg mx-auto">
+<p class="font-title-lg text-title-lg text-primary leading-relaxed tracking-wide">
+                Sinta o ar preencher seus pulmões...
+            </p>
+</div>
+</main>
+<!-- Suppressed BottomNavBar due to transactional/task-focused intent (Active Practice) -->
+</body></html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Chegada - Como quer ser chamado?</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;500;600;700&amp;family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed": "#f2e0c4",
+                      "surface-tint": "#77592a",
+                      "on-tertiary-fixed": "#231a09",
+                      "secondary-fixed": "#ffdeaa",
+                      "inverse-primary": "#e8c087",
+                      "on-tertiary-container": "#a3947b",
+                      "surface-container": "#fcebdc",
+                      "on-surface": "#1f1b15",
+                      "on-surface-variant": "#4e453a",
+                      "ink-warm": "#221a11",
+                      "primary-fixed": "#ffddb1",
+                      "on-error-container": "#93000a",
+                      "secondary-fixed-dim": "#efbf6b",
+                      "outline": "#807569",
+                      "surface-variant": "#eae1d7",
+                      "on-tertiary-fixed-variant": "#514530",
+                      "outline-warm": "#817567",
+                      "background": "#fff8f3",
+                      "tertiary-container": "#372d1a",
+                      "on-primary": "#ffffff",
+                      "on-background": "#1f1b15",
+                      "surface-container-highest": "#eae1d7",
+                      "surface-dim": "#e2d9cf",
+                      "inverse-on-surface": "#f9efe5",
+                      "on-error": "#ffffff",
+                      "on-primary-fixed": "#291800",
+                      "tertiary": "#211807",
+                      "surface": "#fff8f4",
+                      "tertiary-fixed-dim": "#d5c4a9",
+                      "primary-container": "#422a00",
+                      "surface-container-low": "#fcf2e8",
+                      "on-primary-container": "#b5905c",
+                      "primary": "#271700",
+                      "surface-container-high": "#f0e7dd",
+                      "on-secondary-container": "#795506",
+                      "on-secondary-fixed": "#271900",
+                      "outline-variant": "#d2c4b6",
+                      "on-secondary-fixed-variant": "#5f4100",
+                      "primary-fixed-dim": "#e8c087",
+                      "on-tertiary": "#ffffff",
+                      "surface-bright": "#fff8f3",
+                      "inverse-surface": "#343029",
+                      "error": "#ba1a1a",
+                      "error-container": "#ffdad6",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-container": "#fecd77",
+                      "on-primary-fixed-variant": "#5d4214",
+                      "on-secondary": "#ffffff",
+                      "secondary": "#7c580a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter-mobile": "16px",
+                      "margin-mobile": "24px",
+                      "card-padding": "20px",
+                      "max-content-width": "1120px",
+                      "section-gap": "64px",
+                      "element-gap": "16px"
+              },
+              "fontFamily": {
+                      "headline-lg": [
+                              "Fraunces"
+                      ],
+                      "button": [
+                              "Bitter"
+                      ],
+                      "title-lg": [
+                              "Fraunces"
+                      ],
+                      "display-lg-mobile": [
+                              "Fraunces"
+                      ],
+                      "label-md": [
+                              "Bitter"
+                      ],
+                      "label-sm": [
+                              "Bitter"
+                      ],
+                      "navigation": [
+                              "Bitter"
+                      ],
+                      "body-lg": [
+                              "Fraunces"
+                      ],
+                      "body-md": [
+                              "Fraunces"
+                      ],
+                      "display-lg": [
+                              "Fraunces"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "button": [
+                              "15px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "title-lg": [
+                              "22px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "fontWeight": "300"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "navigation": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "56px",
+                              {
+                                      "lineHeight": "64px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "300"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Subtle texture overlay for contemplative warmth */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.5;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center justify-center p-margin-mobile md:p-8 antialiased">
+<!-- Note: TopAppBar and BottomNavBar are suppressed as this is a linear/transactional onboarding screen -->
+<main class="w-full max-w-md mx-auto flex flex-col justify-center min-h-[707px] relative z-10">
+<!-- Header Section -->
+<header class="mb-section-gap text-center md:text-left">
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-ink-warm mb-4">
+                Como quer ser<br/>
+                chamado?
+            </h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Um espaço reservado para suas reflexões.
+            </p>
+</header>
+<!-- Form Section -->
+<form class="space-y-element-gap flex flex-col">
+<!-- Nickname Input (Required) -->
+<div class="relative group">
+<label class="sr-only" for="nickname">Seu apelido</label>
+<input class="w-full bg-surface-container-low border border-outline-variant text-on-surface font-label-md text-label-md px-4 py-4 rounded focus:ring-1 focus:ring-on-primary-container focus:border-on-primary-container focus:outline-none transition-colors placeholder:text-outline-warm" id="nickname" name="nickname" placeholder="Seu apelido" required="" type="text"/>
+</div>
+<hr class="border-outline-variant my-6 opacity-50"/>
+<!-- Optional Fields Section -->
+<div class="space-y-4">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-outline-warm text-sm">lock_open</span>
+<span class="font-label-sm text-label-sm text-outline-warm uppercase tracking-wider">Opcional para agora</span>
+</div>
+<!-- Email Input (Optional) -->
+<div class="relative">
+<label class="sr-only" for="email">E-mail</label>
+<input class="w-full bg-surface-container-low border border-outline-variant text-on-surface font-label-md text-label-md px-4 py-4 rounded focus:ring-1 focus:ring-on-primary-container focus:border-on-primary-container focus:outline-none transition-colors placeholder:text-outline-warm" id="email" name="email" placeholder="E-mail (pode preencher depois)" type="email"/>
+</div>
+<!-- Password Input (Optional) -->
+<div class="relative">
+<label class="sr-only" for="password">Senha</label>
+<input class="w-full bg-surface-container-low border border-outline-variant text-on-surface font-label-md text-label-md px-4 py-4 rounded focus:ring-1 focus:ring-on-primary-container focus:border-on-primary-container focus:outline-none transition-colors placeholder:text-outline-warm" id="password" name="password" placeholder="Senha (pode preencher depois)" type="password"/>
+</div>
+</div>
+<!-- Spacer to push consent and button to bottom if on taller screens -->
+<div class="flex-grow min-h-[40px]"></div>
+<!-- Consent Block -->
+<div class="bg-surface-container p-card-padding rounded-lg border border-outline-variant mt-8 mb-6">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-primary-container shrink-0 mt-0.5" style="font-variation-settings: 'FILL' 1;">eco</span>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface mb-2">Transparência e Cuidado</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm leading-relaxed">
+                            Seus dados são um refúgio. Usamos essas informações apenas para personalizar sua experiência e manter suas anotações seguras. Nunca compartilhamos com terceiros sem seu consentimento explícito.
+                        </p>
+</div>
+</div>
+</div>
+<!-- Submit Button -->
+<button class="w-full bg-on-primary-container text-on-primary font-button text-button py-4 px-8 rounded-full hover:bg-primary-container hover:shadow-md transition-all duration-300 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 flex items-center justify-center gap-2" type="submit">
+<span>Continuar</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</form>
+</main>
+<script>
+        // Simple micro-interaction for input fields to elevate them slightly on focus
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('shadow-sm', 'bg-surface-bright');
+                this.classList.replace('bg-surface-container-low', 'bg-surface-bright');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('shadow-sm', 'bg-surface-bright');
+                this.classList.replace('bg-surface-bright', 'bg-surface-container-low');
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html><html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Fechamento do Dia</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&amp;family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed": "#231a09",
+                      "on-secondary": "#ffffff",
+                      "secondary-container": "#fecd77",
+                      "primary-container": "#422a00",
+                      "outline-variant": "#d2c4b6",
+                      "surface-container-lowest": "#ffffff",
+                      "on-surface": "#1f1b15",
+                      "on-primary": "#ffffff",
+                      "background": "#fff8f3",
+                      "surface-container-low": "#fcf2e8",
+                      "surface-tint": "#77592a",
+                      "surface-bright": "#fff8f3",
+                      "on-secondary-container": "#795506",
+                      "primary-fixed": "#ffddb1",
+                      "surface-variant": "#eae1d7",
+                      "outline": "#807569",
+                      "on-tertiary": "#ffffff",
+                      "inverse-surface": "#343029",
+                      "inverse-on-surface": "#f9efe5",
+                      "on-primary-fixed": "#291800",
+                      "surface-dim": "#e2d9cf",
+                      "on-primary-container": "#b5905c",
+                      "on-primary-fixed-variant": "#5d4214",
+                      "secondary": "#7c580a",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed-dim": "#d5c4a9",
+                      "inverse-primary": "#e8c087",
+                      "on-secondary-fixed": "#271900",
+                      "on-tertiary-container": "#a3947b",
+                      "secondary-fixed-dim": "#efbf6b",
+                      "tertiary-container": "#372d1a",
+                      "surface": "#14100a", 
+                      "error": "#ba1a1a",
+                      "tertiary": "#211807",
+                      "primary-fixed-dim": "#e8c087",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed-variant": "#514530",
+                      "on-error-container": "#93000a",
+                      "secondary-fixed": "#ffdeaa",
+                      "outline-warm": "#817567",
+                      "primary": "#d9a441", 
+                      "on-secondary-fixed-variant": "#5f4100",
+                      "surface-container-highest": "#eae1d7",
+                      "surface-container-high": "#f0e7dd",
+                      "surface-container": "#f6ece2",
+                      "on-surface-variant": "#4e453a",
+                      "ink-warm": "#f2e4c9", 
+                      "on-background": "#1f1b15",
+                      "tertiary-fixed": "#f2e0c4",
+                      "modal-border": "#785f3c",
+                      "modal-tertiary-text": "#a2947a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "element-gap": "16px",
+                      "max-content-width": "1120px",
+                      "section-gap": "64px",
+                      "gutter-mobile": "16px",
+                      "margin-mobile": "24px",
+                      "card-padding": "20px"
+              },
+              "fontFamily": {
+                      "navigation": ["Spectral", "serif"],
+                      "label-sm": ["Spectral", "serif"],
+                      "display-lg": ["Fraunces", "serif"],
+                      "headline-lg": ["Fraunces", "serif"],
+                      "body-lg": ["Spectral", "serif"],
+                      "body-md": ["Spectral", "serif"],
+                      "title-lg": ["Fraunces", "serif"],
+                      "button": ["Spectral", "serif"],
+                      "label-md": ["Spectral", "serif"],
+                      "display-lg-mobile": ["Fraunces", "serif"]
+              },
+              "fontSize": {
+                      "navigation": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                      "display-lg": ["56px", {"lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "300"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "500"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "title-lg": ["22px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "button": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                      "display-lg-mobile": ["40px", {"lineHeight": "48px", "fontWeight": "300"}]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .modal-enter {
+            animation: modalFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -48%) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        /* Custom scrollbar for textarea */
+        textarea::-webkit-scrollbar {
+            width: 6px;
+        }
+        textarea::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background: #4e453a;
+            border-radius: 4px;
+        }
+        textarea::placeholder {
+            color: rgba(242, 228, 201, 0.4);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background min-h-screen relative overflow-hidden font-body-md text-on-surface">
+<!-- Background Content (Simulated underlying page) -->
+<div class="absolute inset-0 z-0 p-8">
+<div class="max-w-max-content-width mx-auto">
+<header class="mb-section-gap">
+<h1 class="font-headline-lg text-headline-lg mb-4">Diário de Práticas</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Reflexões e anotações do dia. O espaço para registrar a evolução pessoal contínua.</p>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Dummy content cards -->
+<div class="bg-surface-container rounded-xl p-card-padding outline outline-1 outline-outline-variant">
+<h3 class="font-title-lg text-title-lg mb-2">Meditação Matinal</h3>
+<p class="text-on-surface-variant mb-4">Foco na respiração e clareza mental.</p>
+</div>
+<div class="bg-surface-container rounded-xl p-card-padding outline outline-1 outline-outline-variant">
+<h3 class="font-title-lg text-title-lg mb-2">Leitura Profunda</h3>
+<p class="text-on-surface-variant mb-4">Filosofia estoica, capítulos 3 e 4.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Overlay & Modal Container -->
+<div aria-hidden="true" class="fixed inset-0 z-40 bg-[#14100a]/85 backdrop-blur-sm"></div>
+<!-- Modal -->
+<div aria-labelledby="modal-title" aria-modal="true" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[420px] z-50 modal-enter bg-[#14100a] text-ink-warm rounded-2xl shadow-2xl border border-modal-border/20 overflow-hidden flex flex-col" role="dialog">
+<!-- Modal Content -->
+<div class="p-8 flex flex-col gap-6">
+<!-- Header -->
+<div class="text-center mb-2">
+<h2 class="font-headline-lg text-headline-lg md:text-headline-lg text-primary tracking-tight" id="modal-title">Antes de fechar por hoje...</h2>
+</div>
+<!-- Quick Responses (Chips) -->
+<div class="flex flex-col gap-4">
+<label class="font-label-md text-label-md text-ink-warm/70 uppercase tracking-[0.1em] text-center mb-1">Como você se sente?</label>
+<div class="flex flex-col gap-3 justify-center items-center">
+<button class="w-full max-w-[280px] px-6 py-2 rounded-full border border-modal-border/40 text-ink-warm font-body-md text-body-md hover:border-primary/50 hover:bg-primary/10 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center">
+                        Algo encontrou eco
+                    </button>
+<button class="w-full max-w-[280px] px-6 py-2 rounded-full border border-modal-border/40 text-ink-warm font-body-md text-body-md hover:border-primary/50 hover:bg-primary/10 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center">
+                        Percebi algo de outra maneira
+                    </button>
+<button class="w-full max-w-[280px] px-6 py-2 rounded-full border border-modal-border/40 text-ink-warm font-body-md text-body-md hover:border-primary/50 hover:bg-primary/10 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-center">
+                        Nada em especial
+                    </button>
+</div>
+</div>
+<!-- Text Area -->
+<div class="mt-2">
+<label class="sr-only" for="reflection-text">Quer escrever mais sobre isso?</label>
+<textarea class="w-full bg-[#1a150d] border border-modal-border/30 rounded-xl p-5 font-body-md text-body-md text-ink-warm focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-none shadow-inner" id="reflection-text" placeholder="Quer escrever mais sobre isso?" rows="4"></textarea>
+</div>
+</div>
+<!-- Actions Footer -->
+<div class="p-8 pt-0 flex flex-col gap-4 items-center">
+<!-- Primary Action -->
+<button class="w-full bg-primary text-[#14100a] font-button text-button py-3.5 px-6 rounded-full hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#14100a] focus:ring-primary">
+                Enviar
+            </button>
+<!-- Secondary Action -->
+<button class="w-full bg-transparent border-2 border-[#785f3c]/30 text-ink-warm font-button text-button py-[12px] px-6 rounded-full hover:border-[#785f3c]/60 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#14100a] focus:ring-primary">
+                Salvar e enviar
+            </button>
+<!-- Tertiary Action -->
+<button class="mt-1 text-modal-tertiary-text font-body-md text-body-md hover:text-ink-warm transition-colors focus:outline-none rounded px-2 py-1">
+                Agora não
+            </button>
+</div>
+</div>
+<!-- Interactive Script for Chips -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chips = document.querySelectorAll('.flex-col > button');
+            
+            chips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    // Remove active state from all
+                    chips.forEach(c => {
+                        c.classList.remove('bg-primary/20', 'border-primary');
+                        c.classList.add('border-modal-border/40');
+                    });
+                    
+                    // Add active state to clicked
+                    this.classList.remove('border-modal-border/40');
+                    this.classList.add('bg-primary/20', 'border-primary');
+                });
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Conversa - Dr. Arisvaldo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;500;600;700&amp;family=Fraunces:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "on-background": "#1f1b15",
+                        "on-tertiary-fixed": "#231a09",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "surface-dim": "#e2d9cf",
+                        "on-secondary-container": "#795506",
+                        "on-tertiary-fixed-variant": "#514530",
+                        "tertiary": "#211807",
+                        "secondary-fixed": "#ffdeaa",
+                        "primary-fixed-dim": "#e8c087",
+                        "surface-bright": "#fff8f3",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#422a00",
+                        "error": "#ba1a1a",
+                        "inverse-surface": "#343029",
+                        "inverse-primary": "#e8c087",
+                        "surface-container": "#fcebdc",
+                        "tertiary-fixed": "#f2e0c4",
+                        "outline": "#807569",
+                        "secondary": "#7c580a",
+                        "surface": "#fff8f4",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#b5905c",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#eae1d7",
+                        "tertiary-container": "#372d1a",
+                        "inverse-on-surface": "#f9efe5",
+                        "surface-tint": "#77592a",
+                        "surface-container-high": "#f0e7dd",
+                        "tertiary-fixed-dim": "#d5c4a9",
+                        "secondary-fixed-dim": "#efbf6b",
+                        "surface-container-low": "#fcf2e8",
+                        "ink-warm": "#221a11",
+                        "on-secondary-fixed": "#271900",
+                        "secondary-container": "#fecd77",
+                        "primary": "#271700",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#5d4214",
+                        "on-surface-variant": "#4e453a",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#eae1d7",
+                        "outline-warm": "#817567",
+                        "on-primary-fixed": "#291800",
+                        "background": "#fff8f3",
+                        "on-surface": "#1f1b15",
+                        "outline-variant": "#d2c4b6",
+                        "primary-fixed": "#ffddb1",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#a3947b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "max-content-width": "1120px",
+                        "section-gap": "64px",
+                        "card-padding": "20px",
+                        "element-gap": "16px",
+                        "gutter-mobile": "16px",
+                        "margin-mobile": "24px"
+                    },
+                    "fontFamily": {
+                        "navigation": ["Bitter"],
+                        "display-lg-mobile": ["Fraunces"],
+                        "button": ["Bitter"],
+                        "title-lg": ["Fraunces"],
+                        "label-md": ["Bitter"],
+                        "body-lg": ["Fraunces"],
+                        "headline-lg": ["Fraunces"],
+                        "body-md": ["Fraunces"],
+                        "display-lg": ["Fraunces"],
+                        "label-sm": ["Bitter"]
+                    },
+                    "fontSize": {
+                        "navigation": ["16px", { "lineHeight": "24px", "fontWeight": "500" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "48px", "fontWeight": "300" }],
+                        "button": ["15px", { "lineHeight": "20px", "fontWeight": "700" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "300" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .message-group {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeUp 0.6s ease forwards;
+        }
+        
+        .message-group:nth-child(2) { animation-delay: 0.2s; }
+        .message-group:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-margin-mobile py-4 w-full bg-background font-headline-lg-mobile text-headline-lg-mobile text-primary sticky top-0 z-40 bg-surface-container-low flat no shadows">
+<button class="text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded-full p-2 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-lg text-headline-lg text-primary text-center">Conversa</h1>
+<button class="text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded-full p-2 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</header>
+<!-- Main Content (Chat History) -->
+<main class="flex-grow w-full max-w-max-content-width mx-auto px-margin-mobile py-element-gap flex flex-col gap-element-gap overflow-y-auto pb-32">
+<!-- AI Message -->
+<div class="message-group flex flex-col gap-2 max-w-[85%] self-start group">
+<div class="bg-surface-container-low rounded-xl rounded-tl-sm p-4 text-on-surface font-body-lg text-body-lg border border-outline-variant">
+<p>Como você está se sentindo hoje após o episódio que conversamos na sessão anterior?</p>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant text-label-sm font-label-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="flex items-center gap-1 hover:text-primary transition-colors">
+<img alt="Salvar no diário" class="w-4 h-4 opacity-70 mix-blend-multiply" src="https://lh3.googleusercontent.com/aida/AEtjO1VgrkV4nUflK6kCxlNtG2BvVe6i9FLtIKYo4ry9-K-fQJIrst1PU2dMTWw6Olre7G3opB9sQKsVYuJMcgAicfAGzOSiC9yxhJQc_2Nvo4KAmYhFf5qNfe8SwfVJwCDfx2rIwvy6UhOZm0qr60kKRbCwqmT_YO17EzbEAyVVuXLMwDifx5Ccmlk-JUp0UWTi_5lPjmDmhITO8bRvRjzxzB8mBf2v7Wc5wLm5963eWpDCBUmKxrhevEu29j0"/>
+<span>Salvar nota</span>
+</button>
+</div>
+</div>
+<!-- User Message -->
+<div class="message-group flex flex-col gap-2 max-w-[85%] self-end group items-end mt-4">
+<div class="bg-surface-bright rounded-xl rounded-tr-sm p-4 text-on-background font-body-lg text-body-lg border border-outline-variant/50">
+<p>Estou me sentindo um pouco melhor, mas a ansiedade ainda aparece quando penso no trabalho.</p>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant text-label-sm font-label-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="flex items-center gap-1 hover:text-primary transition-colors">
+<img alt="Salvar no diário" class="w-4 h-4 opacity-70 mix-blend-multiply" src="https://lh3.googleusercontent.com/aida/AEtjO1VgrkV4nUflK6kCxlNtG2BvVe6i9FLtIKYo4ry9-K-fQJIrst1PU2dMTWw6Olre7G3opB9sQKsVYuJMcgAicfAGzOSiC9yxhJQc_2Nvo4KAmYhFf5qNfe8SwfVJwCDfx2rIwvy6UhOZm0qr60kKRbCwqmT_YO17EzbEAyVVuXLMwDifx5Ccmlk-JUp0UWTi_5lPjmDmhITO8bRvRjzxzB8mBf2v7Wc5wLm5963eWpDCBUmKxrhevEu29j0"/>
+<span>Salvar nota</span>
+</button>
+</div>
+</div>
+<!-- AI Message -->
+<div class="message-group flex flex-col gap-2 max-w-[85%] self-start group mt-4">
+<div class="bg-surface-container-low rounded-xl rounded-tl-sm p-4 text-on-surface font-body-lg text-body-lg border border-outline-variant">
+<p>Entendo perfeitamente. É natural que resquícios dessa sensação permaneçam. Que tal focarmos em um pequeno passo hoje? Alguma tarefa específica que parece mais gerenciável?</p>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant text-label-sm font-label-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="flex items-center gap-1 hover:text-primary transition-colors">
+<img alt="Salvar no diário" class="w-4 h-4 opacity-70 mix-blend-multiply" src="https://lh3.googleusercontent.com/aida/AEtjO1VgrkV4nUflK6kCxlNtG2BvVe6i9FLtIKYo4ry9-K-fQJIrst1PU2dMTWw6Olre7G3opB9sQKsVYuJMcgAicfAGzOSiC9yxhJQc_2Nvo4KAmYhFf5qNfe8SwfVJwCDfx2rIwvy6UhOZm0qr60kKRbCwqmT_YO17EzbEAyVVuXLMwDifx5Ccmlk-JUp0UWTi_5lPjmDmhITO8bRvRjzxzB8mBf2v7Wc5wLm5963eWpDCBUmKxrhevEu29j0"/>
+<span>Salvar nota</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Input Area -->
+<div class="fixed bottom-[80px] md:bottom-0 left-0 w-full bg-background px-margin-mobile py-4 z-40 border-t border-surface-container/30">
+<div class="max-w-max-content-width mx-auto flex items-end gap-2 bg-surface-container-lowest border border-outline-variant rounded-full p-2 pl-6 focus-within:border-outline focus-within:ring-1 focus-within:ring-outline transition-all">
+<textarea class="w-full bg-transparent border-none focus:ring-0 resize-none font-body-md text-body-md text-on-surface py-2 placeholder:text-on-surface-variant/60" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" placeholder="Escreva sua reflexão..." rows="1" style="min-height: 44px; max-height: 120px;"></textarea>
+<button class="bg-surface-container hover:bg-surface-container-high transition-colors text-primary rounded-full p-3 flex-shrink-0 flex items-center justify-center h-11 w-11">
+<img alt="Enviar mensagem" class="w-5 h-5 mix-blend-multiply opacity-80" src="https://lh3.googleusercontent.com/aida/AEtjO1UFWjhr6bZFqt9-4Y_Hbfatv-9TvsOaohhKKH0Gtl9_qRRUwSad0LJSYSBtsZ1RU9gsm7uKyswNTVVnMXGoQZdMYsxxqjrEkVo1J9m3g8LFCZ2DyHuh23Kl_39C77jOF2bCBT0rtWfKacwfz6u4bnGoXEhEfAnWs66em7uRtjM4C6fAaAFut7nJK-RZWV19j2A6jE9ua_YeOc46gDriSBjl672SjfMVeD3Lccno81Le2e-CyTKvH3aHTbg"/>
+</button>
+</div>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter-mobile py-3 bg-surface-container md:hidden">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-colors group" href="#">
+<div class="w-16 h-8 flex items-center justify-center rounded-full group-hover:bg-surface-container-highest transition-colors">
+<img alt="Home" class="w-6 h-6 mix-blend-multiply opacity-70 group-hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida/AEtjO1Uu8UVYMzikWCSciuYB5G0mA6sA30HfEEB2Cyc1KXPE-UBts_9K_HlIQ00-PUZvFKvjqFV2u0kDcC5Vt7bvnog1Y-Fn18tE7BjY6xSAvI7POZg2CFvpdoEzK9Uhp0fZX0SsX9GYxOHYgPliKU5jyOGy6hq3xP54I8K450Q1RTHF0AMqCgco1faIcUUajD2dHC-XYonRIOut5EmjjifBR1AGyWeqB82f9T1Qpa2fE9hxnSv5RCaORFto_cxd"/>
+</div>
+<span class="font-navigation text-label-sm mt-1">Home</span>
+</a>
+<!-- Diário -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-colors group" href="#">
+<div class="w-16 h-8 flex items-center justify-center rounded-full group-hover:bg-surface-container-highest transition-colors">
+<img alt="Diário" class="w-6 h-6 mix-blend-multiply opacity-70 group-hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida/AEtjO1X7xkIgLDgyiPJGYV784uWOaQO76nUl4wc8TywYgPQJaJS12mOFtxv9UTw-zR1Kw9rG4oETIvpkNNsdDFLTCJ5fCuIaDycUUllFmJZCJaKqNVDeuFfbjcR2mIRM2ewJkjMKrOu_7mnk_DuuXlZrC7lOrbkwiWqGVY-bCmTyl8jVaFrtjNe2CWgZeD0wcKSDlE3u-yo40UpooCjsgBty0P9DibHsrYJ5xdylFFfY1yU31XNJgqJB2Vdq1SZL"/>
+</div>
+<span class="font-navigation text-label-sm mt-1">Diário</span>
+</a>
+<!-- Conversa (Active) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 scale-90 transition-transform" href="#">
+<div class="w-16 h-8 flex items-center justify-center">
+<img alt="Conversa" class="w-6 h-6 mix-blend-multiply" src="https://lh3.googleusercontent.com/aida/AEtjO1XMYuz_DgvXAWGe4xs7aM15ru5uB2-5lUdSJDp0x9O9y4ve_9tWkOWMs2lYz4croa9yTNpLIPUCcNIJnD_zOFxU-uDaDbETCXItfHW0PiIDBhBMMFRX6T1sn10aYnn2FQbDOmhcRHH60PmUQrFAKns02FR_FT04V3Ah_bz7KjyqfNArriDu84xyhAKRmJVm362NpDDThE0u_J4g_KldS6zxtwW7iaBf2KaUK4Zj8Kj9xEKIdlrbpl2wEbh3"/>
+</div>
+<span class="font-navigation text-label-sm mt-1 font-bold">Conversa</span>
+</a>
+<!-- Práticas / Biblioteca -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-colors group" href="#">
+<div class="w-16 h-8 flex items-center justify-center rounded-full group-hover:bg-surface-container-highest transition-colors">
+<img alt="Biblioteca" class="w-6 h-6 mix-blend-multiply opacity-70 group-hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida/AEtjO1XN8afkcEvch839gcCGIr3MzDDF0F1Vqm5Kwezpoz620E77Oy4J2QqZWfN2l-ptPt_BpPsCEW065kA8q0DdkXe2RVn0vCSQQutOd1fTsabJAaBiy-xyYCIfVLUfTSJEGOmoIFsjOjxilZVBv-QFZjS0t6UZaWapxCGq5nuwJ7a4cTrYWRIhgo82YFYQbhwChfW6CXOkcxx6Itwij1zcVwmJCysk3XOKhNPDVXgWd2BTR0Ts6CGtdTulzHmi"/>
+</div>
+<span class="font-navigation text-label-sm mt-1">Biblioteca</span>
+</a>
+</nav>
+<script>
+        // Simple script to auto-resize textarea
+        const tx = document.getElementsByTagName("textarea");
+        for (let i = 0; i < tx.length; i++) {
+          tx[i].setAttribute("style", "height:" + (tx[i].scrollHeight) + "px;overflow-y:hidden;");
+          tx[i].addEventListener("input", OnInput, false);
+        }
+        function OnInput() {
+          this.style.height = 0;
+          this.style.height = (this.scrollHeight) + "px";
+        }
+    </script>
+</body></html>

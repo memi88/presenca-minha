@@ -1,0 +1,191 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Autor - Alice Guimarães</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&amp;family=Spectral:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#4e453a",
+                        "inverse-on-surface": "#f9efe5",
+                        "surface-container-low": "#fcf2e8",
+                        "primary-container": "#422a00",
+                        "surface-container-high": "#f0e7dd",
+                        "on-background": "#1f1b15",
+                        "tertiary-container": "#372d1a",
+                        "outline-variant": "#d2c4b6",
+                        "on-primary-fixed-variant": "#5d4214",
+                        "secondary-container": "#fecd77",
+                        "outline-warm": "#817567",
+                        "background": "#fff8f3",
+                        "secondary-fixed": "#ffdeaa",
+                        "outline": "#807569",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1f1b15",
+                        "ink-warm": "#221a11",
+                        "on-primary-fixed": "#291800",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#f6ece2",
+                        "on-tertiary-fixed": "#231a09",
+                        "surface-dim": "#e2d9cf",
+                        "surface-tint": "#77592a",
+                        "tertiary-fixed": "#f2e0c4",
+                        "on-tertiary-fixed-variant": "#514530",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#b5905c",
+                        "on-tertiary-container": "#a3947b",
+                        "secondary": "#7c580a",
+                        "primary-fixed": "#ffddb1",
+                        "on-secondary-container": "#795506",
+                        "inverse-primary": "#e8c087",
+                        "secondary-fixed-dim": "#efbf6b",
+                        "primary": "#271700",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#fff8f3",
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "primary-fixed-dim": "#e8c087",
+                        "surface-container-highest": "#eae1d7",
+                        "inverse-surface": "#343029",
+                        "surface-variant": "#eae1d7",
+                        "tertiary-fixed-dim": "#d5c4a9",
+                        "tertiary": "#211807",
+                        "surface": "#fff8f4",
+                        "on-secondary-fixed": "#271900"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "element-gap": "16px",
+                        "card-padding": "20px",
+                        "section-gap": "64px",
+                        "max-content-width": "1120px",
+                        "gutter-mobile": "16px",
+                        "margin-mobile": "24px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Fraunces"],
+                        "display-lg-mobile": ["Fraunces"],
+                        "body-md": ["Spectral"],
+                        "headline-lg": ["Fraunces"],
+                        "title-lg": ["Fraunces"],
+                        "button": ["Bitter"],
+                        "body-lg": ["Spectral"],
+                        "label-md": ["Bitter"],
+                        "navigation": ["Bitter"],
+                        "label-sm": ["Bitter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "300" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "48px", "fontWeight": "300" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "500" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "button": ["15px", { "lineHeight": "20px", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "navigation": ["16px", { "lineHeight": "24px", "fontWeight": "500" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #f7f0e4; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="text-on-background min-h-screen pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-40 bg-[#f7f0e4] flex justify-between items-center px-margin-mobile py-4 w-full border-b border-outline-variant">
+<button class="p-2 -ml-2 rounded-full hover:bg-surface-container-highest transition-colors active:scale-95 duration-150 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-on-background">Livro Vivo</h1>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</header>
+<main class="max-w-max-content-width mx-auto px-margin-mobile pt-element-gap pb-section-gap">
+<!-- Profile Section -->
+<section class="flex flex-col items-center text-center mb-section-gap">
+<div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden mb-6 border border-outline-variant p-1">
+<img alt="Alice Guimarães" class="w-full h-full object-cover rounded-full" data-alt="A portrait photography of a serene, thoughtful female writer with warm natural lighting, shot in a soft focus documentary style against a light parchment-toned background. She has a contemplative expression, fitting a light mode minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaIP6W0PZqAtWs3XCgHpoy03VWCcbDSJQp0wUSP-sd35YTDt4x2BAHCeNLgueTwJpsHikudY5QhGmyMhtWyMQBYTaA9gy485FUBtyH7wipoCspAofLvCLxiOOqFSRdVl3P2PKAfL_q7vz7DitZ-YXXVFUv68X1CeLoWalIy6M8xroWjABJ91X5z240mOqlQ84zCPgSBUo6UWbDiRFEHCyx0THnGy4AZ0IU1-qO00KWi5sJXFyqAfb6kg">
+</div>
+<span class="font-label-sm text-label-sm text-outline-warm uppercase tracking-widest mb-1">Perfil do Autor</span><h2 class="font-headline-lg text-headline-lg md:font-display-lg-mobile md:text-display-lg-mobile text-primary mb-2">Alice Guimarães</h2>
+<p class="font-label-md text-label-md italic text-on-surface-variant">Escritora e Instrutora de Práticas Contemplativas</p>
+<!-- Bio -->
+<div class="mt-8 max-w-2xl text-center font-body-lg text-body-lg text-on-background space-y-4 px-4 md:px-0 border-t border-b border-outline-variant py-8">
+<p class="">Alice dedica sua vida a traduzir o silêncio em palavras e práticas acessíveis. Suas obras buscam criar espaços de pausa no cotidiano apressado, unindo sabedoria ancestral e regulação emocional moderna.</p>
+</div>
+</section>
+<!-- Contribution List -->
+<section class="mb-section-gap">
+<h3 class="font-label-md text-label-md text-outline-warm uppercase tracking-widest mb-6 flex items-center">
+<span class="w-8 h-px bg-outline-variant mr-3 inline-block"></span>
+                Mais de Alice
+            </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<article class="bg-surface-container rounded-xl overflow-hidden border border-outline-variant group cursor-pointer hover:bg-surface-container-highest transition-colors flex flex-col md:flex-row h-full">
+<div class="w-full md:w-1/3 aspect-[3/4] md:aspect-auto">
+<img class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" data-alt="A minimalist book cover design featuring abstract organic shapes in warm earthy tones on a light cream background, representing a contemplative essay on silence. Soft lighting, highly aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwi_l5dp1GRLJ_mC5FD6FBgIaIb7EFoQGRPXhJoDoo2oMUt1sL87NWzAMiopMErElHZVoEF9rL1pzSQDkcrop98rS4gNwylzZ9HAlkzJaoZcR_VZHlXCZLnFEVRMd2S_dBwgU76q3BHAHRDeKsg_VA6T0eCT9P4dcrXgrt7XUzkFKFZn_mmG2uXIBfSVrXUizAzJez9VaqkGHteuwfE72opU4ukddbSnX7KP_KcnHJyfZYJgHvYsE7ag">
+</div>
+<div class="p-card-padding flex flex-col justify-center flex-grow">
+<span class="inline-block px-3 py-1 bg-tertiary-container text-on-tertiary font-label-sm text-label-sm rounded-full mb-3 w-max">ENSAIO</span>
+<h4 class="font-title-lg text-title-lg text-primary mb-2">O Valor do Silêncio</h4>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Uma exploração profunda sobre a necessidade de quietude mental.</p>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-surface-container rounded-xl overflow-hidden border border-outline-variant group cursor-pointer hover:bg-surface-container-highest transition-colors flex flex-col md:flex-row h-full">
+<div class="w-full md:w-1/3 aspect-[3/4] md:aspect-auto">
+<img class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" data-alt="A serene landscape photo used as a course cover, showing a misty morning over calm water with subtle golden hour light piercing through. Minimalist, high contrast, warm color grading." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyBKfOI3WsIbQbJ4fc6FVx3__pQRn9tU80mj0du-xcJiFRVEM_P8kCnieuOkhgUn1TSLhm9uJOcX0wdftGBATX2tzey-nIMwzdxlMzE6vLCLc1zwSCYppdNU0yCknvik-nM-gXfCmOciG9shEfGX97YTtGPhWq0CvhPm9oRplzWe9WU2vWrXytH67NGJGvQDtYpu0WWYoZIRlb2i_HIHSl2uDGo_7XBh8fEsArJZo9mjyJoe8UlhYspg">
+</div>
+<div class="p-card-padding flex flex-col justify-center flex-grow">
+<span class="inline-block px-3 py-1 bg-secondary-container text-on-secondary-container font-label-sm text-label-sm rounded-full mb-3 w-max">PRÁTICA</span>
+<h4 class="font-title-lg text-title-lg text-primary mb-2">Respiração Âncora</h4>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Exercícios diários para aterramento e regulação do sistema nervoso.</p>
+</div>
+</article>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-surface-container flex justify-around items-center px-gutter-mobile py-3 border-t-0 shadow-[0_-4px_20px_rgba(31,27,21,0.05)]">
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="font-navigation text-navigation text-[10px]">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="auto_stories">auto_stories</span>
+<span class="font-navigation text-navigation text-[10px]">Diário</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-navigation text-navigation text-[10px]">Conversa</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="library_books">library_books</span>
+<span class="font-navigation text-navigation text-[10px]">Biblioteca</span>
+</a>
+</nav>
+
+
+</body></html>

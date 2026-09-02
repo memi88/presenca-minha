@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fechamento da Conversa</title>
+<!-- Google Fonts: Fraunces & Bitter (Mapping Fraunces as requested, Bitter for buttons/nav per guidance) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols for Shared Components -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-surface": "#1f1b15",
+                        "surface-dim": "#e2d9cf",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#ffddb1",
+                        "surface-container-low": "#fcf2e8",
+                        "primary-container": "#422a00",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#d5c4a9",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#f9efe5",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#271900",
+                        "tertiary-container": "#372d1a",
+                        "surface-bright": "#fff8f3",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#77592a",
+                        "background": "#fff8f3",
+                        "on-tertiary-fixed": "#231a09",
+                        "outline-warm": "#817567",
+                        "secondary": "#7c580a",
+                        "on-tertiary-fixed-variant": "#514530",
+                        "outline-variant": "#d2c4b6",
+                        "inverse-surface": "#343029",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "tertiary": "#211807",
+                        "surface-variant": "#eae1d7",
+                        "inverse-primary": "#e8c087",
+                        "tertiary-fixed": "#f2e0c4",
+                        "surface-container": "#fcebdc",
+                        "on-primary-fixed": "#291800",
+                        "on-surface-variant": "#4e453a",
+                        "on-background": "#1f1b15",
+                        "on-secondary-container": "#795506",
+                        "surface-container-high": "#f0e7dd",
+                        "on-primary-container": "#b5905c",
+                        "surface": "#fff8f4", // Approximating #f7f0e4 as requested by using the closest system token or applying custom if strictly needed, but guidance says use tokens. We will use `bg-[#f7f0e4]` only for the very specific body bg if it deviates significantly, but `bg-surface` is `#fff8f4`. Let's stick to tokens where possible, or inject the specific hex for the background if it's a strict requirement. The prompt asks for #f7f0e4 specifically. We will add it as a custom extension to the config to respect both instructions.
+                        "custom-bg": "#f7f0e4",
+                        "accent-primary": "#b6873f",
+                        "accent-outline": "#9a8b72",
+                        "ink-warm": "#221a11",
+                        "outline": "#807569",
+                        "primary-fixed-dim": "#e8c087",
+                        "secondary-fixed-dim": "#efbf6b",
+                        "on-tertiary-container": "#a3947b",
+                        "secondary-container": "#fecd77",
+                        "secondary-fixed": "#ffdeaa",
+                        "primary": "#271700",
+                        "surface-container-highest": "#eae1d7",
+                        "on-primary-fixed-variant": "#5d4214"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "gutter-mobile": "16px",
+                        "card-padding": "20px",
+                        "element-gap": "16px",
+                        "margin-mobile": "24px",
+                        "max-content-width": "1120px",
+                        "section-gap": "64px"
+                    },
+                    fontFamily: {
+                        "display-lg": ["Fraunces"],
+                        "navigation": ["Bitter"],
+                        "headline-lg": ["Fraunces"],
+                        "body-md": ["Fraunces"],
+                        "body-lg": ["Fraunces"],
+                        "button": ["Bitter"],
+                        "display-lg-mobile": ["Fraunces"],
+                        "label-md": ["Bitter"],
+                        "title-lg": ["Fraunces"],
+                        "label-sm": ["Bitter"]
+                    },
+                    fontSize: {
+                        "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "300" }],
+                        "navigation": ["16px", { "lineHeight": "24px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "button": ["15px", { "lineHeight": "20px", "fontWeight": "700" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "48px", "fontWeight": "300" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            /* Ensuring the specific background color requested while keeping the token system intact */
+            background-color: #f7f0e4;
+        }
+        
+        /* Organic manual stroke SVG styling */
+        .organic-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 2s ease-out forwards;
+        }
+
+        @keyframes drawLine {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface antialiased min-h-screen flex flex-col font-body-md text-body-md pb-24 md:pb-0">
+<!-- Top Navigation (Desktop only, hidden on mobile per Shell rule) -->
+<header class="hidden md:flex bg-surface-container-low dark:bg-surface-dim sticky top-0 w-full z-50 justify-between items-center px-margin-mobile py-4 border-b border-outline-variant shadow-none transition-transform duration-300">
+<button aria-label="Menu" class="text-on-surface hover:bg-surface-bright transition-colors duration-300 rounded-full p-2 scale-95 active:scale-90 flex items-center justify-center">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed tracking-tight">Presença</h1>
+<button aria-label="Profile or Status" class="text-on-surface hover:bg-surface-bright transition-colors duration-300 rounded-full p-2 scale-95 active:scale-90 flex items-center justify-center">
+<span class="material-symbols-outlined">radio_button_unchecked</span>
+</button>
+</header>
+<!-- Main Content: Conversational Closing -->
+<main class="flex-grow flex flex-col items-center justify-center px-margin-mobile md:max-w-max-content-width md:mx-auto w-full">
+<!-- Contemplative whitespace / Respiro -->
+<div class="flex flex-col items-center justify-center w-full max-w-md space-y-section-gap py-12">
+<!-- Organic Graphic Element -->
+<div aria-hidden="true" class="w-24 h-24 mb-4 flex items-center justify-center opacity-80">
+<svg class="w-full h-full stroke-accent-primary" fill="none" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<path class="organic-line" d="M20 50 Q 40 20, 50 50 T 80 50" stroke-linecap="round" stroke-width="2"></path>
+<circle class="opacity-0 animate-[fadeIn_1s_ease-out_1.5s_forwards]" cx="50" cy="50" fill="#b6873f" r="4"></circle>
+</svg>
+</div>
+<!-- Header Section -->
+<div class="text-center space-y-4">
+<!-- Warm Title -->
+<h2 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-ink-warm leading-tight">
+                    Por hoje, é o bastante.
+                </h2>
+<!-- Discreet subtitle -->
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-sm mx-auto">
+                    O que você quer fazer com essa conversa?
+                </p>
+</div>
+<!-- Action Buttons (Vertical Stack) -->
+<div class="flex flex-col w-full space-y-4 pt-8">
+<!-- Primary Action -->
+<button class="w-full font-button text-button text-on-primary rounded-full py-4 px-6 transition-transform hover:-translate-y-0.5 active:scale-95 flex items-center justify-center" style="background-color: #b6873f;">
+                    Guardar no Diário
+                </button>
+<!-- Secondary Action -->
+<button class="w-full font-button text-button rounded-full py-4 px-6 border-2 transition-transform hover:-translate-y-0.5 active:scale-95 flex items-center justify-center" style="color: #9a8b72; border-color: #9a8b72;">
+                    Enviar resumo para o Dr. Arnaldo
+                </button>
+<!-- Tertiary Action -->
+<button class="w-full font-button text-button text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity py-4 px-6 flex items-center justify-center active:scale-95">
+                    Ignorar
+                </button>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile only, shown because it's requested to maintain standard BottomNavBar) -->
+<!-- Note: Following "Semantic Mapping", active tab is 'Conversa' (Chat) as we are closing a conversation. -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 bg-surface-container-low dark:bg-surface-dim border-t border-outline-variant z-50">
+<!-- Home (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-all duration-200 tap-highlight-transparent active:scale-95 group" href="#">
+<span class="material-symbols-outlined mb-1 transition-transform group-hover:scale-110">home</span>
+<span class="font-label-md text-label-md opacity-0 h-0 overflow-hidden group-hover:opacity-100 group-hover:h-auto transition-all">Home</span>
+</a>
+<!-- Livro Vivo (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-all duration-200 tap-highlight-transparent active:scale-95 group" href="#">
+<span class="material-symbols-outlined mb-1 transition-transform group-hover:scale-110">book_2</span>
+<span class="font-label-md text-label-md opacity-0 h-0 overflow-hidden group-hover:opacity-100 group-hover:h-auto transition-all">Livro Vivo</span>
+</a>
+<!-- Diário (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-all duration-200 tap-highlight-transparent active:scale-95 group" href="#">
+<span class="material-symbols-outlined mb-1 transition-transform group-hover:scale-110">edit_note</span>
+<span class="font-label-md text-label-md opacity-0 h-0 overflow-hidden group-hover:opacity-100 group-hover:h-auto transition-all">Diário</span>
+</a>
+<!-- Práticas (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-all duration-200 tap-highlight-transparent active:scale-95 group" href="#">
+<span class="material-symbols-outlined mb-1 transition-transform group-hover:scale-110">self_improvement</span>
+<span class="font-label-md text-label-md opacity-0 h-0 overflow-hidden group-hover:opacity-100 group-hover:h-auto transition-all">Práticas</span>
+</a>
+<!-- Conversa (Active) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 tap-highlight-transparent active:scale-95" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<span class="font-label-md text-label-md">Conversa</span>
+</a>
+</nav>
+<style>
+        /* Minimal custom keyframes for subtle entry animations to maintain organic feel */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .tap-highlight-transparent {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</body></html>

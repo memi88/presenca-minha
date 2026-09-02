@@ -1,0 +1,259 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Acervo do Livro Vivo</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Spectral (Substituting for Bitter/Fraunces as requested, but keeping within system bounds where possible, mapping to Fraunces/Bitter) -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&amp;family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#fff8f3",
+                        "on-surface": "#1f1b15",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#343029",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#ffddb1",
+                        "on-secondary-container": "#795506",
+                        "tertiary": "#211807",
+                        "surface-variant": "#eae1d7",
+                        "on-primary-container": "#b5905c",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#514530",
+                        "inverse-on-surface": "#f9efe5",
+                        "tertiary-container": "#372d1a",
+                        "tertiary-fixed": "#f2e0c4",
+                        "outline-warm": "#817567",
+                        "on-tertiary-fixed": "#231a09",
+                        "on-tertiary-container": "#a3947b",
+                        "outline-variant": "#d2c4b6",
+                        "outline": "#807569",
+                        "on-primary-fixed": "#291800",
+                        "on-surface-variant": "#4e453a",
+                        "inverse-primary": "#e8c087",
+                        "surface-container-low": "#fcf2e8",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "on-primary-fixed-variant": "#5d4214",
+                        "secondary-container": "#fecd77",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#422a00",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#ffdeaa",
+                        "surface-dim": "#e2d9cf",
+                        "surface": "#fff8f4",
+                        "secondary-fixed-dim": "#efbf6b",
+                        "primary-fixed-dim": "#e8c087",
+                        "surface-container": "#fcebdc",
+                        "primary": "#271700",
+                        "surface-tint": "#77592a",
+                        "surface-container-highest": "#eae1d7",
+                        "on-secondary-fixed": "#271900",
+                        "tertiary-fixed-dim": "#d5c4a9",
+                        "ink-warm": "#221a11",
+                        "surface-container-high": "#f0e7dd",
+                        "secondary": "#7c580a",
+                        "surface-bright": "#fff8f3",
+                        "on-background": "#1f1b15"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "card-padding": "20px",
+                        "element-gap": "16px",
+                        "section-gap": "64px",
+                        "margin-mobile": "24px",
+                        "gutter-mobile": "16px",
+                        "max-content-width": "1120px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Fraunces"],
+                        "title-lg": ["Fraunces"],
+                        "display-lg-mobile": ["Fraunces"],
+                        "button": ["Bitter"],
+                        "headline-lg": ["Fraunces"],
+                        "navigation": ["Bitter"],
+                        "label-md": ["Bitter"],
+                        "body-lg": ["Fraunces"],
+                        "display-lg": ["Fraunces"],
+                        "label-sm": ["Bitter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "48px", "fontWeight": "300" }],
+                        "button": ["15px", { "lineHeight": "20px", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "500" }],
+                        "navigation": ["16px", { "lineHeight": "24px", "fontWeight": "500" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "300" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            /* Forced dark mood for this specific screen per request, though base theme is light, we apply a dark overlay */
+            background-color: #1a1612;
+            color: #eae1d7;
+        }
+        .immersive-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDunuQQmQSUJVgywGWBWpmDvEf6r22tmzEfS1gDz8T47vws_AeEUz5CQxTacNpNJ-S7-y9S45BWl-jZoV1y3EA7fjBcrzuTfEkZBa5tqC0U1dYZQ6nUXExOGQuQfE0_QSPEdw6hHW_6k_UhlgIoQtG5cRGhZBI08vK9aJYxGka-uivKRzEIGTh8eZDwBoGRHh49HI55NloAVQmJ0fU4jyeYq7PGaMG9OYC3GU3PKgoRCtusffeFZEREV55PaWMn-AAgOdg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+        /* Custom scrollbar for contemplative feel */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(210, 196, 182, 0.2);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(210, 196, 182, 0.4);
+        }
+        
+        .book-card {
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
+        }
+        .book-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen relative font-body-md">
+<!-- Immersive Background -->
+<div aria-hidden="true" class="immersive-bg" style="opacity: 0.4; mix-blend-mode: normal;"></div>
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-transparent z-40 px-margin-mobile py-4 flex justify-between items-center max-w-max-content-width mx-auto">
+<button aria-label="Voltar" class="text-surface-variant hover:text-white transition-colors duration-300 p-2 -ml-2 rounded-full hover:bg-white/5">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="font-headline-lg text-headline-lg font-bold text-surface-variant">Livro Vivo</h1>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</header>
+<!-- Main Canvas -->
+<main class="max-w-max-content-width mx-auto px-margin-mobile pb-32 pt-8">
+<!-- Category Filters -->
+<section class="mb-12 overflow-x-auto pb-4 hide-scrollbar">
+<div class="flex gap-4 min-w-max">
+<button class="px-6 py-2 rounded-full border border-surface-variant/30 text-surface-variant bg-surface-variant/10 font-label-md text-label-md hover:bg-surface-variant/20 transition-colors">
+                    Todos os momentos
+                </button>
+<button class="px-6 py-2 rounded-full border border-transparent text-surface-variant/60 font-label-md text-label-md hover:bg-surface-variant/10 hover:text-surface-variant transition-colors">
+                    Quando tudo parece confuso
+                </button>
+<button class="px-6 py-2 rounded-full border border-transparent text-surface-variant/60 font-label-md text-label-md hover:bg-surface-variant/10 hover:text-surface-variant transition-colors">
+                    Para desacelerar
+                </button>
+<button class="px-6 py-2 rounded-full border border-transparent text-surface-variant/60 font-label-md text-label-md hover:bg-surface-variant/10 hover:text-surface-variant transition-colors">
+                    Em busca de sentido
+                </button>
+</div>
+</section>
+<!-- Book Grid (Bento/Asymmetric inspiration) -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-element-gap lg:gap-8">
+<!-- Book 1 -->
+<article class="book-card group cursor-pointer relative h-[400px] rounded-xl overflow-hidden bg-[#2a241c] border border-surface-variant/10 flex flex-col justify-end p-6">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
+<div class="absolute inset-0 bg-[url('placeholder')] bg-cover bg-center opacity-40 group-hover:opacity-60 transition-opacity duration-500" data-alt="A serene, abstract composition of soft, glowing light filtering through dense, ancient forest trees. The light-mode aesthetic is muted into a warm, contemplative dark-academia tone, with deep earthy browns, soft ochre, and muted gold. The mood is tranquil and hushed, perfect for deep reflection."></div>
+<div class="relative z-20">
+<span class="inline-block px-3 py-1 mb-3 rounded-full bg-surface-variant/20 backdrop-blur-sm font-label-sm text-label-sm text-surface-variant uppercase tracking-wider">Ensaio</span>
+<h2 class="font-title-lg text-title-lg text-surface-variant mb-2">A Arte da Pausa</h2>
+<p class="font-body-md text-body-md text-surface-variant/70 line-clamp-2">Um convite para respirar no meio do caos cotidiano e reencontrar o silêncio interno.</p>
+</div>
+</article>
+<!-- Book 2 -->
+<article class="book-card group cursor-pointer relative h-[400px] rounded-xl overflow-hidden bg-[#1e1a14] border border-surface-variant/10 flex flex-col justify-end p-6 md:col-span-2 lg:col-span-1 lg:row-span-2 lg:h-auto">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10 z-10"></div>
+<div class="absolute inset-0 bg-[url('placeholder')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity duration-500" data-alt="A vast, empty landscape at twilight, featuring a calm, glassy lake reflecting a minimal, hazy sky. The color palette revolves around deep twilight blues mixed with warm, fading parchment tones of the Contemplative Warmth style. The atmosphere is deeply silent, poetic, and solitary."></div>
+<div class="relative z-20">
+<span class="inline-block px-3 py-1 mb-3 rounded-full bg-surface-variant/20 backdrop-blur-sm font-label-sm text-label-sm text-surface-variant uppercase tracking-wider">Poesia</span>
+<h2 class="font-display-lg-mobile text-display-lg-mobile text-surface-variant mb-2 leading-tight">Ecos do Silêncio</h2>
+<p class="font-body-md text-body-md text-surface-variant/70 line-clamp-3">Versos que nascem quando as palavras falham. Uma exploração lírica do que resta quando tudo se aquieta.</p>
+</div>
+</article>
+<!-- Book 3 -->
+<article class="book-card group cursor-pointer relative h-[400px] rounded-xl overflow-hidden bg-[#241f18] border border-surface-variant/10 flex flex-col justify-end p-6">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
+<div class="absolute inset-0 bg-[url('placeholder')] bg-cover bg-center opacity-40 group-hover:opacity-60 transition-opacity duration-500" data-alt="A close-up view of ink slowly spreading on handmade textured parchment paper. The lighting is warm and dim, akin to candlelight, highlighting the organic texture of the paper and the deep, rich black of the ink. The style is Organic Minimalist, evoking a sense of slow, deliberate creation."></div>
+<div class="relative z-20">
+<span class="inline-block px-3 py-1 mb-3 rounded-full bg-surface-variant/20 backdrop-blur-sm font-label-sm text-label-sm text-surface-variant uppercase tracking-wider">Diário</span>
+<h2 class="font-title-lg text-title-lg text-surface-variant mb-2">O Vazio Fértil</h2>
+<p class="font-body-md text-body-md text-surface-variant/70 line-clamp-2">Notas sobre preencher os espaços em branco com intenção e presença.</p>
+</div>
+</article>
+<!-- Book 4 -->
+<article class="book-card group cursor-pointer relative h-[400px] rounded-xl overflow-hidden bg-[#1a1612] border border-surface-variant/10 flex flex-col justify-end p-6">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
+<div class="absolute inset-0 bg-[url('placeholder')] bg-cover bg-center opacity-40 group-hover:opacity-60 transition-opacity duration-500" data-alt="Minimalist abstract art showing gentle curves of smooth stone bathed in warm, diffuse light against a dark background. The scene suggests a Zen garden or a quiet meditative space. The palette uses soft sand tones, deep shadow, and subtle warm grays, adhering to a contemplative, hushed aesthetic."></div>
+<div class="relative z-20">
+<span class="inline-block px-3 py-1 mb-3 rounded-full bg-surface-variant/20 backdrop-blur-sm font-label-sm text-label-sm text-surface-variant uppercase tracking-wider">Contemplação</span>
+<h2 class="font-title-lg text-title-lg text-surface-variant mb-2">Raízes Invisíveis</h2>
+<p class="font-body-md text-body-md text-surface-variant/70 line-clamp-2">Práticas para aterramento em um mundo de constante movimento.</p>
+</div>
+</article>
+</section>
+</main>
+<!-- BottomNavBar (Rendered as requested by semantic mapping to Livro Vivo) -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface-container-lowest/10 backdrop-blur-md border-t border-white/5 md:hidden">
+<div class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2">
+<a class="flex flex-col items-center justify-center text-surface-variant/50 hover:text-surface-variant transition-all duration-200 p-2 tap-highlight-transparent active:scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="font-label-md text-label-md text-[10px] mt-1">Home</span>
+</a>
+<!-- Active State for Livro Vivo -->
+<a class="flex flex-col items-center justify-center bg-surface-variant/20 text-surface-variant rounded-full px-4 py-1 tap-highlight-transparent active:scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">book_2</span>
+<span class="font-label-md text-label-md text-[10px] mt-1">Livro Vivo</span>
+</a>
+<a class="flex flex-col items-center justify-center text-surface-variant/50 hover:text-surface-variant transition-all duration-200 p-2 tap-highlight-transparent active:scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">edit_note</span>
+<span class="font-label-md text-label-md text-[10px] mt-1">Diário</span>
+</a>
+<a class="flex flex-col items-center justify-center text-surface-variant/50 hover:text-surface-variant transition-all duration-200 p-2 tap-highlight-transparent active:scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">self_improvement</span>
+<span class="font-label-md text-label-md text-[10px] mt-1">Práticas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-surface-variant/50 hover:text-surface-variant transition-all duration-200 p-2 tap-highlight-transparent active:scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">chat_bubble</span>
+<span class="font-label-md text-label-md text-[10px] mt-1">Conversa</span>
+</a>
+</div>
+</nav>
+
+
+</body></html>
