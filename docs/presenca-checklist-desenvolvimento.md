@@ -138,3 +138,96 @@
 - Contribuição de usuários ao Livro Vivo público.
 - Ambiente claro/escuro por tipo de ação em vez de tela fixa.
 - Painel admin sofisticado para a Biblioteca.
+
+## Fase 11 — Terapeutas: self-signup, pré-cadastro de paciente, biblioteca colaborativa
+
+> Anexar esta fase ao final de `presenca-checklist-desenvolvimento.md`. Detalhe completo das decisões em `presenca-extensao-terapeutas-biblioteca.md`.
+
+### Self-signup do terapeuta
+- [ ] Tela de cadastro no Cuida (nome, tipo/abordagem, forma_de_trabalho, usa_linguagens_simbolicas) — cria `auth.users` + insere em `profissionais`.
+- [ ] Aplicar `check` constraint no campo `tipo` com a lista decidida (TCC, Psicanálise, Gestalt-terapia, Terapia Sistêmica, ACT, Humanista, Holística/Integrativa, Outra).
+- [ ] Login/senha próprios — terapeuta não depende mais de script manual pra existir.
+
+### Pré-cadastro de paciente + link pessoal
+- [ ] Migration `pacientes_pre_cadastro` + RLS (sem policy de select pro paciente, nem depois de confirmado).
+- [ ] RPC `validar_token_pre_cadastro` — retorna só nome + status, nunca características/anotações.
+- [ ] RPC `confirmar_pre_cadastro` — cria vínculo, marca confirmado, valida `auth.uid() = paciente_id`.
+- [ ] Tela no Cuida: terapeuta cadastra paciente (nome + características + anotações), gera e exibe o link.
+- [ ] Tela pública de confirmação do link: paciente confirma nome, cria conta permanente direto (sem etapa anônima).
+- [ ] Confirmar que o código de convite genérico continua funcionando sem regressão, em paralelo ao link pessoal.
+- [ ] Teste de RLS dedicado: paciente nunca consegue ler `caracteristicas`/`anotacoes` em nenhum cenário, nem via API pública nem via outra tabela.
+
+### Biblioteca colaborativa
+- [ ] Migration: `status_moderacao`, `escopo`, `profissional_autor_id`, `motivo_recusa` em `biblioteca`.
+- [ ] Trigger `biblioteca_forca_pendente` — impede terapeuta de se auto-aprovar.
+- [ ] Substituir a policy de select atual da `biblioteca` pela nova (respeita `escopo` + `publicado`).
+- [ ] Tela no Cuida: terapeuta submete prática/página (formulário existente + campo de escopo público/privado).
+- [ ] Confirmar que o Diário (`caderno_entradas`) permanece sem aprovação — nenhuma mudança aqui.
+
+### Painel de aprovação (admin)
+- [ ] Tabela `admins` + RLS; Guilherme inserido manualmente.
+- [ ] Implementar rota separada `/admin/biblioteca`, protegida por `admins` (decidido: fora do Cuida).
+- [ ] Lista de pendentes: autor, tipo, prévia do conteúdo, escopo, Aprovar / Recusar (com campo de motivo).
+- [ ] Lista de publicados: ação "tirar do ar" (`publicado = false`).
+- [ ] Teste de RLS: usuário fora da tabela `admins` nunca acessa a rota nem as policies de gestão da biblioteca.
+
+### Atribuição de autoria
+- [ ] Rodapé discreto "escrito por [nome]" quando `profissional_autor_id` existe.
+- [ ] Cartão expandido ao tocar (nome, tipo/abordagem, breve descrição).
+- [ ] CTA "conectar com [nome]" só quando `profiles.profissional_id` do leitor for nulo.
+- [ ] Confirmar comportamento em `escopo = 'privado_profissional'` (atribuição aparece, sem CTA).
+
+### Pendências externas / decisões ainda em aberto
+- [ ] (Adiado por decisão consciente) Anotações do terapeuta alimentando a IA — não fazer nesta fase; revisitar só se houver interesse futuro.
+
+## Fase 12 — App mobile (Capacitor)
+
+> Detalhe completo das decisões em `presenca-extensao-app-mobile.md`. Escopo: só o Presença — Cuida continua só web.
+
+### Scaffolding
+- [x] Capacitor instalado (`@capacitor/core`, `@capacitor/ios`, `@capacitor/android`, `@capacitor/browser`) e `capacitor.config.ts` em modo remoto. Bundle ID: `app.presenca.mobile`.
+- [x] Projetos nativos gerados (`apps/presenca/ios/`, `apps/presenca/android/`) via `cap add`.
+- [x] Ícone e splash gerados a partir de `docs/logo/circulo.svg` (`scripts/gerar-assets-mobile.mjs` + `capacitor-assets generate`).
+- [x] Scripts `cap:sync` / `cap:open:ios` / `cap:open:android` em `apps/presenca/package.json`.
+- [x] Build rodando de ponta a ponta no simulador iOS (iPhone 16 Pro, iOS 18.6) — carrega o site de verdade, confirmado por screenshot. Precisou de duas correções específicas desta máquina (não do projeto): espaço em disco pra baixar a plataforma iOS 26.5, e instalar o certificado raiz da Netskope (proxy corporativo) como confiável no simulador (`xcrun simctl keychain <device> add-root-cert`) — sem isso toda conexão HTTPS falhava com erro -1200 dentro do simulador.
+- [x] Cabeçalho não sobrepõe mais a status bar — `viewport-fit=cover` (`app/layout.tsx`) + `env(safe-area-inset-top)` em `PageHeader.module.css`.
+- [x] "‹ voltar" de `/bem-vindo`/`/login` não aparece mais dentro do app quando aponta pra `/` (marketing) — `VoltarLink.tsx`, checa `Capacitor.isNativePlatform()`.
+- [x] **Bug de navegação corrigido**: clicar em qualquer link interno (ex: "Já possuo meu espaço" → `/login`) abria o Safari por fora em vez de continuar no app. Causa: `server.url` tinha o path `/bem-vindo` incluído, e o Capacitor decide "isso é navegação do app?" comparando por *prefixo de string* contra essa URL — qualquer outra rota do mesmo domínio não batia o prefixo e caía no fallback "abrir no navegador do sistema". `server.appStartPath` pareceria a solução óbvia, mas quebra em modo remoto puro (Capacitor tenta validar um arquivo local que não existe). Fix real: `server.url` só com a origem (`https://presenca.app`) + `appendUserAgent: "PresencaApp"` no config, e a home de marketing (`app/(marketing)/page.tsx`) detecta esse marcador no header `user-agent` e redireciona pra `/bem-vindo` quando não há sessão. Confirmado funcionando de ponta a ponta no simulador.
+- [x] Testado no emulador Android também (AVD `borah_test`, build via `./gradlew assembleDebug`) — mesma entrada, mesmo comportamento do iOS, navegação interna confirmada com toque de verdade (`adb shell input tap`) indo de `/bem-vindo` pra `/login` sem sair pro navegador.
+
+### Acesso (sem cobrança real ainda)
+- [x] Migration `profiles.acesso_liberado` (boolean, default `true`) — interruptor manual até existir assinatura de verdade. Aplicada ao banco de produção.
+- [x] `lib/acessoMobile.ts` (`temAcessoLiberado`), `AmbienteShell.tsx` checando `Capacitor.isNativePlatform()` (só bloqueia dentro do app empacotado, nunca no site), `AcessoBloqueado.tsx` (sem preço, sem botão de pagamento — abre o navegador do sistema via `@capacitor/browser`).
+- [ ] Testar de verdade dentro de um build nativo (mudar `acesso_liberado` pra `false` numa conta e confirmar que a tela aparece só no app).
+
+### Push notifications — bloqueado, precisa de contas externas
+- [ ] Projeto Firebase (Android/FCM) e chave APNs (iOS) — conta de desenvolvedor configurada por fora, não é algo que se resolve só no código.
+- [ ] Tabela de device tokens (nova migration) vinculada a `profiles.id`.
+- [ ] Hook no gatilho "revisitar" existente (`app/diario/actions.ts`) — único gatilho que vira push de verdade, por decisão já fechada (seção 3 do documento).
+
+### Sign in with Apple — bloqueado, precisa de conta Apple Developer
+- [ ] Exigido pela diretriz 4.8 da Apple (já existe login Google). Precisa configurar o provider no painel do Supabase antes de qualquer código.
+
+### Universal Links / App Links — bloqueado por dependência de produto
+- [ ] Depende da Fase 11 (pré-cadastro de paciente) estar implementada primeiro — hoje o link ainda é só web.
+
+### Submissão às lojas — majoritariamente manual/externo
+- [ ] App Store Connect + Google Play Console: contas, listagem, screenshots, política de privacidade (já existe em `/privacidade`), classificação etária.
+- [ ] Atenção: apps de saúde mental costumam ter revisão humana mais cuidadosa nas lojas — não é bloqueador, mas pode gerar perguntas manuais do revisor.
+
+## Fase 13 — Integração Presente → Presença
+
+> Detalhe completo em `integracao-presente-presenca.md` (spec original), `integracao-presente-presenca-auditoria.md` (estado do código antes de codar) e `integracao-presente-presenca-decisoes.md` (decisões de produto + status). Escopo: lente diária do motor Presente (repositório separado) como contexto opcional na Home e, depois, na Conversa — nunca vira o app num app de Dreamspell (PRD da integração, seção 1).
+
+- [x] **P1** — `lib/present.ts` (`buscarLenteGenerica`, endpoint `/api/lente-do-dia`, `PRESENTE_SERVICE_URL`).
+- [x] **P2** — bloco "Uma lente para hoje" na Home (`app/home/page.tsx`), com "Entender de onde vem" inline (`<details>`) e CTA "Conversar sobre isso"; fail-open (some se o motor Presente não responder).
+- [x] **P3** — `lib/presenceDailyContext.ts` (`PresenceDailyContext`, `montarPresenceDailyContext`).
+- [x] Testado no navegador com `PRESENTE_SERVICE_URL` real (`https://alpha.presenca.app`) — funcionando de ponta a ponta.
+- [x] **Llama Guard 3 em paralelo à Conversa** (`api/conversa/route.ts`) — pré-requisito do P4, decisão fechada em `integracao-presente-presenca-decisoes.md` itens 5 e 5.1. Binding `AI` (`wrangler.jsonc`), `lib/llamaGuard.ts`, decisão de desacordo em `lib/protocoloRisco.ts` testada (`scripts/testar-protocolo-risco.ts`, 8/8). **Validado em produção real (2026-08-31)**, isolado via `git worktree` (nunca publicou o resto do working tree): chamada isolada ao binding real confirmou o parse (`unsafe`/`safe` batendo com o código) e uma conversa autenticada real com mensagem de risco forçou o card de Recursos de ponta a ponta — nesse teste específico Sonnet e Llama Guard concordaram (não isolou o caso "só o Llama sinaliza"), esse caso específico continua garantido pelo teste unitário determinístico. Detalhe completo em `integracao-presente-presenca-decisoes.md`.
+- [x] **P4 — contexto opcional pro chat, implementado e EM PRODUÇÃO (2026-08-31).** Bateria G2 rodada (31 conversas reais, `docs/testes-modelo/integracao-presente/bateria-g2-2026-08-31.md`) e revisada — risco residual aceito com gatilho de reavaliação (`integracao-presente-presenca-decisoes.md`, decisão 7). `lib/systemPromptConversa.ts` (`montarSystemPromptConversa`) injeta a lente do dia no system prompt quando existe, buscada no servidor (nunca do client). **Cache real da lente** (`caches.default`, chave por dia civil em America/Sao_Paulo) substituindo o `next.revalidate` que não tinha efeito no Worker — sem isso, cada mensagem de conversa faria uma chamada de rede síncrona ao Presente antes do Sonnet responder. Testado em produção real: 4 mensagens numa mesma conversa confirmaram cache HIT a partir da 2ª busca bem-sucedida (as 2 primeiras bateram um cold start do Railway, não bug do cache). `PRESENTE_SERVICE_URL` configurada como secret real no Cloudflare pela primeira vez (antes só existia local). Deploy final confirmado saudável nos 3 domínios (`presenca.app`, `www.presenca.app`, `cuida.presenca.app`).
+- [ ] P5 — integração com práticas: **adiada.** Auditoria (2026-08-31) achou que o mecanismo de sugestão presumido pelo documento original (tool tipo `sugerirPratica`, busca semântica contra `biblioteca`) nunca foi implementado — nem a tool nem a busca existem hoje; `systemPromptConversa.ts` não menciona biblioteca/prática. Infraestrutura não será construída só pra viabilizar o P5 agora; retomar depois com mais clareza. Detalhe em `integracao-presente-presenca-decisoes.md`.
+- [x] **P6 — fechamento leve do dia, implementado e EM PRODUÇÃO (2026-08-31).** Tela própria `/fechamento` (link discreto na Home, abaixo da lente), reaproveita `caderno_entradas` (`tipo = 'fechamento_dia'` + coluna nova `fechamento_resposta_rapida`). Os 3 cenários (sem interação/só resposta rápida/resposta + texto) testados em produção real; "sem obrigatoriedade" confirmado (nenhuma linha criada sem interação); métrica "houve fechamento hoje?" confirmada via query direta, sem infraestrutura nova; desacoplamento da lente provado byte a byte duas vezes. Deploy via worktree isolado (Version ID `483ec6e5`), fluxo completo reconfirmado ao vivo pós-deploy, 3 domínios saudáveis. Detalhe completo em `integracao-presente-presenca-decisoes.md`.
+  - **Bug de produção achado e corrigido no caminho, não específico do P6:** recursão de RLS (`infinite recursion detected in policy for relation "caderno_entradas"`) bloqueava **qualquer** insert de paciente na tabela — incluindo `guardarNoDiario`, já em produção, que falhava silenciosamente (UI otimista escondia o erro). Corrigido via `supabase/migrations/20260831190000_corrige_recursao_insert_caderno.sql` (policy de INSERT do profissional passou a usar `profissional_id_do_usuario_atual()`, mesma proteção da Fase 4, sem a subquery recursiva). Aplicada e confirmada.
+- [x] **P7 — memória longitudinal, implementado e EM PRODUÇÃO (2026-09-01).** Conecta `fechamento_dia` ao mecanismo "a IA percebe conexões" (`buscar_conexao_caderno`) com 2 correções de risco: (1) só ganha embedding/entra no pipeline quando há texto livre real, nunca a partir só do rótulo de resposta rápida; (2) nunca é o lado citado de uma conexão pra ninguém, mesmo pra si mesma (`and ce.tipo <> 'fechamento_dia'` no WHERE, migration `20260901163707`) — evita que texto influenciado pela lente simbólica seja reproduzido como "padrão da pessoa". `processarConexaoEntrada` extraída pra `lib/conexaoCaderno.ts` (era duplicada em `diario/actions.ts`/`conversa/actions.ts`) antes do 3º call site em `fechamento/actions.ts`. 3 testes confirmados em produção real, incluindo teste direto da exclusão via RPC forçando o cenário mais favorável ao auto-match. Detalhe completo em `integracao-presente-presenca-decisoes.md`.
+- [ ] P8 — personalização por Selo natal: bloqueado até `/privacidade` cobrir o novo serviço externo recebendo `data_nascimento` **e** a coluna de consentimento (`profiles.consentiu_lente_presente_em`) existir e ser testada.
+- [ ] Migração "Como você chega hoje?" (check-in) — frente paralela e independente, **não faz parte** deste plano P1-P8 (decisão já no doc original).

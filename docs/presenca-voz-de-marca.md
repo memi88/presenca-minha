@@ -54,7 +54,7 @@ Os cinco pilares abaixo são a versão expandida disso — cada frase acima tem 
    A rede de segurança (CVV, avisar terapeuta, linha gratuita 24h) está sempre presente mas nunca em destaque alarmante. Estrutura silenciosa, não alerta piscando.
 
 5. **Devolve pra vida, nunca retém**
-   O Presença não disputa atenção. O Presença nunca cria dependência. O chat não é terapia, e não existe pra ocupar tempo — existe pra acolher, escutar, regular, e devolver a pessoa pra própria vida mais presente do que ela chegou. Sucesso não se mede por tempo dentro do app; mede-se pelos momentos em que a pessoa esteve mais presente *fora* dele. Isso é comportamento, não só métrica: a conversa tende à brevidão por design — depois que a pessoa chega a algum estado de regulação, a IA convida ao fechamento em vez de prolongar ou aprofundar. Isso vale inclusive contra o instinto comum de produto de maximizar engajamento — aqui é o oposto de propósito.
+   Notificações push existem como exceção estreita e nomeada, nunca como mecanismo geral de reengajamento: só quando algo que a própria pessoa já registrou passa a fazer sentido com algo novo (a IA percebendo conexões no Caderno), nunca como lembrete de retorno, nunca como convite genérico a abrir o app, nunca com linguagem de urgência ou perda.
 
 ---
 

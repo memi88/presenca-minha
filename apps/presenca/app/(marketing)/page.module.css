@@ -1,6 +1,10 @@
 .hero {
   position: relative;
-  padding: 120px clamp(24px, 4vw, 48px) 130px;
+  min-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 clamp(24px, 4vw, 48px) 90px;
   text-align: center;
   overflow: hidden;
 }
@@ -11,13 +15,13 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.28;
+  opacity: 0.62;
 }
 
 .heroGradiente {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(250, 247, 241, 0.55), rgba(250, 247, 241, 0.25) 55%, #faf7f1);
+  background: linear-gradient(180deg, transparent 0%, transparent 48%, rgba(250, 247, 241, 0.55) 74%, #faf7f1 100%);
 }
 
 .heroConteudo {
@@ -27,16 +31,10 @@
 }
 
 .heroHeadline {
-  margin: 0 0 1.6rem;
+  margin: 0 0 2.2rem;
   font: 400 clamp(2.4rem, 5vw, 3.6rem) / 1.18 var(--font-fraunces), serif;
   color: #2e2921;
-}
-
-.heroTexto {
-  margin: 0 auto 2.8rem;
-  max-width: 520px;
-  font: 300 1.05rem/1.75 var(--font-inter), sans-serif;
-  color: #5f5748;
+  text-shadow: 0 2px 24px rgba(250, 247, 241, 0.6);
 }
 
 .heroCtas {
@@ -113,17 +111,17 @@
 .perguntaConteudo {
   max-width: 680px;
   margin: 0 auto;
-  padding: 170px clamp(24px, 4vw, 48px);
+  padding: 110px clamp(24px, 4vw, 48px);
 }
 
 .perguntaEyebrow {
-  margin: 0 0 2.6rem;
+  margin: 0 0 2rem;
   font: 300 0.9rem/1.6 var(--font-inter), sans-serif;
   color: #b8a680;
 }
 
 .perguntaDestaque {
-  margin: 0 0 3.6rem;
+  margin: 0 0 2.6rem;
   font: italic 400 clamp(1.7rem, 3.8vw, 2.5rem) / 1.45 var(--font-fraunces), serif;
   color: #fdf5e5;
 }
@@ -135,19 +133,19 @@
 .perguntaTraco {
   display: block;
   width: 1px;
-  height: 52px;
+  height: 40px;
   background: linear-gradient(180deg, #c99a4a, transparent);
-  margin: 0 auto 3.4rem;
+  margin: 0 auto 2.4rem;
 }
 
 .perguntaSubtitulo {
-  margin: 0 0 1.4rem;
+  margin: 0 0 1.2rem;
   font: italic 400 1.2rem/1.5 var(--font-fraunces), serif;
   color: #e6d4bb;
 }
 
 .perguntaTexto {
-  margin: 0 0 3.4rem;
+  margin: 0 0 2.2rem;
   font: 300 1rem/1.85 var(--font-inter), sans-serif;
   color: #c7b795;
 }
@@ -158,7 +156,7 @@
   align-items: center;
   gap: 18px;
   flex-wrap: wrap;
-  margin-bottom: 4.5rem;
+  margin-bottom: 2.8rem;
   font: italic 300 clamp(0.85rem, 1.6vw, 1.05rem) / 1.4 var(--font-fraunces), serif;
   color: #e6d4bb;
 }
@@ -172,7 +170,7 @@
 }
 
 .perguntaAviso {
-  margin: 0 0 2.4rem;
+  margin: 0 0 1.8rem;
   font: 400 0.7rem/2.1 var(--font-inter), sans-serif;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -191,7 +189,7 @@
 }
 
 .paraQuem {
-  padding: 40px clamp(24px, 4vw, 48px) 120px;
+  padding: 20px clamp(24px, 4vw, 48px) 90px;
   max-width: 960px;
   margin: 0 auto;
 }
@@ -212,29 +210,35 @@
   position: relative;
   border-radius: 20px;
   overflow: hidden;
-  min-height: 420px;
+  min-height: 360px;
+  padding: 44px 34px 34px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  background: linear-gradient(160deg, #3d3222 0%, #221b10 100%);
 }
 
-.paraQuemImagem {
+/* leve luz no canto — ecoa o gradiente escuro da seção .pergunta, em vez
+   de uma foto de banco de imagem. */
+.paraQuemCard::before {
+  content: "";
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  background: radial-gradient(120% 100% at 100% 0%, rgba(201, 154, 74, 0.16), transparent 60%);
+  pointer-events: none;
 }
 
-.paraQuemGradiente {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(20, 14, 6, 0.05) 30%, rgba(20, 14, 6, 0.72));
+.paraQuemIcone {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  color: #e8b563;
+  opacity: 0.85;
+  margin-bottom: 26px;
 }
 
 .paraQuemConteudo {
   position: relative;
-  padding: 32px;
+  margin-top: auto;
 }
 
 .paraQuemTitulo {
@@ -244,17 +248,76 @@
 }
 
 .paraQuemTexto {
-  margin: 0 0 1.4rem;
-  font: 300 0.92rem/1.65 var(--font-inter), sans-serif;
-  color: rgba(253, 245, 229, 0.88);
+  margin: 0 0 1.6rem;
+  font: 300 0.92rem/1.6 var(--font-inter), sans-serif;
+  color: rgba(253, 245, 229, 0.82);
+}
+
+.paraQuemPrecoLinha {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 2px;
+}
+
+.paraQuemPrecoValor {
+  font: italic 400 2.3rem/1 var(--font-fraunces), serif;
+  color: #fdf5e5;
+}
+
+.paraQuemPrecoUnidade {
+  font: 300 0.95rem/1 var(--font-inter), sans-serif;
+  color: rgba(253, 245, 229, 0.7);
+}
+
+.paraQuemPrecoSub {
+  margin: 0 0 20px;
+  font: 300 0.82rem/1.5 var(--font-inter), sans-serif;
+  color: rgba(253, 245, 229, 0.62);
+}
+
+.paraQuemBeneficios {
+  list-style: none;
+  margin: 0 0 26px;
+  padding: 0;
+  font: 300 0.88rem/1.9 var(--font-inter), sans-serif;
+  color: rgba(253, 245, 229, 0.85);
+}
+
+.paraQuemBeneficios li {
+  padding-left: 1.1em;
+  position: relative;
+}
+
+.paraQuemBeneficios li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: #c99a4a;
+}
+
+.paraQuemAcoes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: auto;
 }
 
 .paraQuemCta {
   display: inline-block;
-  font: 500 0.85rem/1 var(--font-inter), sans-serif;
+  font: 500 0.9rem/1 var(--font-inter), sans-serif;
   color: #2a1c08;
   background: #f2dcae;
   border-radius: 22px;
-  padding: 11px 22px;
+  padding: 13px 26px;
   text-decoration: none;
+}
+
+.paraQuemCtaSecundaria {
+  font: 500 0.82rem/1 var(--font-inter), sans-serif;
+  color: #e6d4ae;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(230, 212, 174, 0.5);
 }

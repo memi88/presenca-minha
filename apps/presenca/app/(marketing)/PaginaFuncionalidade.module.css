@@ -1,0 +1,116 @@
+/* Páginas de funcionalidade (/para-voce/conversa, /diario, /livro-vivo,
+   /praticas). Sem imagem, sem ícone — mesmo vocabulário minimalista de
+   /sobre: coluna centralizada estreita, itálico como único destaque. */
+
+.voltar {
+  display: block;
+  padding: 24px clamp(24px, 4vw, 48px) 0;
+  max-width: 620px;
+  margin: 0 auto;
+  font: 300 0.82rem/1 var(--font-inter), sans-serif;
+  color: #a2947a;
+  text-decoration: none;
+}
+
+.intro {
+  padding: 40px clamp(24px, 4vw, 48px) 60px;
+  max-width: 620px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.titulo {
+  margin: 0 0 1.6rem;
+  font: 400 clamp(1.8rem, 3.8vw, 2.6rem) / 1.28 var(--font-fraunces), serif;
+  color: #2e2921;
+}
+
+.lead {
+  margin: 0 auto;
+  max-width: 52ch;
+  font: 300 1.02rem/1.8 var(--font-inter), sans-serif;
+  color: #5f5748;
+}
+
+.blocos {
+  padding: 50px clamp(24px, 4vw, 48px);
+  max-width: 620px;
+  margin: 0 auto;
+  border-top: 1px solid rgba(58, 52, 40, 0.1);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+@media (min-width: 560px) {
+  .blocos {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.blocoTitulo {
+  font: italic 400 1.1rem/1.3 var(--font-fraunces), serif;
+  color: #2e2921;
+  margin-bottom: 0.6rem;
+}
+
+.blocoTexto {
+  font: 300 0.92rem/1.7 var(--font-inter), sans-serif;
+  color: #5f5748;
+}
+
+.destaque {
+  padding: 40px clamp(24px, 4vw, 48px) 60px;
+  max-width: 620px;
+  margin: 0 auto;
+  text-align: center;
+  border-top: 1px solid rgba(58, 52, 40, 0.1);
+}
+
+.destaqueTexto {
+  margin: 0;
+  font: italic 400 1.3rem/1.5 var(--font-fraunces), serif;
+  color: #8a6b2e;
+}
+
+.outras {
+  padding: 40px clamp(24px, 4vw, 48px) 100px;
+  max-width: 620px;
+  margin: 0 auto;
+  text-align: center;
+  border-top: 1px solid rgba(58, 52, 40, 0.1);
+}
+
+.outrasEyebrow {
+  margin: 0 0 1.2rem;
+  font: 300 0.8rem/1.6 var(--font-inter), sans-serif;
+  color: #a2947a;
+}
+
+.outrasLinks {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 2.4rem;
+}
+
+.outrasLink {
+  font: 400 0.85rem/1 var(--font-inter), sans-serif;
+  color: #7a6f5c;
+  text-decoration: none;
+}
+
+.outrasLink:hover {
+  color: #3a3428;
+}
+
+.cta {
+  display: inline-block;
+  font: 500 0.95rem/1 var(--font-inter), sans-serif;
+  color: #faf7f1;
+  background: #3a3428;
+  border-radius: 28px;
+  padding: 15px 32px;
+  text-decoration: none;
+}

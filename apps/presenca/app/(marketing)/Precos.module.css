@@ -1,0 +1,206 @@
+/* Estilo compartilhado dos planos — usado em /para-voce (Presença) e
+   /para-terapeutas (Cuida). Segue o mesmo vocabulário tipográfico das
+   .blocos de PaginaAudiencia.module.css: sem cards, sem sombra, só
+   tipografia e uma borda fina separando as seções. */
+
+.secao {
+  padding: 90px clamp(24px, 4vw, 48px) 60px;
+  max-width: 880px;
+  margin: 0 auto;
+  border-top: 1px solid rgba(58, 52, 40, 0.1);
+}
+
+.eyebrow {
+  margin: 0 0 0.6rem;
+  font: 300 0.85rem/1.6 var(--font-inter), sans-serif;
+  color: #7a6f5c;
+}
+
+.titulo {
+  margin: 0 0 1rem;
+  font: italic 400 1.7rem/1.3 var(--font-fraunces), serif;
+  color: #2e2921;
+}
+
+.intro {
+  margin: 0 0 3rem;
+  max-width: 60ch;
+  font: 300 0.98rem/1.75 var(--font-inter), sans-serif;
+  color: #5f5748;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 36px 40px;
+}
+
+@media (min-width: 720px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.plano {
+  padding-top: 22px;
+  border-top: 1px solid rgba(58, 52, 40, 0.1);
+}
+
+.planoDestaque {
+  composes: plano;
+  border-top: 1px solid #c99a4a;
+}
+
+.planoNome {
+  font: 400 0.8rem/1 var(--font-inter), sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #a2947a;
+  margin-bottom: 0.8rem;
+}
+
+.planoValor {
+  font: italic 400 1.9rem/1 var(--font-fraunces), serif;
+  color: #2e2921;
+  margin-bottom: 0.3rem;
+}
+
+.planoSub {
+  font: 300 0.85rem/1.5 var(--font-inter), sans-serif;
+  color: #7a6f5c;
+  margin-bottom: 1.1rem;
+}
+
+.planoLista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font: 300 0.9rem/1.8 var(--font-inter), sans-serif;
+  color: #5f5748;
+}
+
+.planoLista li {
+  padding-left: 1.1em;
+  position: relative;
+}
+
+.planoLista li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: #c99a4a;
+}
+
+.nota {
+  margin-top: 3rem;
+  font: 300 0.85rem/1.7 var(--font-inter), sans-serif;
+  color: #a2947a;
+  max-width: 56ch;
+}
+
+/* Contribuição livre — nunca um 4º card no grid de comparação (3 é o
+   número fixo, igual a qualquer SaaS). Fica como bloco à parte, logo
+   abaixo, com o MESMO peso tipográfico dos planos — nunca menor, nunca
+   escondida (decisão de modelo de negócio já fechada). */
+.contribuicaoPainel {
+  margin-top: 48px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(58, 52, 40, 0.1);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 28px;
+}
+
+.contribuicaoNome {
+  font: 400 0.8rem/1 var(--font-inter), sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #a2947a;
+  flex-basis: 100%;
+  margin-bottom: 0.6rem;
+}
+
+.contribuicaoValor {
+  font: italic 400 1.9rem/1 var(--font-fraunces), serif;
+  color: #2e2921;
+}
+
+.contribuicaoTexto {
+  font: 300 0.92rem/1.7 var(--font-inter), sans-serif;
+  color: #5f5748;
+  max-width: 46ch;
+}
+
+/* Cuida: onboarding ainda manual — CTA é WhatsApp, não assinatura direta */
+.whatsappBloco {
+  margin-top: 3rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(58, 52, 40, 0.1);
+}
+
+.whatsappCta {
+  display: inline-block;
+  font: 500 0.95rem/1 var(--font-inter), sans-serif;
+  color: #faf7f1;
+  background: #3a3428;
+  border-radius: 28px;
+  padding: 15px 30px;
+  text-decoration: none;
+}
+
+.whatsappNota {
+  margin-top: 1rem;
+  max-width: 52ch;
+  font: 300 0.85rem/1.7 var(--font-inter), sans-serif;
+  color: #a2947a;
+}
+
+/* Trial em destaque — antes era uma frase perdida dentro de .intro; vira
+   manchete própria, no mesmo peso do restante do sistema tipográfico
+   (itálico Fraunces, igual .planoValor / .contribuicaoValor). */
+.trialDestaque {
+  margin: 0 0 1.6rem;
+  font: italic 400 1.3rem/1.4 var(--font-fraunces), serif;
+  color: #2e2921;
+  max-width: 60ch;
+}
+
+/* FAQ curto pra resolver objeção de compra — mesma convenção de separador
+   fino usada em .contribuicaoPainel/.whatsappBloco, nunca card com sombra. */
+.faqBloco {
+  margin-top: 48px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(58, 52, 40, 0.1);
+}
+
+.faqTitulo {
+  margin: 0 0 1.4rem;
+  font: 400 0.8rem/1 var(--font-inter), sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #a2947a;
+}
+
+.faqItem {
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(58, 52, 40, 0.08);
+}
+
+.faqItem:first-of-type {
+  padding-top: 0;
+  border-top: none;
+}
+
+.faqPergunta {
+  margin: 0 0 0.5rem;
+  font: italic 400 1.05rem/1.4 var(--font-fraunces), serif;
+  color: #2e2921;
+}
+
+.faqResposta {
+  margin: 0 0 1.2rem;
+  max-width: 60ch;
+  font: 300 0.92rem/1.7 var(--font-inter), sans-serif;
+  color: #5f5748;
+}
