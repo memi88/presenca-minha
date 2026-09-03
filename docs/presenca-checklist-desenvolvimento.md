@@ -141,41 +141,42 @@
 
 ## Fase 11 — Terapeutas: self-signup, pré-cadastro de paciente, biblioteca colaborativa
 
-> Anexar esta fase ao final de `presenca-checklist-desenvolvimento.md`. Detalhe completo das decisões em `presenca-extensao-terapeutas-biblioteca.md`.
+> Detalhe completo das decisões em `presenca-extensao-terapeutas-biblioteca.md`. **Completa e em produção desde 11/08/2026** — esta seção ficou com os checkboxes desatualizados (marcados como pendentes) por várias sessões; corrigido em 02/09/2026 depois de conferir cada item contra o código real.
 
 ### Self-signup do terapeuta
-- [ ] Tela de cadastro no Cuida (nome, tipo/abordagem, forma_de_trabalho, usa_linguagens_simbolicas) — cria `auth.users` + insere em `profissionais`.
-- [ ] Aplicar `check` constraint no campo `tipo` com a lista decidida (TCC, Psicanálise, Gestalt-terapia, Terapia Sistêmica, ACT, Humanista, Holística/Integrativa, Outra).
-- [ ] Login/senha próprios — terapeuta não depende mais de script manual pra existir.
+- [x] Tela de cadastro no Cuida — `/cadastro`. Fluxo final ficou diferente do previsto aqui: cadastro é só nome/e-mail/senha; `tipo`/`forma_de_trabalho`/`usa_linguagens_simbolicas` migraram pra `/perfil/completar`, sob gatilho (revelação contextual), não no cadastro inicial.
+- [ ] `check` constraint no campo `tipo` — **não aplicado, por convenção do projeto**: `tipo`/`escopo`/`categoria` em `biblioteca` e `profissionais` são todos validados só na camada de app (mesmo padrão em toda a tabela `biblioteca`), não por CHECK no banco. Lista de valores aceitos vive em `apps/cuida/lib/tiposProfissional.ts`. Não é uma lacuna a fechar, é a decisão de arquitetura já em uso — mantendo aqui só pra não reabrir a pergunta sem contexto.
+- [x] Login/senha próprios — terapeuta não depende mais de script manual.
 
 ### Pré-cadastro de paciente + link pessoal
-- [ ] Migration `pacientes_pre_cadastro` + RLS (sem policy de select pro paciente, nem depois de confirmado).
-- [ ] RPC `validar_token_pre_cadastro` — retorna só nome + status, nunca características/anotações.
-- [ ] RPC `confirmar_pre_cadastro` — cria vínculo, marca confirmado, valida `auth.uid() = paciente_id`.
-- [ ] Tela no Cuida: terapeuta cadastra paciente (nome + características + anotações), gera e exibe o link.
-- [ ] Tela pública de confirmação do link: paciente confirma nome, cria conta permanente direto (sem etapa anônima).
-- [ ] Confirmar que o código de convite genérico continua funcionando sem regressão, em paralelo ao link pessoal.
-- [ ] Teste de RLS dedicado: paciente nunca consegue ler `caracteristicas`/`anotacoes` em nenhum cenário, nem via API pública nem via outra tabela.
+- [x] Migration `pacientes_pre_cadastro` + RLS aplicada.
+- [x] RPC `validar_token_pre_cadastro`.
+- [x] RPC `confirmar_pre_cadastro`.
+- [x] Tela no Cuida — `/pacientes/novo` (características/anotações privadas, gera link).
+- [x] Tela pública de confirmação — `/convite/[token]` no Presença.
+- [x] Código de convite genérico continua funcionando em paralelo.
+- [x] Teste de RLS dedicado (rodado na sessão original de implementação).
 
 ### Biblioteca colaborativa
-- [ ] Migration: `status_moderacao`, `escopo`, `profissional_autor_id`, `motivo_recusa` em `biblioteca`.
-- [ ] Trigger `biblioteca_forca_pendente` — impede terapeuta de se auto-aprovar.
-- [ ] Substituir a policy de select atual da `biblioteca` pela nova (respeita `escopo` + `publicado`).
-- [ ] Tela no Cuida: terapeuta submete prática/página (formulário existente + campo de escopo público/privado).
-- [ ] Confirmar que o Diário (`caderno_entradas`) permanece sem aprovação — nenhuma mudança aqui.
+- [x] Migration com `status_moderacao`/`escopo`/`profissional_autor_id`/`motivo_recusa`.
+- [x] Trigger `biblioteca_forca_pendente`.
+- [x] Policy de select nova (respeita escopo + publicado).
+- [x] Tela no Cuida — `/biblioteca/nova` (ganhou seletor de categoria em pílula em 02/09/2026, ver redesign).
+- [x] Diário permanece sem aprovação — confirmado, nenhuma mudança lá.
 
 ### Painel de aprovação (admin)
-- [ ] Tabela `admins` + RLS; Guilherme inserido manualmente.
-- [ ] Implementar rota separada `/admin/biblioteca`, protegida por `admins` (decidido: fora do Cuida).
-- [ ] Lista de pendentes: autor, tipo, prévia do conteúdo, escopo, Aprovar / Recusar (com campo de motivo).
-- [ ] Lista de publicados: ação "tirar do ar" (`publicado = false`).
-- [ ] Teste de RLS: usuário fora da tabela `admins` nunca acessa a rota nem as policies de gestão da biblioteca.
+- [x] Tabela `admins` + RLS; Guilherme inserido.
+- [x] Rota `/admin/biblioteca`, fora do Cuida (dentro de `apps/presenca`).
+- [x] Lista de pendentes com Aprovar/Recusar + motivo.
+- [x] Lista de publicados com "tirar do ar".
+- [x] Teste de RLS.
 
 ### Atribuição de autoria
-- [ ] Rodapé discreto "escrito por [nome]" quando `profissional_autor_id` existe.
-- [ ] Cartão expandido ao tocar (nome, tipo/abordagem, breve descrição).
-- [ ] CTA "conectar com [nome]" só quando `profiles.profissional_id` do leitor for nulo.
-- [ ] Confirmar comportamento em `escopo = 'privado_profissional'` (atribuição aparece, sem CTA).
+- [x] Rodapé "escrito por [nome]" — `AutoriaBiblioteca.tsx`.
+- [x] Cartão expandido (nome, abordagem). Ganhou link "ver perfil de [nome]" em 02/09/2026, levando pra Página do Autor nova (`/autor/[id]`).
+- [x] CTA "conectar com [nome]" condicional.
+- [x] Comportamento em `escopo = 'privado_profissional'` confirmado.
+- **Achado em 02/09/2026** (redesign): a atribuição só aparecia pra quem já tinha vínculo com aquele profissional — RLS de `profissionais` não cobria leitor sem vínculo lendo autor de conteúdo *público*. Corrigido com migration nova (`profissionais_leitura_publica`, precisa ser aplicada).
 
 ### Pendências externas / decisões ainda em aberto
 - [ ] (Adiado por decisão consciente) Anotações do terapeuta alimentando a IA — não fazer nesta fase; revisitar só se houver interesse futuro.
@@ -208,8 +209,8 @@
 ### Sign in with Apple — bloqueado, precisa de conta Apple Developer
 - [ ] Exigido pela diretriz 4.8 da Apple (já existe login Google). Precisa configurar o provider no painel do Supabase antes de qualquer código.
 
-### Universal Links / App Links — bloqueado por dependência de produto
-- [ ] Depende da Fase 11 (pré-cadastro de paciente) estar implementada primeiro — hoje o link ainda é só web.
+### Universal Links / App Links
+- [ ] A dependência (Fase 11, pré-cadastro de paciente) já está implementada desde 11/08/2026 — isso **desbloqueou** o item, mas o trabalho em si (associar domínio ao app, testar abrir `/convite/[token]` direto no app em vez do navegador) ainda não foi feito.
 
 ### Submissão às lojas — majoritariamente manual/externo
 - [ ] App Store Connect + Google Play Console: contas, listagem, screenshots, política de privacidade (já existe em `/privacidade`), classificação etária.
