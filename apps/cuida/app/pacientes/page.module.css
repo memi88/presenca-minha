@@ -5,6 +5,17 @@
   margin: 0 auto;
 }
 
+/* Achado na auditoria (presenca-cuida-planejamento.md §2): o Cuida roda
+   majoritariamente no navegador (desktop), não no app mobile — travar em
+   480px mesmo num monitor largo desperdiça o espaço. Só a largura muda
+   (mais respiro), não a estrutura de lista em coluna única. */
+@media (min-width: 900px) {
+  .scene {
+    max-width: 640px;
+    padding: 40px;
+  }
+}
+
 .topBar {
   display: flex;
   align-items: center;

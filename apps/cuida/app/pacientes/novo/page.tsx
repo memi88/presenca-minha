@@ -31,9 +31,11 @@ export default async function NovoPaciente() {
       <a className={styles.voltar} href="/pacientes">
         ‹ pacientes
       </a>
-      <p className={styles.eyebrow}>novo paciente</p>
-      <h1 className={styles.headline}>Pré-cadastrar paciente</h1>
-      <PreCadastroForm />
+      <div className={styles.card}>
+        <p className={styles.eyebrow}>novo paciente</p>
+        <h1 className={styles.headline}>Pré-cadastrar paciente</h1>
+        <PreCadastroForm />
+      </div>
     </main>
   );
 }

@@ -5,6 +5,15 @@
   margin: 0 auto;
 }
 
+/* Mesmo achado da lista de pacientes (presenca-cuida-planejamento.md §2)
+   — largura de celular presa mesmo em desktop. */
+@media (min-width: 900px) {
+  .scene {
+    max-width: 640px;
+    padding: 40px;
+  }
+}
+
 .voltar {
   display: inline-block;
   font-size: 13px;
