@@ -111,6 +111,11 @@
 
 ## Processo
 
-- [ ] Nada commitado ainda nesta branch (`redesign/visual-contemplative-warmth`)
-      — Fase 0 a 4 inteiras estão como working tree solto. Decidir ponto de
-      corte pra commitar (por fase? tudo junto no final?).
+- [x] Trabalho da sessão organizado em 9 commits temáticos na branch
+      `redesign/visual-contemplative-warmth` (fundação, Home, Práticas,
+      Livro Vivo/autor, Diário/pergunta, Privacidade, Cuida, docs,
+      indicação estruturada). Nada em aberto sem commit.
+- [ ] **2 migrations novas precisam ser aplicadas** (mesmo fluxo manual de
+      sempre): `20260902120000_biblioteca_categoria_pratica.sql`,
+      `20260902123000_profissionais_leitura_publica.sql`.
+- [ ] Branch ainda não teve PR aberto nem foi mergeada — só local.
