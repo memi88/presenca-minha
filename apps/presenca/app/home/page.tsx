@@ -59,6 +59,48 @@ const OPCOES_PRESENCA = [
 
 const DIAS_PARA_CONVITE_NASCIMENTO = 3;
 
+// O stub solto de database.types.ts não conhece a relação
+// caderno_entradas.biblioteca_ref_id → biblioteca — sem isso, o embed
+// `biblioteca:biblioteca_ref_id(...)` quebra o typecheck (mesmo problema
+// documentado em AutoriaBiblioteca/praticas/[id]/page.tsx).
+type UltimaEntradaHome = {
+  autor_tipo: string;
+  tipo: string;
+  conteudo: string;
+  biblioteca_ref_id: string | null;
+  biblioteca: { id: string; titulo: string; tipo: string } | null;
+};
+
+// "Do seu terapeuta" varia por tipo — o terapeuta escolhe isso na hora de
+// escrever (EntradaForm.tsx no Cuida): pergunta manda pra tela de
+// resposta focada; prática/página indicada apontam pro item de verdade
+// (biblioteca_ref_id, estruturado, não mais texto livre) quando a
+// referência existe e ainda está publicada; reflexão/símbolo (ou uma
+// indicação sem referência válida) são só a citação, sem CTA.
+function montarCardTerapeuta(
+  entrada: UltimaEntradaHome,
+): { texto: string; ctaLabel: string | null; ctaHref: string | null } {
+  const ref = entrada.biblioteca;
+  if (entrada.tipo === "pergunta") {
+    return { texto: entrada.conteudo, ctaLabel: "Responder →", ctaHref: "/diario/pergunta" };
+  }
+  if (entrada.tipo === "pratica_indicada" && ref) {
+    return {
+      texto: entrada.conteudo || `indicou a prática "${ref.titulo}"`,
+      ctaLabel: `Ver prática: ${ref.titulo} →`,
+      ctaHref: `/praticas/${ref.id}`,
+    };
+  }
+  if (entrada.tipo === "pagina_indicada" && ref) {
+    return {
+      texto: entrada.conteudo || `indicou a página "${ref.titulo}"`,
+      ctaLabel: `Ler no Livro Vivo: ${ref.titulo} →`,
+      ctaHref: `/livro-vivo/${ref.id}`,
+    };
+  }
+  return { texto: entrada.conteudo, ctaLabel: null, ctaHref: null };
+}
+
 export default async function Home() {
   const supabase = await createClient();
   const {
@@ -115,10 +157,11 @@ export default async function Home() {
   ] = await Promise.all([
     supabase
       .from("caderno_entradas")
-      .select("autor_tipo, tipo, conteudo")
+      .select("autor_tipo, tipo, conteudo, biblioteca_ref_id, biblioteca:biblioteca_ref_id(id, titulo, tipo)")
       .eq("paciente_id", user.id)
       .order("created_at", { ascending: false })
       .limit(1)
+      .returns<UltimaEntradaHome[]>()
       .maybeSingle(),
     reduzido
       ? Promise.resolve({ data: null })
@@ -167,14 +210,14 @@ export default async function Home() {
   const perguntaEmAberto = ultimaEntrada?.autor_tipo === "profissional" && ultimaEntrada?.tipo === "pergunta";
   const temRevisitar = !!entradasRevisitar;
 
-  // "Do seu terapeuta" — mostra a última entrada só enquanto ela for a
-  // coisa mais recente no caderno (autor_tipo profissional). Assim que a
-  // pessoa escreve algo, o card some sozinho — sem precisar de uma flag de
-  // "lida". Reduzido (humor "confuso") também esconde, mesma lógica que já
-  // reduz o resto da tela.
-  const citacaoTerapeuta =
-    !reduzido && profissionalConectado?.nome && ultimaEntrada?.autor_tipo === "profissional" && ultimaEntrada.conteudo
-      ? ultimaEntrada.conteudo
+  // Mostra a última entrada só enquanto ela for a coisa mais recente no
+  // caderno (autor_tipo profissional). Assim que a pessoa escreve algo, o
+  // card some sozinho — sem precisar de uma flag de "lida". Reduzido
+  // (humor "confuso") também esconde, mesma lógica que já reduz o resto
+  // da tela.
+  const cardTerapeuta =
+    !reduzido && profissionalConectado?.nome && ultimaEntrada?.autor_tipo === "profissional"
+      ? montarCardTerapeuta(ultimaEntrada)
       : null;
 
   const tag = tagDoMomento(profile.presenca_hoje);
@@ -337,7 +380,7 @@ export default async function Home() {
               </section>
             )}
 
-            {citacaoTerapeuta && profissionalConectado && (
+            {cardTerapeuta?.texto && profissionalConectado && (
               <section className={styles.terapeuta} aria-label="Do seu terapeuta">
                 <div
                   className={styles.terapeutaAvatar}
@@ -346,7 +389,12 @@ export default async function Home() {
                 />
                 <div>
                   <p className={styles.lenteRotulo}>{profissionalConectado.nome}</p>
-                  <p className={styles.terapeutaTexto}>“{trecho(citacaoTerapeuta, 220)}”</p>
+                  <p className={styles.terapeutaTexto}>“{trecho(cardTerapeuta.texto, 220)}”</p>
+                  {cardTerapeuta.ctaLabel && cardTerapeuta.ctaHref && (
+                    <a className={styles.terapeutaCta} href={cardTerapeuta.ctaHref}>
+                      {cardTerapeuta.ctaLabel}
+                    </a>
+                  )}
                 </div>
               </section>
             )}

@@ -37,34 +37,43 @@ export default async function DetalhePaciente({ params }: { params: Promise<{ id
     .maybeSingle();
   if (!paciente) notFound();
 
-  const [{ data: entradas }, { data: compartilhadas }, { data: ultimoAlerta }] = await Promise.all([
-    supabase
-      .from("caderno_entradas")
-      .select("id, tipo, conteudo, created_at")
-      .eq("paciente_id", id)
-      .eq("autor_tipo", "profissional")
-      .eq("autor_profissional_id", profissional.id)
-      .order("created_at", { ascending: false }),
-    // RLS já restringe isso ao profissional certo (só vê o que o paciente
-    // marcou compartilhar E tem vínculo ativo) — o filtro explícito aqui é
-    // só consistência com a query vizinha, não uma proteção adicional.
-    supabase
-      .from("caderno_entradas")
-      .select("id, tipo, conteudo, created_at")
-      .eq("paciente_id", id)
-      .eq("autor_tipo", "usuario")
-      .eq("compartilhar", true)
-      .order("created_at", { ascending: false }),
-    supabase
-      .from("alertas_risco")
-      .select("created_at")
-      .eq("paciente_id", id)
-      .eq("profissional_id", profissional.id)
-      .gte("created_at", new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString())
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle(),
-  ]);
+  const [{ data: entradas }, { data: compartilhadas }, { data: ultimoAlerta }, { data: itensBiblioteca }] =
+    await Promise.all([
+      supabase
+        .from("caderno_entradas")
+        .select("id, tipo, conteudo, created_at")
+        .eq("paciente_id", id)
+        .eq("autor_tipo", "profissional")
+        .eq("autor_profissional_id", profissional.id)
+        .order("created_at", { ascending: false }),
+      // RLS já restringe isso ao profissional certo (só vê o que o paciente
+      // marcou compartilhar E tem vínculo ativo) — o filtro explícito aqui é
+      // só consistência com a query vizinha, não uma proteção adicional.
+      supabase
+        .from("caderno_entradas")
+        .select("id, tipo, conteudo, created_at")
+        .eq("paciente_id", id)
+        .eq("autor_tipo", "usuario")
+        .eq("compartilhar", true)
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("alertas_risco")
+        .select("created_at")
+        .eq("paciente_id", id)
+        .eq("profissional_id", profissional.id)
+        .gte("created_at", new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString())
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      // Catálogo pra "prática indicada"/"página indicada" apontarem pra um
+      // item de verdade em vez de só texto livre — só publicado (RLS de
+      // `biblioteca` também exige isso; nada pendente aparece aqui).
+      supabase
+        .from("biblioteca")
+        .select("id, tipo, titulo")
+        .eq("publicado", true)
+        .order("titulo", { ascending: true }),
+    ]);
 
   return (
     <main className={styles.scene}>
@@ -79,7 +88,7 @@ export default async function DetalhePaciente({ params }: { params: Promise<{ id
         </p>
       )}
 
-      <EntradaForm pacienteId={id} />
+      <EntradaForm pacienteId={id} itensBiblioteca={itensBiblioteca ?? []} />
 
       <div className={styles.historico}>
         <p className={styles.historicoTitulo}>o que {paciente.nome} compartilhou com você</p>

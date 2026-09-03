@@ -384,6 +384,13 @@
   margin: 0;
 }
 
+.terapeutaCta {
+  display: inline-block;
+  margin-top: 10px;
+  font: 600 13px/1 var(--font-bitter), sans-serif;
+  color: #b6873f;
+}
+
 /* Prática sugerida — card de foto (placeholder até `biblioteca` ganhar
    coluna de imagem), texto branco sobre gradiente escuro no rodapé, igual
    ao tratamento do mockup pra esse bloco. */

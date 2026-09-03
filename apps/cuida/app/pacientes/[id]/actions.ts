@@ -10,6 +10,12 @@ import { podeCalcularEmbedding } from "@/lib/rateLimit";
 
 export type EscreverEntradaState = { erro?: string; sucesso?: boolean };
 
+const TIPOS_COM_REFERENCIA = new Set(["pratica_indicada", "pagina_indicada"]);
+const TIPO_BIBLIOTECA_ESPERADO: Record<string, string> = {
+  pratica_indicada: "pratica",
+  pagina_indicada: "pagina_livro_vivo",
+};
+
 export async function escreverEntrada(
   pacienteId: string,
   _prev: EscreverEntradaState,
@@ -17,7 +23,13 @@ export async function escreverEntrada(
 ): Promise<EscreverEntradaState> {
   const tipo = String(formData.get("tipo") ?? "reflexao");
   const conteudo = String(formData.get("conteudo") ?? "").trim();
-  if (!conteudo) return { erro: "Escreva alguma coisa antes de enviar." };
+  const bibliotecaRefId = String(formData.get("biblioteca_ref_id") ?? "").trim() || null;
+  const precisaReferencia = TIPOS_COM_REFERENCIA.has(tipo);
+
+  if (precisaReferencia && !bibliotecaRefId) {
+    return { erro: "Escolha qual prática ou página você quer indicar." };
+  }
+  if (!precisaReferencia && !conteudo) return { erro: "Escreva alguma coisa antes de enviar." };
 
   const supabase = await createClient();
   const {
@@ -32,10 +44,27 @@ export async function escreverEntrada(
     .maybeSingle();
   if (!profissional) redirect("/");
 
+  // Confere que a referência escolhida existe, está publicada e é do tipo
+  // certo (prática pra "prática indicada", página do Livro Vivo pra
+  // "página indicada") — o <select> do form já filtra isso, mas o form
+  // pode ser manipulado, então confere de novo aqui.
+  if (precisaReferencia && bibliotecaRefId) {
+    const { data: item } = await supabase
+      .from("biblioteca")
+      .select("id, tipo")
+      .eq("id", bibliotecaRefId)
+      .eq("publicado", true)
+      .maybeSingle();
+    if (!item || item.tipo !== TIPO_BIBLIOTECA_ESPERADO[tipo]) {
+      return { erro: "Essa indicação não é válida — escolha de novo." };
+    }
+  }
+
   // Mesmo padrão do Presença (apps/presenca/app/diario/actions.ts): não
   // trava a escrita se o serviço de embedding ainda não estiver no ar, nem
-  // se o limite de uso do usuário estourou.
-  const permitido = await podeCalcularEmbedding(supabase);
+  // se o limite de uso do usuário estourou. Sem conteúdo (indicação sem
+  // nota), não tem o que gerar embedding — fica nulo mesmo.
+  const permitido = conteudo && (await podeCalcularEmbedding(supabase));
   const embedding = permitido ? await calcularEmbedding(conteudo, "passage") : null;
 
   const { error } = await supabase.from("caderno_entradas").insert({
@@ -44,6 +73,7 @@ export async function escreverEntrada(
     autor_profissional_id: profissional.id,
     tipo,
     conteudo,
+    biblioteca_ref_id: bibliotecaRefId,
     embedding,
   });
   // A policy de insert (paciente vinculado) é o que realmente trava isso —
