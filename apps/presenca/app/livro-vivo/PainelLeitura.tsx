@@ -173,6 +173,7 @@ function TelaDetalhe({
           </div>
           {paginaAtiva.profissional_autor_id && paginaAtiva.profissionais && (
             <AutoriaBiblioteca
+              profissionalId={paginaAtiva.profissional_autor_id}
               nome={paginaAtiva.profissionais.nome}
               tipo={paginaAtiva.profissionais.tipo}
               formaDeTrabalho={paginaAtiva.profissionais.forma_de_trabalho}

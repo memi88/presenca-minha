@@ -5,6 +5,7 @@ import { useState } from "react";
 import styles from "./AutoriaBiblioteca.module.css";
 
 type Props = {
+  profissionalId: string;
   nome: string;
   tipo: string;
   formaDeTrabalho: string | null;
@@ -16,8 +17,10 @@ type Props = {
 // curado por Guilherme (profissional_autor_id nulo) nunca passa por aqui,
 // continua só com o `autor` texto de sempre. Tocar no nome expande um
 // cartão pequeno com os mesmos campos do cadastro do terapeuta (seção 2) —
-// nada novo.
-export function AutoriaBiblioteca({ nome, tipo, formaDeTrabalho, mostrarCta }: Props) {
+// nada novo. "ver perfil" leva pra Página do Autor (app/autor/[id]) —
+// sempre visível, diferente do CTA de conectar (que só faz sentido pra
+// quem ainda não tem profissional vinculado).
+export function AutoriaBiblioteca({ profissionalId, nome, tipo, formaDeTrabalho, mostrarCta }: Props) {
   const [expandido, setExpandido] = useState(false);
   const descricao = tipo === "Outra" ? (formaDeTrabalho ?? tipo) : tipo;
 
@@ -30,6 +33,9 @@ export function AutoriaBiblioteca({ nome, tipo, formaDeTrabalho, mostrarCta }: P
         <div className={styles.cartao}>
           <p className={styles.nome}>{nome}</p>
           <p className={styles.descricao}>{descricao}</p>
+          <a className={styles.cta} href={`/autor/${profissionalId}`}>
+            ver perfil de {nome}
+          </a>
           {mostrarCta && (
             <a className={styles.cta} href="/terapia">
               conectar com {nome}

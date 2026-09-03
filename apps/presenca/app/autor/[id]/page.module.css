@@ -1,0 +1,102 @@
+.scene {
+  min-height: 100dvh;
+  background: var(--bg);
+  /* Sem padding-top: o PageHeader já traz seu próprio espaçamento
+     (clamp(20px,3vw,28px)) — duplicar aqui criava inconsistência de
+     espaço acima do header entre telas diferentes do app. */
+  padding: 0 24px 64px;
+}
+
+.content {
+  max-width: clamp(560px, 40vw, 780px);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  margin: 0 auto 24px;
+}
+
+.eyebrow {
+  font: 600 12px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.nome {
+  font: italic 300 clamp(30px, 2.4vw, 38px) / 1.28 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.descricao {
+  font: 400 15px/1.5 var(--font-fraunces), Georgia, serif;
+  color: var(--text-muted);
+}
+
+.obras {
+  margin-top: 56px;
+  text-align: left;
+}
+
+.obrasRotulo {
+  font: 600 11px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 16px;
+}
+
+.grade {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+@media (min-width: 640px) {
+  .grade {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.card {
+  position: relative;
+  display: block;
+  min-height: 170px;
+  border-radius: 16px;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.cardOverlay {
+  position: relative;
+  z-index: 1;
+  min-height: 170px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 4px;
+  background: linear-gradient(180deg, rgba(20, 16, 10, 0.05) 0%, rgba(20, 16, 10, 0.75) 100%);
+}
+
+.cardTipo {
+  font: 600 10px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.cardTitulo {
+  font: 500 17px/1.3 var(--font-fraunces), Georgia, serif;
+  color: #fff;
+}
