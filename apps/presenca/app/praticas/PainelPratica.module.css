@@ -1,6 +1,6 @@
-/* Ambiente escuro (PRD seção 6) — data-ambiente="escuro" é setado pelo
-   AmbienteShell pra esta rota (e /praticas/[id]). Mesmo padrão de dois
-   painéis do Livro Vivo (ver PainelLeitura.module.css) quando há uma
+/* Ambiente claro/híbrido (redesign §2 — Práticas saiu do escuro, só
+   Diário e Livro Vivo continuam; ver AmbienteShell.tsx). Mesmo padrão de
+   dois painéis do Livro Vivo (ver PainelLeitura.module.css) quando há uma
    prática ativa; sem seleção, é a TelaSelecao (coluna única centralizada,
    ver .selecaoCentro) — por isso .scene precisa ser flex column, pra
    `.selecaoCentro` conseguir se centralizar verticalmente no espaço que
@@ -37,27 +37,27 @@
 .voltarMobileDetalhe {
   display: inline-block;
   margin-bottom: 18px;
-  font: 400 13px/1 var(--font-spectral), serif;
+  font: 500 13px/1 var(--font-bitter), sans-serif;
   color: var(--text-link-muted);
   text-decoration: none;
 }
 
 .eyebrow {
-  font: 300 14px/1 var(--font-spectral), serif;
-  letter-spacing: 0.28em;
+  font: 600 12px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 12px;
 }
 
 .titulo {
-  font: italic 400 clamp(27px, 2vw, 32px) / 1.3 var(--font-spectral), serif;
+  font: italic 300 clamp(27px, 2vw, 32px) / 1.3 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: 10px;
 }
 
 .subtitulo {
-  font: italic 300 15px/1.3 var(--font-spectral), serif;
+  font: italic 300 15px/1.3 var(--font-fraunces), Georgia, serif;
   color: var(--text-faint);
   margin-bottom: 28px;
 }
@@ -107,12 +107,12 @@
 }
 
 .itemTitulo {
-  font: 400 clamp(16px, 1.1vw, 18px) / 1.2 var(--font-spectral), serif;
+  font: 400 clamp(16px, 1.1vw, 18px) / 1.2 var(--font-fraunces), Georgia, serif;
   color: var(--text);
 }
 
 .tituloLeitura {
-  font: 400 clamp(28px, 2.2vw, 36px) / 1.28 var(--font-spectral), serif;
+  font: 400 clamp(28px, 2.2vw, 36px) / 1.28 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: 24px;
 }
@@ -122,7 +122,7 @@
 }
 
 .paragrafo {
-  font: 400 clamp(18px, 1.2vw, 20px) / 1.7 var(--font-spectral), serif;
+  font: 400 clamp(18px, 1.2vw, 20px) / 1.7 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: 18px;
 }
@@ -134,43 +134,18 @@
 .guardar {
   background: none;
   border: none;
-  font: 400 13px/1 var(--font-spectral), serif;
+  font: 500 13px/1 var(--font-bitter), sans-serif;
   color: var(--text-link-muted);
   cursor: pointer;
 }
 
 .guardado {
-  font: italic 400 13px/1 var(--font-spectral), serif;
+  font: 500 13px/1 var(--font-bitter), sans-serif;
   color: var(--accent);
 }
 
-/* Fôlego (única prática interativa hoje) — em vez de embutir o círculo de
-   respiração aqui, um convite simples pra abrir a experiência de verdade. */
-.cartaoInterativo {
-  padding: clamp(24px, 3vw, 40px);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  background: var(--bg-elevated);
-}
-
-.descricaoInterativa {
-  font: italic 400 15px/1.5 var(--font-spectral), serif;
-  color: var(--text-subtle);
-  margin-bottom: 22px;
-}
-
-.abrirPratica {
-  display: inline-block;
-  background: var(--accent-strong);
-  color: var(--cta-text);
-  font: 500 14px/1 var(--font-spectral), serif;
-  padding: 13px 28px;
-  border-radius: 30px;
-  text-decoration: none;
-}
-
 .vazio {
-  font: italic 400 14px/1.5 var(--font-spectral), serif;
+  font: italic 400 14px/1.5 var(--font-fraunces), Georgia, serif;
   color: var(--text-subtle);
 }
 
@@ -185,66 +160,98 @@
   flex-direction: column;
   justify-content: center;
   width: 100%;
-  max-width: 680px;
+  max-width: 1040px;
   margin: 0 auto;
+  padding-top: clamp(32px, 5vh, 56px);
+  padding-bottom: clamp(32px, 5vh, 56px);
 }
 
 .tituloSelecao {
-  font: italic 400 clamp(34px, 4vw, 52px) / 1.15 var(--font-spectral), serif;
+  font: italic 300 clamp(34px, 4vw, 52px) / 1.15 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: 10px;
 }
 
-.listaGrande {
+/* Filtro por categoria — pílulas, mesmo padrão visual de /admin/biblioteca
+   (.filtroPill). Links simples (?categoria=x), sem client component. */
+.filtros {
   display: flex;
-  flex-direction: column;
-  gap: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+
+.filtroPill {
+  font: 500 13px/1 var(--font-bitter), sans-serif;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.filtroPillAtivo {
+  color: var(--cta-text);
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+}
+
+/* Grade de cards de foto (placeholder até imagem real existir, ver
+   PLACEHOLDER_PRATICA) — mesmo tratamento visual dos blocos novos da Home. */
+.grade {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
   margin-top: 20px;
 }
 
-.itemGrande {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: clamp(20px, 2.5vw, 26px) clamp(22px, 2.5vw, 28px);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  background: var(--bg-elevated);
-  text-decoration: none;
-  transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease;
+@media (min-width: 640px) {
+  .grade {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.itemGrande:hover,
-.itemGrande:active {
-  background: rgba(217, 164, 65, 0.12);
-  border-color: rgba(217, 164, 65, 0.4);
+@media (min-width: 960px) {
+  .grade {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
-.itemGrandeIcone {
-  flex: none;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  border: 1px solid rgba(217, 164, 65, 0.55);
+.cardFoto {
   position: relative;
+  display: block;
+  min-height: 200px;
+  border-radius: 18px;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  text-decoration: none;
 }
 
-.itemGrandeIcone::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-40%, -50%);
-  border-top: 7px solid transparent;
-  border-bottom: 7px solid transparent;
-  border-left: 11px solid var(--accent);
+.cardFotoOverlay {
+  position: relative;
+  z-index: 1;
+  min-height: 200px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+  background: linear-gradient(180deg, rgba(20, 16, 10, 0.05) 0%, rgba(20, 16, 10, 0.75) 100%);
 }
 
-.itemGrandeTitulo {
-  font: 500 clamp(18px, 1.4vw, 21px) / 1.3 var(--font-spectral), serif;
-  color: var(--text);
+.cardFotoCategoria {
+  font: 600 11px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.cardFotoTitulo {
+  font: 500 19px/1.3 var(--font-fraunces), Georgia, serif;
+  color: #fff;
 }
 
 @media (min-width: 640px) {

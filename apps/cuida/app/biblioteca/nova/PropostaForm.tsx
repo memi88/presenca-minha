@@ -1,12 +1,17 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
+
+import { CATEGORIAS_PRATICA, type CategoriaPratica } from "@/lib/categoriasPratica";
 
 import { propor } from "./actions";
 import styles from "./page.module.css";
 
 export function PropostaForm() {
   const [state, action, pending] = useActionState(propor, {});
+  const [tipo, setTipo] = useState<"pagina_livro_vivo" | "pratica">("pagina_livro_vivo");
+  const [categoria, setCategoria] = useState<CategoriaPratica>("respiracao");
+  const [escopo, setEscopo] = useState<"publico" | "privado_profissional">("publico");
 
   if (state.sucesso) {
     return (
@@ -24,19 +29,77 @@ export function PropostaForm() {
   return (
     <form className={styles.form} action={action}>
       {state.erro && <p className={styles.erro}>{state.erro}</p>}
-      <select className={styles.field} name="tipo" defaultValue="" required>
-        <option value="" disabled>
-          tipo de conteúdo
-        </option>
-        <option value="pagina_livro_vivo">página do Livro Vivo</option>
-        <option value="pratica">prática</option>
-      </select>
+      <input type="hidden" name="tipo" value={tipo} />
+      <input type="hidden" name="escopo" value={escopo} />
+
+      <p className={styles.grupoLabel}>Tipo de conteúdo</p>
+      <div className={styles.alternador} role="radiogroup" aria-label="Tipo de conteúdo">
+        <button
+          type="button"
+          role="radio"
+          aria-checked={tipo === "pagina_livro_vivo"}
+          className={`${styles.opcao} ${tipo === "pagina_livro_vivo" ? styles.opcaoAtiva : ""}`}
+          onClick={() => setTipo("pagina_livro_vivo")}
+        >
+          página do Livro Vivo
+        </button>
+        <button
+          type="button"
+          role="radio"
+          aria-checked={tipo === "pratica"}
+          className={`${styles.opcao} ${tipo === "pratica" ? styles.opcaoAtiva : ""}`}
+          onClick={() => setTipo("pratica")}
+        >
+          prática
+        </button>
+      </div>
+
+      {tipo === "pratica" && (
+        <>
+          <input type="hidden" name="categoria" value={categoria} />
+          <p className={styles.grupoLabel}>Categoria</p>
+          <div className={styles.alternador} role="radiogroup" aria-label="Categoria da prática">
+            {CATEGORIAS_PRATICA.map((opcao) => (
+              <button
+                key={opcao.valor}
+                type="button"
+                role="radio"
+                aria-checked={categoria === opcao.valor}
+                className={`${styles.opcao} ${categoria === opcao.valor ? styles.opcaoAtiva : ""}`}
+                onClick={() => setCategoria(opcao.valor)}
+              >
+                {opcao.rotulo}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
       <input className={styles.field} type="text" name="titulo" placeholder="título" required />
       <textarea className={styles.field} name="conteudo" placeholder="conteúdo" rows={8} required />
-      <select className={styles.field} name="escopo" defaultValue="publico" required>
-        <option value="publico">público — qualquer pessoa no app pode ler</option>
-        <option value="privado_profissional">só meus pacientes conectados</option>
-      </select>
+
+      <p className={styles.grupoLabel}>Escopo de publicação</p>
+      <div className={styles.alternador} role="radiogroup" aria-label="Escopo de publicação">
+        <button
+          type="button"
+          role="radio"
+          aria-checked={escopo === "publico"}
+          className={`${styles.opcao} ${escopo === "publico" ? styles.opcaoAtiva : ""}`}
+          onClick={() => setEscopo("publico")}
+        >
+          público — qualquer pessoa lê
+        </button>
+        <button
+          type="button"
+          role="radio"
+          aria-checked={escopo === "privado_profissional"}
+          className={`${styles.opcao} ${escopo === "privado_profissional" ? styles.opcaoAtiva : ""}`}
+          onClick={() => setEscopo("privado_profissional")}
+        >
+          só meus pacientes
+        </button>
+      </div>
+
       <button className={styles.cta} type="submit" disabled={pending}>
         enviar pra aprovação
       </button>

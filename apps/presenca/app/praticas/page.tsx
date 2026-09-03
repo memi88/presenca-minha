@@ -7,7 +7,12 @@ import { PageHeader } from "../PageHeader";
 import { PainelPratica } from "./PainelPratica";
 import styles from "./PainelPratica.module.css";
 
-export default async function Praticas() {
+export default async function Praticas({
+  searchParams,
+}: {
+  searchParams: Promise<{ categoria?: string }>;
+}) {
+  const { categoria } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -22,7 +27,7 @@ export default async function Praticas() {
       .maybeSingle(),
     supabase
       .from("biblioteca")
-      .select("id, titulo, slug, conteudo")
+      .select("id, titulo, slug, conteudo, categoria")
       .eq("tipo", "pratica")
       .eq("publicado", true)
       .order("created_at", { ascending: false }),
@@ -67,6 +72,7 @@ export default async function Praticas() {
       jaGuardada={false}
       introExpandidaInicialmente={primeiraEntrada}
       mostrarCtaConectar={!profile.profissional_id}
+      categoriaAtiva={categoria ?? null}
     />
   );
 }

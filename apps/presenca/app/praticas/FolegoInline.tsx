@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { PageHeader } from "../PageHeader";
-import styles from "./page.module.css";
+import styles from "./FolegoInline.module.css";
 
 type Fase = "inspire" | "segure" | "expire";
 
@@ -26,25 +25,45 @@ function NumeroFase({ valor, rotulo, ativo }: { valor: string; rotulo: string; a
   );
 }
 
-export function FolegoExperiencia({ nome }: { nome: string }) {
+// Antes era a rota /folego inteira — dobrada aqui dentro de /praticas/[id]
+// como estado local (decisão registrada em
+// docs/redesign/presenca-redesign-sistema-visual-status.md §5/§7). Some do
+// painel claro e vira uma experiência em tela cheia (sempre escura, ver
+// FolegoInline.module.css) quando "começar" é tocado.
+export function FolegoInline({ titulo }: { titulo: string }) {
+  const [iniciada, setIniciada] = useState(false);
   const [fase, setFase] = useState<Fase>("inspire");
   const [pausado, setPausado] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (pausado) return;
+    if (!iniciada || pausado) return;
     timeoutRef.current = setTimeout(() => setFase((f) => PROXIMA_FASE[f]), DURACOES_MS[fase]);
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [fase, pausado]);
+  }, [iniciada, fase, pausado]);
+
+  if (!iniciada) {
+    return (
+      <div className={styles.cartaoInterativo}>
+        <h2 className={styles.tituloLeitura}>{titulo}</h2>
+        <p className={styles.descricaoInterativa}>Uma prática guiada, no seu ritmo.</p>
+        <button className={styles.abrirPratica} type="button" onClick={() => setIniciada(true)}>
+          começar →
+        </button>
+      </div>
+    );
+  }
 
   const { rotulo, instrucao } = TEXTOS[fase];
   const animacao = pausado ? styles.circuloPausado : "";
 
   return (
-    <main className={styles.scene}>
-      <PageHeader nome={nome} atual="pratica" voltar={{ href: "/home", label: "← voltar" }} />
+    <div className={styles.scene}>
+      <button className={styles.fechar} type="button" onClick={() => setIniciada(false)} aria-label="Fechar prática">
+        ×
+      </button>
       <div className={styles.conteudo}>
         <div className={styles.contador}>
           <NumeroFase valor="4" rotulo="INSPIRE" ativo={fase === "inspire"} />
@@ -68,11 +87,11 @@ export function FolegoExperiencia({ nome }: { nome: string }) {
           <button className={styles.pausar} type="button" onClick={() => setPausado((p) => !p)}>
             {pausado ? "continuar" : "pausar"}
           </button>
-          <a className={styles.encerrar} href="/home">
+          <button className={styles.encerrar} type="button" onClick={() => setIniciada(false)}>
             encerrar quando quiser — cada respiração já conta
-          </a>
+          </button>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

@@ -1,7 +1,11 @@
+import { CATEGORIAS_PRATICA } from "@/lib/categoriasPratica";
+import { PLACEHOLDER_PRATICA } from "@/lib/placeholders";
+
 import { AutoriaBiblioteca } from "../AutoriaBiblioteca";
 import { IntroEspaco } from "../IntroEspaco";
 import { PageHeader } from "../PageHeader";
 import { guardarPratica } from "./[id]/actions";
+import { FolegoInline } from "./FolegoInline";
 import styles from "./PainelPratica.module.css";
 
 export type ItemPratica = {
@@ -9,16 +13,26 @@ export type ItemPratica = {
   titulo: string;
   slug: string | null;
   conteudo: string;
+  categoria?: string | null;
   profissional_autor_id?: string | null;
   profissionais?: { nome: string; tipo: string; forma_de_trabalho: string | null } | null;
 };
 
-const SLUGS_INTERATIVOS: Record<string, string> = {
-  "respiracao-4-7-8": "/folego",
-};
+function rotuloCategoria(categoria: string | null | undefined): string | null {
+  return CATEGORIAS_PRATICA.find((c) => c.valor === categoria)?.rotulo ?? null;
+}
+
+// Slugs cuja prática é uma experiência interativa embutida (FolegoInline),
+// não um texto pra ler — hoje só a respiração 4-7-8. Não é mais uma rota
+// própria (/folego foi absorvida aqui, ver FolegoInline.tsx).
+const SLUGS_INTERATIVOS = new Set(["respiracao-4-7-8"]);
 
 export function rotaDePratica(pratica: ItemPratica): string {
-  return (pratica.slug && SLUGS_INTERATIVOS[pratica.slug]) || `/praticas/${pratica.id}`;
+  return `/praticas/${pratica.id}`;
+}
+
+export function ehPraticaInterativa(pratica: ItemPratica): boolean {
+  return !!pratica.slug && SLUGS_INTERATIVOS.has(pratica.slug);
 }
 
 type Props = {
@@ -29,23 +43,29 @@ type Props = {
   jaGuardada: boolean;
   introExpandidaInicialmente: boolean;
   mostrarCtaConectar: boolean;
+  categoriaAtiva?: string | null;
 };
 
-// Estado de seleção (nenhuma prática ativa) — coluna única centralizada na
-// tela, título grande, cada prática como card clicável. Sem texto de apoio:
-// o item disponível é o elemento dominante da tela. `.listaGrande` já
-// aceita 1 ou N itens sem quebrar visualmente — quando o catálogo passar de
-// ~3-4 práticas, isso migra pra um padrão de lista/grade com ordenação por
-// recomendação (não implementado ainda, ver instruções de UX).
+// Estado de seleção (nenhuma prática ativa) — grade de cards de foto
+// (placeholder até imagem real existir) com filtro por categoria em
+// pílula, igual ao mockup docs/redesign/biblioteca_de_pr_ticas_imersiva_e_padronizada.
+// Filtro via query string (?categoria=x), server-rendered — mesmo padrão
+// de /admin/biblioteca, sem precisar de client component novo.
 function TelaSelecao({
   nome,
   praticas,
   introExpandidaInicialmente,
+  categoriaAtiva,
 }: {
   nome: string;
   praticas: ItemPratica[];
   introExpandidaInicialmente: boolean;
+  categoriaAtiva: string | null;
 }) {
+  const praticasFiltradas = categoriaAtiva
+    ? praticas.filter((p) => p.categoria === categoriaAtiva)
+    : praticas;
+
   return (
     <main className={styles.scene}>
       <PageHeader nome={nome} atual="pratica" voltar={{ href: "/home", label: "← voltar" }} />
@@ -58,14 +78,42 @@ function TelaSelecao({
         </h1>
         <p className={styles.subtitulo}>escolha pelo tempo que você tem</p>
 
-        <div className={styles.listaGrande}>
-          {praticas.map((pratica) => (
-            <a key={pratica.id} href={rotaDePratica(pratica)} className={styles.itemGrande}>
-              <span className={styles.itemGrandeIcone} aria-hidden="true" />
-              <span className={styles.itemGrandeTitulo}>{pratica.titulo}</span>
+        <div className={styles.filtros}>
+          <a href="/praticas" className={`${styles.filtroPill} ${!categoriaAtiva ? styles.filtroPillAtivo : ""}`}>
+            todas
+          </a>
+          {CATEGORIAS_PRATICA.map((cat) => (
+            <a
+              key={cat.valor}
+              href={`/praticas?categoria=${cat.valor}`}
+              className={`${styles.filtroPill} ${categoriaAtiva === cat.valor ? styles.filtroPillAtivo : ""}`}
+            >
+              {cat.rotulo.toLowerCase()}
             </a>
           ))}
         </div>
+
+        {praticasFiltradas.length === 0 ? (
+          <p className={styles.vazio}>Nenhuma prática nessa categoria ainda.</p>
+        ) : (
+          <div className={styles.grade}>
+            {praticasFiltradas.map((pratica) => (
+              <a
+                key={pratica.id}
+                href={rotaDePratica(pratica)}
+                className={styles.cardFoto}
+                style={{ backgroundImage: `url(${PLACEHOLDER_PRATICA})` }}
+              >
+                <div className={styles.cardFotoOverlay}>
+                  {rotuloCategoria(pratica.categoria) && (
+                    <span className={styles.cardFotoCategoria}>{rotuloCategoria(pratica.categoria)}</span>
+                  )}
+                  <span className={styles.cardFotoTitulo}>{pratica.titulo}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
       </div>
     </main>
   );
@@ -89,7 +137,7 @@ function TelaDetalhe({
   introExpandidaInicialmente: boolean;
   mostrarCtaConectar: boolean;
 }) {
-  const interativa = rotaDePratica(praticaAtiva) === "/folego";
+  const interativa = ehPraticaInterativa(praticaAtiva);
   const paragrafos = !interativa ? praticaAtiva.conteudo.split(/\n{2,}/).filter(Boolean) : [];
 
   return (
@@ -128,13 +176,7 @@ function TelaDetalhe({
                 ‹ Práticas
               </a>
               <IntroEspaco espaco="praticas" expandidaInicialmente={introExpandidaInicialmente} />
-              <div className={styles.cartaoInterativo}>
-                <h2 className={styles.tituloLeitura}>{praticaAtiva.titulo}</h2>
-                <p className={styles.descricaoInterativa}>Uma prática guiada, no seu ritmo.</p>
-                <a className={styles.abrirPratica} href="/folego">
-                  abrir prática →
-                </a>
-              </div>
+              <FolegoInline titulo={praticaAtiva.titulo} />
             </>
           ) : (
             <>
@@ -163,6 +205,7 @@ function TelaDetalhe({
               </div>
               {praticaAtiva.profissional_autor_id && praticaAtiva.profissionais && (
                 <AutoriaBiblioteca
+                  profissionalId={praticaAtiva.profissional_autor_id}
                   nome={praticaAtiva.profissionais.nome}
                   tipo={praticaAtiva.profissionais.tipo}
                   formaDeTrabalho={praticaAtiva.profissionais.forma_de_trabalho}
@@ -184,9 +227,17 @@ export function PainelPratica({
   jaGuardada,
   introExpandidaInicialmente,
   mostrarCtaConectar,
+  categoriaAtiva = null,
 }: Props) {
   if (!praticaAtiva) {
-    return <TelaSelecao nome={nome} praticas={praticas} introExpandidaInicialmente={introExpandidaInicialmente} />;
+    return (
+      <TelaSelecao
+        nome={nome}
+        praticas={praticas}
+        introExpandidaInicialmente={introExpandidaInicialmente}
+        categoriaAtiva={categoriaAtiva}
+      />
+    );
   }
   return (
     <TelaDetalhe

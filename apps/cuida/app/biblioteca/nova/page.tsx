@@ -24,13 +24,15 @@ export default async function NovaProposta() {
       <a className={styles.voltar} href="/pacientes">
         ‹ pacientes
       </a>
-      <p className={styles.eyebrow}>biblioteca</p>
-      <h1 className={styles.headline}>Propor conteúdo</h1>
-      <p className={styles.subtext}>
-        Toda proposta passa por aprovação antes de aparecer pra alguém — mesmo conteúdo restrito aos
-        seus pacientes.
-      </p>
-      <PropostaForm />
+      <div className={styles.card}>
+        <p className={styles.eyebrow}>biblioteca</p>
+        <h1 className={styles.headline}>Propor conteúdo</h1>
+        <p className={styles.subtext}>
+          Toda proposta passa por aprovação antes de aparecer pra alguém — mesmo conteúdo restrito
+          aos seus pacientes.
+        </p>
+        <PropostaForm />
+      </div>
     </main>
   );
 }

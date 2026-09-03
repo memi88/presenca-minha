@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
-import { PainelPratica, rotaDePratica, type ItemPratica } from "../PainelPratica";
+import { ehPraticaInterativa, PainelPratica, type ItemPratica } from "../PainelPratica";
 
 export default async function LeituraPratica({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -38,7 +38,7 @@ export default async function LeituraPratica({ params }: { params: Promise<{ id:
   if (!praticaAtiva) notFound();
 
   let jaGuardada = false;
-  if (rotaDePratica(praticaAtiva) !== "/folego") {
+  if (!ehPraticaInterativa(praticaAtiva)) {
     const { data } = await supabase
       .from("caderno_entradas")
       .select("id")

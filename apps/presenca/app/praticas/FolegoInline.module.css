@@ -1,16 +1,63 @@
-/* Ambiente escuro (Fase 5/AmbienteShell já cobre /folego). Fundo próprio,
-   sem imagem — mesmo espírito do gradiente radial da tela de leitura do
-   Livro Vivo, mas com o tom mais quente que o mockup usa aqui.
-   Fonte: docs/Presenca Experiencia Standalone.html, tela "05 FÔLEGO". */
+/* Estado "convite" — sentado dentro do painel claro de /praticas/[id],
+   usa os tokens normais de tema (mesmo tratamento que .cartaoInterativo
+   tinha em PainelPratica.module.css antes desta fusão). */
+.cartaoInterativo {
+  padding: clamp(24px, 3vw, 40px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--bg-elevated);
+}
+
+.tituloLeitura {
+  font: 400 clamp(28px, 2.2vw, 36px) / 1.28 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
+.descricaoInterativa {
+  font: italic 400 15px/1.5 var(--font-fraunces), Georgia, serif;
+  color: var(--text-subtle);
+  margin-bottom: 22px;
+}
+
+.abrirPratica {
+  display: inline-block;
+  background: var(--accent-strong);
+  color: var(--cta-text);
+  font: 600 14px/1 var(--font-bitter), sans-serif;
+  padding: 13px 28px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Estado "ativo" — some do painel claro e vira uma experiência imersiva
+   em tela cheia, sempre escura por design (mesma cor fixa que /folego
+   tinha como rota própria), independente do ambiente claro/escuro da
+   rota por baixo. Por isso as cores aqui são fixas (hex do
+   [data-ambiente="escuro"] em globals.css), não var(--text) etc — este
+   bloco nunca deveria clarear junto com o resto de Práticas. */
 .scene {
-  min-height: 100dvh;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
   background: radial-gradient(120% 90% at 50% 32%, #2a2013, #171009 62%, #0e0a05);
   display: flex;
   flex-direction: column;
-  /* Sem padding-top: o PageHeader já traz seu próprio espaçamento
-     (clamp(20px,3vw,28px)) — duplicar aqui criava inconsistência de
-     espaço acima do header entre telas diferentes do app. */
-  padding: 0 24px clamp(32px, 5vh, 48px);
+  padding: clamp(20px, 3vw, 28px) 24px clamp(32px, 5vh, 48px);
+  overflow-y: auto;
+}
+
+.fechar {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: #f2e4c9;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+  margin-bottom: 8px;
 }
 
 .conteudo {
@@ -20,22 +67,10 @@
 }
 
 @media (min-width: 960px) {
-  /* Conteúdo fica numa faixa central (diferente do header, que é
-     full-bleed) — width:100% explícito evita que margin:auto seja
-     suprimido pelo align-items:stretch implícito do .scene, senão o
-     elemento encolhe pro tamanho do conteúdo em vez de centralizar. */
-  .scene {
-    padding-left: 0;
-    padding-right: 0;
-  }
-
   .conteudo {
     max-width: clamp(1000px, 82vw, 1200px);
     width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: clamp(32px, 4vw, 64px);
-    padding-right: clamp(32px, 4vw, 64px);
+    margin: 0 auto;
     box-sizing: border-box;
   }
 }
@@ -64,24 +99,24 @@
 }
 
 .numeroValor {
-  font: 500 clamp(22px, 2vw, 26px) / 1 var(--font-spectral), serif;
-  color: var(--text);
+  font: 600 clamp(20px, 1.8vw, 24px) / 1 var(--font-bitter), sans-serif;
+  color: #f2e4c9;
 }
 
 .numeroRotulo {
-  font: 300 11px/1 var(--font-spectral), serif;
+  font: 600 11px/1 var(--font-bitter), sans-serif;
   letter-spacing: 0.14em;
-  color: var(--accent);
+  color: #d9a441;
   margin-top: 6px;
 }
 
 .numero .numeroRotulo {
-  color: var(--text-subtle);
+  color: #a2947a;
 }
 
 .ponto {
   color: rgba(217, 164, 65, 0.3);
-  font: 300 15px/1 var(--font-spectral), serif;
+  font: 300 15px/1 var(--font-bitter), sans-serif;
 }
 
 .centro {
@@ -132,13 +167,13 @@
 
 .rotuloFase {
   position: relative;
-  font: italic 400 clamp(24px, 2vw, 30px) / 1 var(--font-spectral), serif;
-  color: var(--text);
+  font: italic 300 clamp(24px, 2vw, 30px) / 1 var(--font-fraunces), Georgia, serif;
+  color: #f2e4c9;
 }
 
 .instrucao {
-  font: italic 400 16px/1.4 var(--font-spectral), serif;
-  color: var(--text-subtle);
+  font: italic 400 16px/1.4 var(--font-fraunces), Georgia, serif;
+  color: #a2947a;
   margin-top: clamp(30px, 5vh, 42px);
   text-align: center;
   max-width: 280px;
@@ -146,7 +181,7 @@
 
 /* Paradas em 21% (fim do inspire, 4/19) e 58% (fim do segure, 11/19) — os
    mesmos limites de tempo do estado em JS, pra circulo e rótulo lerem como
-   a mesma respiração (ver FolegoExperiencia.tsx). */
+   a mesma respiração (ver FolegoInline.tsx). */
 @keyframes folegoRespirar {
   0% {
     transform: scale(0.82);
@@ -181,14 +216,17 @@
   border: 1px solid rgba(217, 164, 65, 0.4);
   border-radius: 30px;
   padding: 13px 26px;
-  font: 400 15px/1 var(--font-spectral), serif;
-  color: var(--text);
+  font: 600 14px/1 var(--font-bitter), sans-serif;
+  color: #f2e4c9;
   cursor: pointer;
 }
 
 .encerrar {
-  font: italic 400 14px/1.4 var(--font-spectral), serif;
-  color: var(--text-faint);
+  font: italic 400 14px/1.4 var(--font-fraunces), Georgia, serif;
+  color: #8a7c66;
   text-align: center;
-  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
 }
