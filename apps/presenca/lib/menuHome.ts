@@ -57,3 +57,28 @@ export const HEADLINE_MOOD = "Há outros lugares por onde você pode caminhar.";
 export const HEADLINE_RETOMADA = "Tem uma pergunta te esperando no seu diário.";
 export const HEADLINE_CONTINUAR = "Continue de onde você parou.";
 export const HEADLINE_CONTINUAR_SEM_HISTORICO = "Por onde você quer seguir?";
+
+// O check-in "como está sua presença hoje?" (Fase 6) já é o próprio nome da
+// tag — mapeamento direto, sem vocabulário novo pra curadoria decorar.
+// "nao_sei" não filtra nada (resposta neutra, sem sinal de momento). Usado
+// pra priorizar itens da biblioteca com `tags_momento_vida` compatível —
+// Livro Vivo (app/livro-vivo/page.tsx) e os blocos de destaque da Home.
+export function tagDoMomento(presencaHoje: string | null): string | null {
+  if (!presencaHoje || presencaHoje === "nao_sei") return null;
+  return presencaHoje;
+}
+
+/** Reordena itens da biblioteca priorizando quem tem `tags_momento_vida`
+ * compatível com a tag do momento — nunca esconde, só prioriza (mesma
+ * regra desde a Fase 7). */
+export function ordenarPorMomento<T extends { tags_momento_vida?: string[] | null }>(
+  itens: T[],
+  tag: string | null,
+): T[] {
+  if (!tag) return itens;
+  return [...itens].sort((a, b) => {
+    const aCombina = a.tags_momento_vida?.includes(tag) ? 1 : 0;
+    const bCombina = b.tags_momento_vida?.includes(tag) ? 1 : 0;
+    return bCombina - aCombina;
+  });
+}

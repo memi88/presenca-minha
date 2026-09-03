@@ -14,11 +14,12 @@ export function precisaCheckin(presencaHojeEm: string | null): boolean {
 }
 
 /**
- * Decide se a Home redireciona pro check-in (`/hoje`) — agora baseado em
- * quanto tempo faz desde a última *visita* (não desde a última resposta de
- * humor). Quem visita todo dia nunca cai aqui, mesmo que o humor de ontem
- * já tenha "esfriado" — nesse caso a Home usa "continue de onde você
- * parou" em vez de perguntar de novo.
+ * Decide se a Home mostra o check-in no lugar do headline normal (absorvido
+ * do antigo /hoje pro próprio bloco de saudação) — baseado em quanto tempo
+ * faz desde a última *visita* (não desde a última resposta de humor). Quem
+ * visita todo dia nunca cai aqui, mesmo que o humor de ontem já tenha
+ * "esfriado" — nesse caso a Home usa "continue de onde você parou" em vez
+ * de perguntar de novo.
  */
 export function precisaVisitaCheckin(ultimaVisitaEm: string | null): boolean {
   if (!ultimaVisitaEm) return true;

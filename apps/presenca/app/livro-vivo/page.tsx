@@ -2,18 +2,12 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@presenca/supabase/server";
 
+import { ordenarPorMomento, tagDoMomento } from "@/lib/menuHome";
+
 import { IntroEspaco } from "../IntroEspaco";
 import { PageHeader } from "../PageHeader";
 import { PainelLeitura } from "./PainelLeitura";
 import styles from "./PainelLeitura.module.css";
-
-// O check-in "como está sua presença hoje?" (Fase 6) já é o próprio nome da
-// tag — mapeamento direto, sem vocabulário novo pra curadoria decorar.
-// "nao_sei" não filtra nada (resposta neutra, sem sinal de momento).
-function tagDoMomento(presencaHoje: string | null): string | null {
-  if (!presencaHoje || presencaHoje === "nao_sei") return null;
-  return presencaHoje;
-}
 
 export default async function LivroVivo() {
   const supabase = await createClient();
@@ -51,13 +45,7 @@ export default async function LivroVivo() {
   // uma tag pra combinar, isso só faz diferença quando a biblioteca tiver
   // itens curados com `tags_momento_vida` preenchido (scripts/cadastrar-biblioteca.mjs).
   const tag = tagDoMomento(profile.presenca_hoje);
-  const paginasOrdenadas = tag
-    ? [...(paginas ?? [])].sort((a, b) => {
-        const aCombina = a.tags_momento_vida?.includes(tag) ? 1 : 0;
-        const bCombina = b.tags_momento_vida?.includes(tag) ? 1 : 0;
-        return bCombina - aCombina;
-      })
-    : (paginas ?? []);
+  const paginasOrdenadas = ordenarPorMomento(paginas ?? [], tag);
 
   if (!paginasOrdenadas.length) {
     return (

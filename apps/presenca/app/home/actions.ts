@@ -46,3 +46,22 @@ export async function adiarNascimento() {
 
   revalidatePath("/home");
 }
+
+// Antes era a rota /hoje inteira — absorvida pelo bloco de saudação da
+// Home no redesign (docs/redesign/presenca-redesign-sistema-visual-status.md
+// §5): mesmo registro, só que sem sair da página.
+export async function registrarPresenca(momento: string) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const agora = new Date().toISOString();
+  await supabase
+    .from("profiles")
+    .update({ presenca_hoje: momento, presenca_hoje_em: agora, ultima_visita_em: agora })
+    .eq("id", user.id);
+
+  revalidatePath("/home");
+}
