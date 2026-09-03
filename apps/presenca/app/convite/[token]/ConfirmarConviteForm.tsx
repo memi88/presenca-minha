@@ -37,7 +37,7 @@ export function ConfirmarConviteForm({ token }: { token: string }) {
         <input type="checkbox" checked={aceitou} onChange={(e) => setAceitou(e.target.checked)} />
         <span className={styles.consentimentoTexto}>
           Li e concordo com a <a href="/privacidade">política de privacidade</a> e os{" "}
-          <a href="/limites-de-cuidado">limites de cuidado</a>.
+          <a href="/privacidade#limites-de-cuidado">limites de cuidado</a>.
         </span>
       </label>
     </form>
