@@ -15,14 +15,15 @@
 }
 
 .eyebrow {
-  font: 300 clamp(16px, 1vw, 18px) / 1 var(--font-spectral), serif;
-  letter-spacing: 0.32em;
+  font: 600 12px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 18px;
 }
 
 .headline {
-  font: italic 400 clamp(30px, 2.2vw, 38px) / 1.28 var(--font-spectral), serif;
+  font: italic 300 clamp(30px, 2.2vw, 38px) / 1.28 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: 32px;
 }
@@ -40,7 +41,7 @@
   border: 1px solid var(--border);
   border-radius: 30px;
   padding: clamp(15px, 1.1vw, 18px);
-  font: 400 clamp(16px, 1vw, 17px) / 1 var(--font-spectral), serif;
+  font: 500 clamp(15px, 1vw, 16px) / 1 var(--font-bitter), sans-serif;
   color: var(--text);
   text-align: center;
   cursor: pointer;
@@ -65,7 +66,7 @@
   border: 1px solid var(--border);
   border-radius: 18px;
   padding: 16px;
-  font: 400 15px/1.5 var(--font-spectral), serif;
+  font: 400 15px/1.5 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: 24px;
 }
@@ -88,7 +89,7 @@
   border: none;
   border-radius: 30px;
   padding: clamp(15px, 1.1vw, 18px);
-  font: 500 clamp(16px, 1vw, 17px) / 1 var(--font-spectral), serif;
+  font: 600 clamp(15px, 1vw, 16px) / 1 var(--font-bitter), sans-serif;
   cursor: pointer;
 }
 
@@ -98,7 +99,7 @@
 }
 
 .pular {
-  font: italic 400 14px/1 var(--font-spectral), serif;
+  font: italic 400 14px/1 var(--font-fraunces), Georgia, serif;
   color: var(--text-muted);
   text-decoration: none;
 }

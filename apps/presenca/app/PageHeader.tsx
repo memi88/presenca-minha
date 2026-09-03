@@ -1,3 +1,4 @@
+import { BottomNav } from "./BottomNav";
 import { CirculoRespirando } from "./CirculoRespirando";
 import { MonogramaP } from "./MonogramaP";
 import styles from "./PageHeader.module.css";
@@ -75,6 +76,8 @@ export function PageHeader({ voltar, nome, atual }: Props) {
           </div>
         </div>
       )}
+
+      {temNav && <BottomNav atual={atual ?? null} />}
     </>
   );
 }

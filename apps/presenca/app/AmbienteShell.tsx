@@ -7,9 +7,14 @@ import { usePathname } from "next/navigation";
 import { AcessoBloqueado } from "./AcessoBloqueado";
 import styles from "./AmbienteShell.module.css";
 
-// Mapeamento fixo por tela (PRD seção 6) — Livro Vivo, Meditação (+ Fôlego,
-// sua prática interativa) e Diário são os "cômodos escuros".
-const PREFIXOS_ESCUROS = ["/livro-vivo", "/praticas", "/folego", "/diario"];
+// Redesign visual reduz o escopo do escuro (docs/redesign/presenca-handoff-claude-code.md
+// §2 e docs/redesign/presenca-redesign-sistema-visual-status.md §2): só
+// Livro Vivo e Diário continuam "cômodos escuros". Práticas vira
+// claro/híbrido — /folego não é mais rota própria (dobrada dentro de
+// praticas/[id] como estado local, ver FolegoInline.tsx; a experiência
+// continua escura por design, só que com cor fixa em vez de depender
+// deste token).
+const PREFIXOS_ESCUROS = ["/livro-vivo", "/diario"];
 
 function ambienteDaRota(pathname: string): "claro" | "escuro" {
   const escuro = PREFIXOS_ESCUROS.some((p) => pathname === p || pathname.startsWith(`${p}/`));

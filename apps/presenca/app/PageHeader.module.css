@@ -29,7 +29,7 @@
 }
 
 .voltarLink {
-  font: 400 13px/1 var(--font-spectral), serif;
+  font: 500 13px/1 var(--font-bitter), sans-serif;
   color: var(--text-link-muted);
   text-decoration: none;
 }
@@ -71,7 +71,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font: 300 15px/1 var(--font-spectral), serif;
+    font: 500 13px/1 var(--font-bitter), sans-serif;
     letter-spacing: 0.32em;
     color: var(--text-subtle);
     text-decoration: none;
@@ -98,8 +98,9 @@
 
   .navItem,
   .navItemDesabilitado {
-    font-size: 16px;
-    font-family: var(--font-spectral), serif;
+    font-size: 14px;
+    font-family: var(--font-bitter), sans-serif;
+    font-weight: 500;
     color: var(--text-subtle);
     text-decoration: none;
     padding: 6px 14px;
@@ -131,7 +132,7 @@
     background: var(--bg-elevated);
     border: 1px solid var(--border);
     color: var(--accent);
-    font: 600 13px/1 var(--font-spectral), serif;
+    font: 600 13px/1 var(--font-bitter), sans-serif;
     text-decoration: none;
   }
 }

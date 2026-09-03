@@ -31,20 +31,21 @@
 }
 
 .eyebrow {
-  font: 300 clamp(16px, 1.1vw, 19px) / 1 var(--font-spectral), serif;
-  letter-spacing: 0.32em;
+  font: 600 12px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
   color: var(--accent);
   margin-bottom: clamp(18px, 1.5vw, 24px);
 }
 
 .headline {
-  font: italic 400 clamp(32px, 2.6vw, 44px) / 1.28 var(--font-spectral), serif;
+  font: italic 300 clamp(32px, 2.6vw, 44px) / 1.28 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: 8px;
 }
 
 .subtext {
-  font: 400 clamp(16px, 1.1vw, 18px) / 1.4 var(--font-spectral), serif;
+  font: 400 clamp(16px, 1.1vw, 18px) / 1.4 var(--font-fraunces), Georgia, serif;
   color: var(--text-muted);
   margin-bottom: clamp(28px, 2.2vw, 38px);
 }
@@ -56,7 +57,7 @@
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: clamp(18px, 1.4vw, 21px) clamp(20px, 1.4vw, 22px);
-  font: 400 clamp(17px, 1.1vw, 18px) / 1 var(--font-spectral), serif;
+  font: 400 clamp(17px, 1.1vw, 18px) / 1 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   box-shadow: 0 2px 6px rgba(90, 60, 20, 0.05);
 }
@@ -66,13 +67,13 @@
 }
 
 .erro {
-  font: 400 13px/1.4 var(--font-spectral), serif;
+  font: 500 13px/1.4 var(--font-bitter), sans-serif;
   color: var(--error);
   margin-bottom: 10px;
 }
 
 .escape {
-  font: italic 300 12.5px/1.4 var(--font-spectral), serif;
+  font: italic 300 12.5px/1.4 var(--font-fraunces), Georgia, serif;
   color: var(--text-faint);
   margin: 4px 0 4px;
 }
@@ -82,7 +83,7 @@
   margin-top: 20px;
   background: var(--accent-strong);
   color: var(--cta-text);
-  font: 500 clamp(17px, 1.1vw, 18px) / 1 var(--font-spectral), serif;
+  font: 600 clamp(16px, 1.1vw, 17px) / 1 var(--font-bitter), sans-serif;
   padding: clamp(18px, 1.4vw, 21px);
   border-radius: 30px;
   text-align: center;
@@ -110,7 +111,7 @@
 }
 
 .consentimentoTexto {
-  font: 400 13px/1.4 var(--font-spectral), serif;
+  font: 400 13px/1.4 var(--font-fraunces), Georgia, serif;
   color: var(--text-muted);
 }
 

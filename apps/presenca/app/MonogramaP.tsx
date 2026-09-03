@@ -13,7 +13,7 @@ export function MonogramaP({ className }: Props) {
         x="46"
         y="104"
         textAnchor="middle"
-        fontFamily="'Fraunces', Georgia, 'Times New Roman', serif"
+        fontFamily="var(--font-fraunces), Georgia, 'Times New Roman', serif"
         fontStyle="italic"
         fontWeight="300"
         fontSize="120"

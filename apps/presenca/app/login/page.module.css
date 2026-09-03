@@ -31,14 +31,15 @@
 }
 
 .eyebrow {
-  font: 300 clamp(16px, 1vw, 18px) / 1 var(--font-spectral), serif;
-  letter-spacing: 0.32em;
+  font: 600 12px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
   color: var(--accent);
   margin-bottom: clamp(18px, 1.5vw, 22px);
 }
 
 .headline {
-  font: italic 400 clamp(30px, 2.4vw, 38px) / 1.28 var(--font-spectral), serif;
+  font: italic 300 clamp(30px, 2.4vw, 38px) / 1.28 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: clamp(30px, 2.6vw, 38px);
 }
@@ -49,7 +50,7 @@
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: clamp(16px, 1.2vw, 19px) clamp(18px, 1.2vw, 20px);
-  font: 400 clamp(16px, 1vw, 17px) / 1 var(--font-spectral), serif;
+  font: 400 clamp(16px, 1vw, 17px) / 1 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   box-shadow: 0 2px 6px rgba(90, 60, 20, 0.05);
   margin-bottom: 14px;
@@ -65,7 +66,7 @@
   background: none;
   border: none;
   padding: 0;
-  font: italic 400 13.5px/1 var(--font-spectral), serif;
+  font: 500 13px/1 var(--font-bitter), sans-serif;
   color: var(--accent);
   cursor: pointer;
 }
@@ -74,7 +75,7 @@
   width: 100%;
   background: var(--accent-strong);
   color: var(--cta-text);
-  font: 500 clamp(17px, 1.1vw, 18px) / 1 var(--font-spectral), serif;
+  font: 600 clamp(16px, 1.1vw, 17px) / 1 var(--font-bitter), sans-serif;
   padding: clamp(18px, 1.4vw, 20px);
   border-radius: 34px;
   text-align: center;
@@ -89,13 +90,13 @@
 }
 
 .erro {
-  font: 400 13px/1.4 var(--font-spectral), serif;
+  font: 500 13px/1.4 var(--font-bitter), sans-serif;
   color: var(--error);
   margin-bottom: 10px;
 }
 
 .confirmacao {
-  font: italic 400 15px/1.5 var(--font-spectral), serif;
+  font: italic 400 15px/1.5 var(--font-fraunces), Georgia, serif;
   color: var(--text-muted);
   margin-bottom: 20px;
 }

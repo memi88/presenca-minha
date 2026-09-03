@@ -27,21 +27,21 @@
 }
 
 .eyebrow {
-  font: 300 13px/1 var(--font-spectral), serif;
-  letter-spacing: 0.28em;
+  font: 600 12px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 18px;
 }
 
 .headline {
-  font: italic 400 clamp(26px, 2.2vw, 32px) / 1.35 var(--font-spectral), serif;
+  font: italic 300 clamp(26px, 2.2vw, 32px) / 1.35 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: 16px;
 }
 
 .texto {
-  font: 300 15px/1.7 var(--font-spectral), serif;
+  font: 400 15px/1.7 var(--font-fraunces), Georgia, serif;
   color: var(--text-muted);
   margin-bottom: 32px;
 }
@@ -50,7 +50,7 @@
   display: inline-block;
   background: var(--accent-strong);
   color: var(--cta-text);
-  font: 500 16px/1 var(--font-spectral), serif;
+  font: 600 15px/1 var(--font-bitter), sans-serif;
   padding: 18px 32px;
   border-radius: 34px;
   border: none;

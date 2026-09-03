@@ -35,14 +35,15 @@
  * mesmo clamp exagera o tamanho em telas largas e força scroll no modal.
  */
 .eyebrow {
-  font: 300 clamp(14px, 0.9vw, 16px) / 1 var(--font-spectral), serif;
-  letter-spacing: 0.28em;
+  font: 600 11px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 16px;
 }
 
 .headline {
-  font: italic 400 clamp(26px, 2vw, 32px) / 1.32 var(--font-spectral), serif;
+  font: italic 300 clamp(26px, 2vw, 32px) / 1.32 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: 24px;
 }
@@ -55,7 +56,7 @@
   background: none;
   border: none;
   text-align: center;
-  font: 400 14px/1 var(--font-spectral), serif;
+  font: 500 14px/1 var(--font-bitter), sans-serif;
   color: var(--text-faint);
   cursor: pointer;
 }

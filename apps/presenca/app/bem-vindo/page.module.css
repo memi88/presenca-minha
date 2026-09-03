@@ -31,14 +31,15 @@
 }
 
 .eyebrow {
-  font: 300 clamp(16px, 1vw, 18px) / 1 var(--font-spectral), serif;
-  letter-spacing: 0.32em;
+  font: 600 12px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
   color: var(--accent);
   margin-bottom: clamp(18px, 1.5vw, 22px);
 }
 
 .headline {
-  font: italic 400 clamp(32px, 2.6vw, 40px) / 1.28 var(--font-spectral), serif;
+  font: italic 300 clamp(32px, 2.6vw, 40px) / 1.28 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: clamp(36px, 3vw, 44px);
 }
@@ -55,7 +56,7 @@
   box-sizing: border-box;
   background: var(--accent-strong);
   color: var(--cta-text);
-  font: 500 clamp(17px, 1.1vw, 18px) / 1 var(--font-spectral), serif;
+  font: 600 clamp(16px, 1.1vw, 17px) / 1 var(--font-bitter), sans-serif;
   padding: clamp(18px, 1.4vw, 20px);
   border-radius: 34px;
   text-align: center;
@@ -72,7 +73,7 @@
   background: none;
   border: 1.5px solid var(--accent-strong);
   color: #8a6320;
-  font: 500 clamp(17px, 1.1vw, 18px) / 1 var(--font-spectral), serif;
+  font: 600 clamp(16px, 1.1vw, 17px) / 1 var(--font-bitter), sans-serif;
   padding: clamp(16.5px, 1.3vw, 18.5px);
   border-radius: 34px;
   text-align: center;
