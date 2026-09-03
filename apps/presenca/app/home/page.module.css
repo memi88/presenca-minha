@@ -308,6 +308,20 @@
   margin-bottom: 20px;
 }
 
+/* .bottom vira uma coluna de até 1200px no desktop (ver media query mais
+   abaixo) — sem isso, os blocos de texto/card único (lente, terapeuta,
+   prática sugerida) esticavam até lá: linha de texto absurdamente longa
+   ou card de foto virando uma faixa fina. .pilulas e o carrossel do Livro
+   Vivo já são multi-item e usam a largura toda de propósito — só estes
+   três precisam de teto próprio, igual ao .headline/.greetingDesktop. */
+@media (min-width: 960px) {
+  .lente,
+  .terapeuta,
+  .praticaSugerida {
+    max-width: 640px;
+  }
+}
+
 .lenteRotulo {
   font: 600 11px/1 var(--font-bitter), sans-serif;
   text-transform: uppercase;

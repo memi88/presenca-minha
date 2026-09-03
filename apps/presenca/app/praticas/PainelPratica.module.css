@@ -298,6 +298,13 @@
     display: block;
     flex: 1;
     min-width: 0;
+    /* Teto de leitura confortável — sem isso, `.painelConteudo` (que só
+       tem flex:1 pra dividir espaço com `.painelLista`) esticava até
+       ~960px numa tela larga, e `.paragrafo`/`.cartaoInterativo` (Fôlego)
+       junto — linha de texto boa demais de ler não é sinônimo de "cabe
+       tudo que der". max-width aqui, não em cada filho: eles herdam de
+       graça, inclusive o que IntroEspaco.module.css já esperava. */
+    max-width: 680px;
   }
 
   .voltarMobileDetalhe {

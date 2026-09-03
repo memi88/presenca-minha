@@ -282,6 +282,9 @@
     display: block;
     flex: 1;
     min-width: 0;
+    /* Teto de leitura confortável — mesmo ajuste de app/praticas/PainelPratica.module.css:
+       sem isso, `.paragrafo` esticava até ~960px numa tela larga. */
+    max-width: 680px;
   }
 
   .voltarMobileDetalhe {
