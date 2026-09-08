@@ -2,10 +2,16 @@
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 import { APIError } from "better-auth/api";
+import { eq } from "drizzle-orm";
+import { profissionais } from "@presenca/db/schema";
+import { ArquivoInvalidoError, apagarImagem, salvarImagem } from "@presenca/db/media";
 
 import { getAuth } from "@/lib/auth";
+import { getDb } from "@/lib/db";
+import { getMedia } from "@/lib/media";
 import { getSessao } from "@/lib/sessao";
 
 export type AtualizarSenhaState = { erro?: string; sucesso?: boolean };
@@ -48,4 +54,39 @@ export async function atualizarSenha(
   }
 
   return { sucesso: true };
+}
+
+export type AtualizarFotoState = { erro?: string };
+
+export async function atualizarFoto(_prev: AtualizarFotoState, formData: FormData): Promise<AtualizarFotoState> {
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
+
+  const arquivo = formData.get("foto");
+  if (!(arquivo instanceof File) || arquivo.size === 0) {
+    return { erro: "Escolha uma imagem." };
+  }
+
+  const db = await getDb();
+  const profissional = await db.query.profissionais.findFirst({
+    where: eq(profissionais.userId, sessao.user.id),
+    columns: { id: true, fotoChave: true },
+  });
+  if (!profissional) redirect("/");
+
+  const media = await getMedia();
+  let novaChave: string;
+  try {
+    novaChave = await salvarImagem(media, `profissionais/${profissional.id}`, arquivo);
+  } catch (erro) {
+    if (erro instanceof ArquivoInvalidoError) return { erro: erro.message };
+    console.error("atualizarFoto: falha ao gravar no R2", erro);
+    return { erro: "Não foi possível enviar a imagem agora." };
+  }
+
+  await db.update(profissionais).set({ fotoChave: novaChave }).where(eq(profissionais.id, profissional.id));
+  await apagarImagem(media, profissional.fotoChave);
+
+  revalidatePath("/perfil");
+  return {};
 }

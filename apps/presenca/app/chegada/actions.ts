@@ -47,8 +47,13 @@ export async function cadastrar(_prev: CadastroState, formData: FormData): Promi
   }
 
   const auth = await getAuth();
-  const sessaoAtual = await getSessao();
 
+  // `getSessao()` é 1 ida-e-volta ao D1 (Brasil→ENAM, a região mais
+  // próxima disponível — D1 não tem hint de região sul-americana ainda)
+  // só pra checar sessão anônima prévia — sem sentido pagar isso quando
+  // e-mail+senha já vêm preenchidos (esse caminho nem usa `sessaoAtual`).
+  // Pedido de performance do Guilherme (08/09/2026): cada ida-e-volta
+  // extra é sensível daqui.
   let userId: string;
   try {
     if (email && senha) {
@@ -57,24 +62,28 @@ export async function cadastrar(_prev: CadastroState, formData: FormData): Promi
         headers: await headers(),
       });
       userId = resultado.user.id;
-    } else if (sessaoAtual) {
-      userId = sessaoAtual.user.id;
     } else {
-      const resultado = await auth.api.signInAnonymous({ headers: await headers() });
-      userId = resultado.user.id;
+      const sessaoAtual = await getSessao();
+      if (sessaoAtual) {
+        userId = sessaoAtual.user.id;
+      } else {
+        const resultado = await auth.api.signInAnonymous({ headers: await headers() });
+        userId = resultado.user.id;
+      }
     }
   } catch (erro) {
     const mensagem = erro instanceof APIError ? erro.message : "Não foi possível abrir seu espaço agora. Tenta de novo?";
     return { erro: mensagem };
   }
 
+  // Upsert num round trip só, em vez de find+insert/update (2-3 antes) —
+  // `profiles.userId` já é unique, então `onConflictDoUpdate` resolve os
+  // dois casos (perfil novo ou já existente) na mesma query.
   const db = await getDb();
-  const existente = await db.query.profiles.findFirst({ where: eq(profiles.userId, userId) });
-  if (existente) {
-    await db.update(profiles).set({ nome }).where(eq(profiles.userId, userId));
-  } else {
-    await db.insert(profiles).values({ userId, nome });
-  }
+  await db
+    .insert(profiles)
+    .values({ userId, nome })
+    .onConflictDoUpdate({ target: profiles.userId, set: { nome } });
 
   // Redireciona pra /chegada (não direto pra /home): com o nome já salvo,
   // a própria página passa a mostrar a etapa 2 (modal de nascimento).

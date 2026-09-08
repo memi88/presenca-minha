@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { redirect } from "next/navigation";
 
 import { and, desc, eq, gte } from "drizzle-orm";
@@ -7,19 +9,18 @@ import { getDb } from "@/lib/db";
 import { getSessao } from "@/lib/sessao";
 import { precisaCheckin } from "@/lib/checkin";
 import { ordenarPorMomento, tagDoMomento } from "@/lib/menuHome";
-import { montarPresenceDailyContext } from "@/lib/presenceDailyContext";
-import { PLACEHOLDER_LIVRO_VIVO, PLACEHOLDER_PRATICA, PLACEHOLDER_TERAPEUTA } from "@/lib/placeholders";
+import { PLACEHOLDER_LIVRO_VIVO, PLACEHOLDER_PRATICA, PLACEHOLDER_TERAPEUTA, imagemUrl } from "@/lib/placeholders";
 import { atualizarStreak } from "@/lib/streak";
 
 import { BottomNav } from "../BottomNav";
 import { CirculoRespirando } from "../CirculoRespirando";
-import { IconeLente } from "../IconeLente";
 import { IconeLivroVivo } from "../IconeLivroVivo";
 import { IconePraticas } from "../IconePraticas";
 import { MonogramaP } from "../MonogramaP";
 import { rotaDePratica } from "../praticas/PainelPratica";
 import { adiarNascimento, registrarPresenca } from "./actions";
 import { FechamentoTrigger } from "./FechamentoTrigger";
+import { LenteDoDiaCard } from "./LenteDoDiaCard";
 import { MoodTrigger } from "./MoodTrigger";
 import styles from "./page.module.css";
 
@@ -38,12 +39,6 @@ function saudacao(): string {
   if (hora < 12) return "Bom dia";
   if (hora < 18) return "Boa tarde";
   return "Boa noite";
-}
-
-// Data de hoje pro eyebrow da "Lente do dia" (docs/redesign/
-// home_presen_a_cones_svgs_inline_refinados) — dia real, nunca inventado.
-function dataDeHoje(): string {
-  return new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "long" }).format(new Date());
 }
 
 // Início do dia civil em America/Sao_Paulo, como instante ISO — Brasil não
@@ -152,7 +147,7 @@ export default async function Home() {
 
   const inicioHojeSaoPaulo = new Date(inicioDoDiaSaoPauloISO());
 
-  const [ultimaEntrada, entradasRevisitar, entradaPropria, fechamentoHoje, presenceDailyContext, praticas, paginasLivroVivo, profissionalConectado] =
+  const [ultimaEntrada, entradasRevisitar, entradaPropria, fechamentoHoje, praticas, paginasLivroVivo, profissionalConectado] =
     await Promise.all([
       db.query.cadernoEntradas.findFirst({
         where: eq(cadernoEntradas.pacienteId, profile.id),
@@ -180,7 +175,6 @@ export default async function Home() {
         ),
         columns: { id: true },
       }),
-      montarPresenceDailyContext(profile.presencaHoje),
       // "Prática Sugerida" — mesmo sinal de curadoria do Livro Vivo (tag do
       // humor de hoje), não uma prática indicada explicitamente por um
       // profissional: o formulário do Cuida (EntradaForm.tsx) grava
@@ -192,22 +186,21 @@ export default async function Home() {
         where: and(eq(biblioteca.tipo, "pratica"), eq(biblioteca.publicado, true)),
         orderBy: desc(biblioteca.createdAt),
         limit: 20,
-        columns: { id: true, titulo: true, slug: true, conteudo: true, tagsMomentoVida: true },
+        columns: { id: true, titulo: true, slug: true, conteudo: true, tagsMomentoVida: true, capaChave: true },
       }),
       db.query.biblioteca.findMany({
         where: and(eq(biblioteca.tipo, "pagina_livro_vivo"), eq(biblioteca.publicado, true)),
         orderBy: desc(biblioteca.createdAt),
         limit: 6,
-        columns: { id: true, titulo: true, conteudo: true, tagsMomentoVida: true },
+        columns: { id: true, titulo: true, conteudo: true, tagsMomentoVida: true, capaChave: true },
       }),
       profile.profissionalId
         ? db.query.profissionais.findFirst({
             where: eq(profissionais.id, profile.profissionalId),
-            columns: { nome: true },
+            columns: { nome: true, fotoChave: true },
           })
         : Promise.resolve(undefined),
     ]);
-  const dailyPresent = presenceDailyContext.dailyPresent;
   const temRevisitar = !!entradasRevisitar;
 
   // Convite de fechamento (pedido explícito, 04/09/2026): só aparece na
@@ -312,24 +305,15 @@ export default async function Home() {
 
         {mostrarFechamento && <FechamentoTrigger />}
 
-        {dailyPresent && (
-          <a className={styles.lente} href="/lente-do-dia" aria-label="Lente do dia">
-            <div className={styles.eyebrow}>
-              <IconeLente className={styles.eyebrowIcone} />
-              <span>Lente do dia · {dataDeHoje()}</span>
-            </div>
-            <p className={styles.lenteTexto}>{trecho(dailyPresent.reflection, 140)}</p>
-            <div className={styles.lenteRodape}>
-              <span className={styles.lenteCta}>Ler</span>
-            </div>
-          </a>
-        )}
+        <Suspense fallback={null}>
+          <LenteDoDiaCard presencaHoje={profile.presencaHoje} />
+        </Suspense>
 
         {cardTerapeuta?.texto && profissionalConectado && (
           <section className={styles.terapeuta} aria-label="Do seu terapeuta">
             <div
               className={styles.terapeutaAvatar}
-              style={{ backgroundImage: `url(${PLACEHOLDER_TERAPEUTA})` }}
+              style={{ backgroundImage: `url(${imagemUrl(profissionalConectado.fotoChave, PLACEHOLDER_TERAPEUTA)})` }}
               aria-hidden="true"
             />
             <div>
@@ -353,7 +337,7 @@ export default async function Home() {
             <a
               className={styles.praticaSugerida}
               href={rotaDePratica(praticaDestaque)}
-              style={{ backgroundImage: `url(${PLACEHOLDER_PRATICA})` }}
+              style={{ backgroundImage: `url(${imagemUrl(praticaDestaque.capaChave, PLACEHOLDER_PRATICA)})` }}
               aria-label={`Prática sugerida: ${praticaDestaque.titulo}`}
             >
               <div className={styles.praticaSugeridaOverlay}>
@@ -396,7 +380,7 @@ export default async function Home() {
                   key={pagina.id}
                   className={styles.livroVivoCard}
                   href={`/livro-vivo/${pagina.id}`}
-                  style={{ backgroundImage: `url(${PLACEHOLDER_LIVRO_VIVO})` }}
+                  style={{ backgroundImage: `url(${imagemUrl(pagina.capaChave, PLACEHOLDER_LIVRO_VIVO)})` }}
                 >
                   <p className={styles.livroVivoCardTitulo}>{pagina.titulo}</p>
                 </a>

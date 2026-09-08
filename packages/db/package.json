@@ -13,7 +13,8 @@
     ".": "./src/auth.ts",
     "./schema": "./src/schema.ts",
     "./client": "./src/auth-client.ts",
-    "./db": "./src/db.ts"
+    "./db": "./src/db.ts",
+    "./media": "./src/media.ts"
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "^1.7.2",

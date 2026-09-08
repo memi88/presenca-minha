@@ -35,7 +35,15 @@ export default async function LeituraPratica({
 
   const praticaAtiva = await db.query.biblioteca.findFirst({
     where: and(eq(biblioteca.id, id), eq(biblioteca.tipo, "pratica"), eq(biblioteca.publicado, true)),
-    columns: { id: true, titulo: true, slug: true, conteudo: true, categoria: true, profissionalAutorId: true },
+    columns: {
+      id: true,
+      titulo: true,
+      slug: true,
+      conteudo: true,
+      categoria: true,
+      capaChave: true,
+      profissionalAutorId: true,
+    },
     with: { profissionalAutor: { columns: { nome: true, tipo: true, formaDeTrabalho: true } } },
   });
   if (!praticaAtiva) notFound();

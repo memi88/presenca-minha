@@ -4,8 +4,10 @@ import { redirect } from "next/navigation";
 
 import { eq } from "drizzle-orm";
 import { biblioteca, profissionais } from "@presenca/db/schema";
+import { ArquivoInvalidoError, salvarImagem } from "@presenca/db/media";
 
 import { getDb } from "@/lib/db";
+import { getMedia } from "@/lib/media";
 import { getSessao } from "@/lib/sessao";
 import { CATEGORIAS_PRATICA } from "@/lib/categoriasPratica";
 
@@ -35,6 +37,13 @@ export async function propor(_prev: PropostaState, formData: FormData): Promise<
     return { erro: "Escolha a categoria da prática." };
   }
 
+  const arquivo = formData.get("capa");
+  if (arquivo instanceof File && arquivo.size > 0) {
+    const tiposAceitos = ["image/jpeg", "image/png", "image/webp"];
+    if (!tiposAceitos.includes(arquivo.type)) return { erro: "Capa: formato não aceito (JPEG, PNG ou WEBP)." };
+    if (arquivo.size > 5 * 1024 * 1024) return { erro: "Capa: arquivo maior que 5MB." };
+  }
+
   const sessao = await getSessao();
   if (!sessao) redirect("/");
 
@@ -54,17 +63,34 @@ export async function propor(_prev: PropostaState, formData: FormData): Promise<
   // a proposta entraria com os defaults da coluna (publicado=true,
   // aprovado) — publicaria sem moderação, exatamente o que o trigger
   // existia pra impedir.
-  await db.insert(biblioteca).values({
-    tipo,
-    titulo,
-    conteudo,
-    escopo,
-    categoria: tipo === "pratica" ? categoria : null,
-    profissionalAutorId: profissional.id,
-    autor: null,
-    publicado: false,
-    statusModeracao: "pendente",
-  });
+  const [linha] = await db
+    .insert(biblioteca)
+    .values({
+      tipo,
+      titulo,
+      conteudo,
+      escopo,
+      categoria: tipo === "pratica" ? categoria : null,
+      profissionalAutorId: profissional.id,
+      autor: null,
+      publicado: false,
+      statusModeracao: "pendente",
+    })
+    .returning({ id: biblioteca.id });
+
+  // Capa é opcional — se a imagem falhar aqui, a proposta em si já está
+  // gravada (não vale perder o conteúdo inteiro por causa da capa).
+  if (linha && arquivo instanceof File && arquivo.size > 0) {
+    try {
+      const media = await getMedia();
+      const chave = await salvarImagem(media, `biblioteca/${linha.id}`, arquivo);
+      await db.update(biblioteca).set({ capaChave: chave }).where(eq(biblioteca.id, linha.id));
+    } catch (erro) {
+      if (!(erro instanceof ArquivoInvalidoError)) {
+        console.error("propor: falha ao gravar capa no R2", erro);
+      }
+    }
+  }
 
   return { sucesso: true };
 }

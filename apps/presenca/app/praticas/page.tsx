@@ -28,7 +28,7 @@ export default async function Praticas({
     db.query.biblioteca.findMany({
       where: and(eq(biblioteca.tipo, "pratica"), eq(biblioteca.publicado, true)),
       orderBy: desc(biblioteca.createdAt),
-      columns: { id: true, titulo: true, slug: true, conteudo: true, categoria: true },
+      columns: { id: true, titulo: true, slug: true, conteudo: true, categoria: true, capaChave: true },
     }),
   ]);
   if (!profile?.nome) redirect("/chegada");

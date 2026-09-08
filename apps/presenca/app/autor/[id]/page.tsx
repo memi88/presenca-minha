@@ -5,7 +5,7 @@ import { biblioteca, profiles, profissionais } from "@presenca/db/schema";
 
 import { getDb } from "@/lib/db";
 import { getSessao } from "@/lib/sessao";
-import { PLACEHOLDER_LIVRO_VIVO, PLACEHOLDER_PRATICA, PLACEHOLDER_TERAPEUTA } from "@/lib/placeholders";
+import { PLACEHOLDER_LIVRO_VIVO, PLACEHOLDER_PRATICA, PLACEHOLDER_TERAPEUTA, imagemUrl } from "@/lib/placeholders";
 
 import { PageHeader } from "../../PageHeader";
 import styles from "./page.module.css";
@@ -38,12 +38,12 @@ export default async function Autor({ params }: { params: Promise<{ id: string }
   const [profissional, obras] = await Promise.all([
     db.query.profissionais.findFirst({
       where: eq(profissionais.id, id),
-      columns: { id: true, nome: true, tipo: true, formaDeTrabalho: true },
+      columns: { id: true, nome: true, tipo: true, formaDeTrabalho: true, fotoChave: true },
     }),
     db.query.biblioteca.findMany({
       where: and(eq(biblioteca.profissionalAutorId, id), eq(biblioteca.publicado, true), eq(biblioteca.escopo, "publico")),
       orderBy: desc(biblioteca.createdAt),
-      columns: { id: true, tipo: true, titulo: true, conteudo: true },
+      columns: { id: true, tipo: true, titulo: true, conteudo: true, capaChave: true },
     }),
   ]);
 
@@ -58,7 +58,7 @@ export default async function Autor({ params }: { params: Promise<{ id: string }
       <div className={styles.content}>
         <div
           className={styles.avatar}
-          style={{ backgroundImage: `url(${PLACEHOLDER_TERAPEUTA})` }}
+          style={{ backgroundImage: `url(${imagemUrl(profissional.fotoChave, PLACEHOLDER_TERAPEUTA)})` }}
           aria-hidden="true"
         />
         <p className={styles.eyebrow}>perfil do autor</p>
@@ -79,7 +79,9 @@ export default async function Autor({ params }: { params: Promise<{ id: string }
                   >
                     <div
                       className={styles.cardImagem}
-                      style={{ backgroundImage: `url(${ehPratica ? PLACEHOLDER_PRATICA : PLACEHOLDER_LIVRO_VIVO})` }}
+                      style={{
+                        backgroundImage: `url(${imagemUrl(obra.capaChave, ehPratica ? PLACEHOLDER_PRATICA : PLACEHOLDER_LIVRO_VIVO)})`,
+                      }}
                       aria-hidden="true"
                     />
                     <div className={styles.cardCorpo}>

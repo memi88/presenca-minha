@@ -124,16 +124,19 @@
   color: var(--text-subtle);
 }
 
-/* TelaSelecao — coluna única centralizada na tela (vertical e
-   horizontalmente) enquanto nada foi escolhido ainda. flex:1 dentro do
-   .scene (flex column) é o que permite o justify-content:center abaixo. */
+/* TelaSelecao — coluna única, ancorada no topo (mesmo padrão de espaço
+   pós-header das outras telas, ex: Diário). Já foi centralizada
+   verticalmente (justify-content:center), mas isso cria um vão enorme
+   vazio acima E abaixo sempre que o acervo tem poucos itens ou nenhum
+   (biblioteca ainda sem conteúdo publicado) — com acervo cheio o efeito
+   de centralizar nem aparecia, já que o conteúdo ultrapassa a altura
+   disponível. */
 .selecaoCentro {
   position: relative;
   z-index: 1;
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   width: 100%;
   max-width: 1040px;
   margin: 0 auto;

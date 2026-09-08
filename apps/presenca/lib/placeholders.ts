@@ -1,10 +1,15 @@
-// Placeholders até `biblioteca`/`profissionais` ganharem coluna de imagem
-// de verdade (cadastro com upload, decisão já encaminhada, ver
-// docs/redesign/pendencias-implementacao.md) — ilustração própria
-// (gradiente + traço orgânico, ver public/images/placeholders/), não foto
-// de banco de imagens fingindo ser conteúdo real. Trocar por
-// `item.imagem_url ?? PLACEHOLDER_X` quando a coluna existir é a única
-// mudança necessária em quem usa isso.
+// Ilustração própria (gradiente + traço orgânico, ver
+// public/images/placeholders/) pra quando `biblioteca.capaChave`/
+// `profissionais.fotoChave` ainda não foram preenchidos (upload
+// opcional — ver apps/cuida/app/perfil e app/biblioteca/nova) — nunca
+// foto de banco de imagens fingindo ser conteúdo real.
 export const PLACEHOLDER_PRATICA = "/images/placeholders/pratica.svg";
 export const PLACEHOLDER_LIVRO_VIVO = "/images/placeholders/livro-vivo.svg";
 export const PLACEHOLDER_TERAPEUTA = "/images/placeholders/terapeuta.svg";
+
+/** Chave do R2 (`biblioteca.capaChave`/`profissionais.fotoChave`) vira URL
+ * servida por `app/imagens/[...chave]/route.ts`; sem chave, cai no
+ * placeholder. */
+export function imagemUrl(chave: string | null | undefined, placeholder: string): string {
+  return chave ? `/imagens/${chave}` : placeholder;
+}

@@ -24,6 +24,15 @@
   padding: calc(clamp(20px, 3vw, 28px) + env(safe-area-inset-top)) clamp(24px, 4vw, 40px)
     clamp(20px, 3vw, 28px);
   box-sizing: border-box;
+  /* .tituloBarra é absolute e .voltarLink é fixed — nenhum dos dois
+     contribui pra altura desta caixa, então sem isso ela encolhe pro
+     tamanho do padding sozinho (~40px) e fica MENOR que o círculo da
+     seta (top:16-28px + 40px de diâmetro ≈ 56-68px). Qualquer conteúdo
+     de página que comece colado embaixo do header (ex: Diário, que não
+     tem margin-top no próprio título) acaba desenhando por cima do
+     círculo. min-height garante essa folga pra toda tela que usa
+     PageHeader, sem cada uma precisar compensar com padding-top próprio. */
+  min-height: calc(clamp(16px, 3vh, 28px) + 40px + env(safe-area-inset-top) + 16px);
 }
 
 .voltarLink {

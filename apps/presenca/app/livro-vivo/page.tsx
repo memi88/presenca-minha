@@ -32,7 +32,7 @@ export default async function LivroVivo({
     db.query.biblioteca.findMany({
       where: eq(biblioteca.tipo, "pagina_livro_vivo"),
       orderBy: desc(biblioteca.createdAt),
-      columns: { id: true, titulo: true, conteudo: true, tagsMomentoVida: true },
+      columns: { id: true, titulo: true, conteudo: true, tagsMomentoVida: true, capaChave: true },
     }),
   ]);
   if (!profile?.nome) redirect("/chegada");

@@ -78,6 +78,9 @@ export function PropostaForm() {
       <input className={styles.field} type="text" name="titulo" placeholder="título" required />
       <textarea className={styles.field} name="conteudo" placeholder="conteúdo" rows={8} required />
 
+      <p className={styles.grupoLabel}>Capa (opcional)</p>
+      <input className={styles.field} type="file" name="capa" accept="image/jpeg,image/png,image/webp" />
+
       <p className={styles.grupoLabel}>Escopo de publicação</p>
       <div className={styles.alternador} role="radiogroup" aria-label="Escopo de publicação">
         <button

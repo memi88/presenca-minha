@@ -1,5 +1,5 @@
 import { CATEGORIAS_PRATICA, type CategoriaPratica } from "@/lib/categoriasPratica";
-import { PLACEHOLDER_PRATICA } from "@/lib/placeholders";
+import { PLACEHOLDER_PRATICA, imagemUrl } from "@/lib/placeholders";
 
 import { AutoriaBiblioteca } from "../AutoriaBiblioteca";
 import { IconeSetaEsquerda } from "../IconeSetaEsquerda";
@@ -15,6 +15,7 @@ export type ItemPratica = {
   slug: string | null;
   conteudo: string;
   categoria?: string | null;
+  capaChave?: string | null;
   profissionalAutorId?: string | null;
   profissionalAutor?: { nome: string; tipo: string | null; formaDeTrabalho: string | null } | null;
 };
@@ -112,7 +113,7 @@ function TelaSelecao({
                   categoriaAtiva ? `${rotaDePratica(pratica)}?categoria=${categoriaAtiva}` : rotaDePratica(pratica)
                 }
                 className={styles.cardFoto}
-                style={{ backgroundImage: `url(${PLACEHOLDER_PRATICA})` }}
+                style={{ backgroundImage: `url(${imagemUrl(pratica.capaChave, PLACEHOLDER_PRATICA)})` }}
               >
                 <div className={styles.cardFotoOverlay}>
                   {rotuloCategoria(pratica.categoria) && (
@@ -191,7 +192,11 @@ function TelaDetalhe({
       <a className={styles.voltarFlutuante} href={voltarHref} aria-label="Voltar para práticas">
         <IconeSetaEsquerda />
       </a>
-      <div className={styles.detalheHero} style={{ backgroundImage: `url(${PLACEHOLDER_PRATICA})` }} aria-hidden="true" />
+      <div
+        className={styles.detalheHero}
+        style={{ backgroundImage: `url(${imagemUrl(praticaAtiva.capaChave, PLACEHOLDER_PRATICA)})` }}
+        aria-hidden="true"
+      />
       <div className={styles.detalheConteudo}>
         {rotuloCategoria(praticaAtiva.categoria) && (
           <p className={styles.detalheCategoria}>{rotuloCategoria(praticaAtiva.categoria)}</p>

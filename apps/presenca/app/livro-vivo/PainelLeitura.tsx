@@ -1,5 +1,5 @@
 import { MOMENTOS_VIDA, type MomentoVida } from "@/lib/momentosVida";
-import { PLACEHOLDER_LIVRO_VIVO } from "@/lib/placeholders";
+import { PLACEHOLDER_LIVRO_VIVO, imagemUrl } from "@/lib/placeholders";
 
 import { AutoriaBiblioteca } from "../AutoriaBiblioteca";
 import { IconeSetaEsquerda } from "../IconeSetaEsquerda";
@@ -11,6 +11,7 @@ export type ItemPagina = {
   id: string;
   titulo: string | null;
   conteudo: string;
+  capaChave?: string | null;
   profissionalAutorId?: string | null;
   profissionalAutor?: { nome: string; tipo: string | null; formaDeTrabalho: string | null } | null;
 };
@@ -85,7 +86,7 @@ function TelaSelecao({
               key={pagina.id}
               href={momentoAtivo ? `/livro-vivo/${pagina.id}?momento=${momentoAtivo}` : `/livro-vivo/${pagina.id}`}
               className={styles.cardFoto}
-              style={{ backgroundImage: `url(${PLACEHOLDER_LIVRO_VIVO})` }}
+              style={{ backgroundImage: `url(${imagemUrl(pagina.capaChave, PLACEHOLDER_LIVRO_VIVO)})` }}
             >
               <div className={styles.cardFotoOverlay}>
                 <span className={styles.cardFotoMeta}>{minutosDeLeitura(pagina.conteudo)} min de leitura</span>

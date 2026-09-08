@@ -5,7 +5,7 @@ import { profiles, profissionais, vinculos } from "@presenca/db/schema";
 
 import { getDb } from "@/lib/db";
 import { getSessao } from "@/lib/sessao";
-import { PLACEHOLDER_TERAPEUTA } from "@/lib/placeholders";
+import { PLACEHOLDER_TERAPEUTA, imagemUrl } from "@/lib/placeholders";
 
 import { IconeConversa } from "../IconeConversa";
 import { IconeDiario } from "../IconeDiario";
@@ -52,7 +52,7 @@ export default async function Terapia() {
     const [profissional, vinculo] = await Promise.all([
       db.query.profissionais.findFirst({
         where: eq(profissionais.id, profile.profissionalId),
-        columns: { nome: true },
+        columns: { nome: true, fotoChave: true },
       }),
       db.query.vinculos.findFirst({
         where: and(eq(vinculos.pacienteId, profile.id), eq(vinculos.ativo, true)),
@@ -71,7 +71,7 @@ export default async function Terapia() {
           <div className={styles.perfilTerapeuta}>
             <div
               className={styles.avatarTerapeuta}
-              style={{ backgroundImage: `url(${PLACEHOLDER_TERAPEUTA})` }}
+              style={{ backgroundImage: `url(${imagemUrl(profissional?.fotoChave, PLACEHOLDER_TERAPEUTA)})` }}
               aria-hidden="true"
             />
             <h2 className={styles.nomeTerapeuta}>{profissional?.nome ?? "seu profissional"}</h2>

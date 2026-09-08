@@ -68,6 +68,10 @@ export const profissionais = sqliteTable(
     formaDeTrabalho: text("forma_de_trabalho"),
     usaLinguagensSimbolicas: integer("usa_linguagens_simbolicas", { mode: "boolean" }).notNull().default(true),
     lembretePerfilEm: integer("lembrete_perfil_em", { mode: "timestamp_ms" }),
+    // Chave do objeto no bucket R2 `presenca-media` (não a URL pronta —
+    // servida via `/imagens/[chave]`, ver apps/*/app/imagens/[...chave]/route.ts).
+    // Null = usa o placeholder SVG padrão (mesmo comportamento de antes do upload existir).
+    fotoChave: text("foto_chave"),
   },
   (table) => [
     index("profissionais_user_id_idx").on(table.userId),
@@ -205,6 +209,9 @@ export const biblioteca = sqliteTable(
     motivoRecusa: text("motivo_recusa"),
     categoria: text("categoria"), // 'respiracao' | 'meditacao' | 'movimento' | 'sono' | null (só pratica usa)
     origin: text("origin"), // 'TRADITIONAL_MAYA' | 'LAW_OF_TIME' | 'HUMAN_DESIGN' | 'KABBALAH' | 'PRESENTE' | 'PRESENCA' | null
+    // Mesmo padrão de profissionais.fotoChave — chave no R2, não URL pronta.
+    // Null = usa o placeholder SVG padrão (mesmo comportamento de antes do upload existir).
+    capaChave: text("capa_chave"),
   },
   (table) => [
     index("biblioteca_profissional_autor_id_idx").on(table.profissionalAutorId),

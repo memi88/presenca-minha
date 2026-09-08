@@ -20,6 +20,14 @@
       "migrations_dir": "../../packages/db/migrations"
     }
   ],
+  // Bucket único pros dois Workers (foto de perfil do terapeuta, capa de
+  // conteúdo da biblioteca) — mesmo padrão do D1 compartilhado acima.
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "presenca-media"
+    }
+  ],
   "observability": {
     "enabled": true
   }
