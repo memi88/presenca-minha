@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Presença — Consentimento Específico (Experiência Acompanhada)</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&amp;family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bgWarm: '#f7f0e4',
+          cardWarm: '#fffdf9',
+          ink: '#2a2118',
+          inkSecondary: '#7a6a52',
+          inkMuted: '#9a8b72',
+          borderWarm: '#e0d3bc',
+          borderSoft: '#ebdccb',
+          accent: '#7c540e',
+          accentHover: '#654308',
+          accentSoft: '#f2e4c9',
+          accentHighlight: '#b6873f',
+        },
+        fontFamily: {
+          fraunces: ['Fraunces', 'serif'],
+          spectral: ['Spectral', 'serif'],
+          bitter: ['Bitter', 'serif'],
+        }
+      }
+    }
+  }
+</script>
+<style>
+  body {
+    background-color: #f7f0e4;
+    color: #2a2118;
+    font-family: 'Spectral', serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Custom checkbox with serene organic touch */
+  .custom-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 1.5px solid #7c540e;
+    border-radius: 6px;
+    background: #fffdf9;
+    cursor: pointer;
+    display: inline-grid;
+    place-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .custom-checkbox:checked {
+    background: #7c540e;
+    border-color: #7c540e;
+  }
+  .custom-checkbox:checked::before {
+    content: "";
+    width: 10px;
+    height: 6px;
+    border-left: 2px solid #fffdf9;
+    border-bottom: 2px solid #fffdf9;
+    transform: rotate(-45deg) translate(1px, -1px);
+  }
+</style>
+</head>
+<body class="min-h-screen flex justify-center items-start sm:py-6 p-0 selection:bg-accentSoft">
+<!-- Mobile Device Container -->
+<main class="w-full max-w-[412px] bg-bgWarm min-h-screen flex flex-col justify-between relative shadow-2xl border-x border-borderWarm sm:rounded-[36px] overflow-hidden">
+<!-- Top Navigation Bar -->
+<header class="pt-6 px-6 pb-4 flex items-center justify-between border-b border-borderWarm/60 bg-bgWarm/90 backdrop-blur-sm sticky top-0 z-20">
+<a class="inline-flex items-center gap-2 text-inkSecondary hover:text-ink transition-colors font-bitter text-[13px] tracking-wide py-1" href="#">
+<!-- Organic back arrow -->
+<svg class="w-4 h-4 text-inkSecondary stroke-[1.8]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewbox="0 0 24 24">
+<path d="M15 19l-7-7 7-7"></path>
+</svg>
+<span>Voltar</span>
+</a>
+<!-- Subtitle badge / breathing mark -->
+<div class="flex items-center gap-2">
+<span class="font-bitter text-[11px] uppercase tracking-wider text-accent font-medium bg-accentSoft/60 px-2.5 py-0.5 rounded-full">Acompanhada</span>
+<div class="w-5 h-5 flex items-center justify-center text-accent" title="Presença">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" viewbox="0 0 28 28">
+<circle cx="14" cy="14" opacity="0.45" r="10.5"></circle>
+<circle cx="14" cy="14" opacity="0.8" r="6.6"></circle>
+<circle cx="14" cy="14" fill="currentColor" r="2.2" stroke="none"></circle>
+</svg>
+</div>
+</div>
+</header>
+<!-- Main Content Flow -->
+<div class="flex-1 px-6 pt-7 pb-8 space-y-6">
+<!-- Pre-heading Context -->
+<div class="space-y-2">
+<p class="font-bitter text-xs uppercase tracking-widest text-accent font-medium">
+          A Travessia do Silêncio
+        </p>
+<h1 class="font-fraunces text-[27px] leading-[1.2] font-normal text-ink">
+          Um acordo de cuidado antes de começar
+        </h1>
+<p class="font-spectral text-[16px] leading-relaxed text-inkSecondary pt-1">
+          Esta não é uma leitura aberta e nem uma interação com algoritmos. É um espaço de troca confidencial entre você e uma profissional de saúde mental.
+        </p>
+</div>
+<!-- Nominated Specialist Profile Card -->
+<div class="bg-cardWarm rounded-2xl p-5 border border-borderWarm shadow-sm relative overflow-hidden">
+<div class="flex items-start gap-4">
+<!-- Specialist Photo / Avatar with verification -->
+<div class="relative flex-shrink-0">
+<img alt="Dra. Alice Guimarães" class="w-14 h-14 rounded-full object-cover border border-borderWarm" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+<span class="absolute -bottom-1 -right-1 bg-accent text-white p-1 rounded-full border-2 border-cardWarm" title="Profissional Verificada">
+<svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewbox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+</span>
+</div>
+<div class="flex-1 min-w-0">
+<span class="font-bitter text-[11px] uppercase tracking-wider text-inkMuted block">Profissional responsável</span>
+<h2 class="font-fraunces text-[18px] font-normal text-ink truncate">Dra. Alice Guimarães</h2>
+<p class="font-bitter text-[12px] text-inkSecondary mt-0.5">Psicóloga clínica • CRP 06/124980</p>
+<p class="font-spectral italic text-[13px] text-accent mt-1.5 leading-snug">
+              "Leio cada palavra no meu tempo de consultório, com a mesma escuta e sigilo de uma sessão presencial."
+            </p>
+</div>
+</div>
+</div>
+<!-- Human Clarity Points (Non-legalistic, deep voice of care) -->
+<div class="bg-cardWarm/80 rounded-2xl p-5 border border-borderWarm/80 space-y-4">
+<h3 class="font-bitter text-[13px] font-semibold tracking-wide uppercase text-ink flex items-center gap-2">
+<svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+</svg>
+          O que significa este consentimento:
+        </h3>
+<ul class="space-y-3.5 text-[15px] leading-relaxed text-inkSecondary">
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-accent mt-2 flex-shrink-0"></span>
+<div>
+<strong class="font-bitter font-medium text-ink">Apenas a Dra. Alice terá acesso:</strong> 
+              suas reflexões escritas nesta travessia não ficam públicas nem visíveis para outros membros do Presença.
+            </div>
+</li>
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-accent mt-2 flex-shrink-0"></span>
+<div>
+<strong class="font-bitter font-medium text-ink">Decisões clínicas humanas:</strong> 
+              é ela quem lê o que você compartilha e decide o momento e a direção dos próximos passos, com base na sua sensibilidade clínica.
+            </div>
+</li>
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-accent mt-2 flex-shrink-0"></span>
+<div>
+<strong class="font-bitter font-medium text-ink">Nenhuma IA analisa seu texto:</strong> 
+              nenhum modelo de inteligência artificial categoriza, pontua ou gera respostas automáticas para o que você escrever.
+            </div>
+</li>
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-accent mt-2 flex-shrink-0"></span>
+<div>
+<strong class="font-bitter font-medium text-ink">Autonomia contínua:</strong> 
+              você pode interromper a experiência, pausar sem pressa ou revogar este acesso a qualquer momento nas configurações do seu perfil.
+            </div>
+</li>
+</ul>
+</div>
+<!-- Real Checkbox (Unchecked by default) -->
+<div class="pt-2">
+<label class="flex items-start gap-3.5 cursor-pointer select-none group p-3.5 rounded-xl bg-cardWarm/60 hover:bg-cardWarm border border-borderWarm/70 transition-colors" for="consent-check">
+<input class="custom-checkbox" id="consent-check" type="checkbox"/>
+<div class="text-[14px] leading-snug font-spectral text-ink">
+<span class="font-bitter font-medium text-[13px] text-ink block mb-0.5">Autorizo a leitura dos meus registros</span>
+            Compreendo que a <strong class="font-semibold text-accent">Dra. Alice Guimarães</strong> lerá com sigilo profissional o que eu escrever nesta experiência e guiará as etapas com sua devolutiva clínica.
+          </div>
+</label>
+</div>
+</div>
+<!-- Action Bar & Clear Opt-out (Sticky Bottom) -->
+<footer class="p-6 pt-3 bg-bgWarm/95 backdrop-blur-md border-t border-borderWarm/70 space-y-3 sticky bottom-0 z-20">
+<!-- Primary Pill Button (enabled dynamically via checkbox, styled disabled by default) -->
+<button class="w-full py-4 px-6 rounded-full bg-accent text-[#fffdf9] font-bitter font-medium text-[15px] tracking-wide flex items-center justify-center gap-2 shadow-sm transition-all duration-300 opacity-40 cursor-not-allowed hover:bg-accentHover active:scale-[0.99]" disabled="" id="submit-btn">
+<span>Concordo e continuo</span>
+<svg class="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewbox="0 0 24 24">
+<line x1="5" x2="19" y1="12" y2="12"></line>
+<polyline points="12 5 19 12 12 19"></polyline>
+</svg>
+</button>
+<!-- Honest, Non-tricky Exit Link -->
+<div class="text-center pt-1">
+<a class="inline-block text-[13px] font-bitter text-inkSecondary hover:text-ink underline decoration-borderWarm underline-offset-4 transition-colors" href="#">
+          Prefiro fazer no modo autoguiado (sem acompanhamento)
+        </a>
+<p class="font-spectral italic text-[11px] text-inkMuted mt-1.5">
+          Você pode explorar as práticas no seu próprio ritmo, sem envio de relatos.
+        </p>
+</div>
+</footer>
+</main>
+<script>
+    // Pure interaction logic for real checkbox toggle
+    const checkbox = document.getElementById('consent-check');
+    const submitBtn = document.getElementById('submit-btn');
+
+    checkbox.addEventListener('change', function() {
+      if (this.checked) {
+        submitBtn.removeAttribute('disabled');
+        submitBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+        submitBtn.classList.add('opacity-100', 'cursor-pointer');
+      } else {
+        submitBtn.setAttribute('disabled', 'true');
+        submitBtn.classList.add('opacity-40', 'cursor-not-allowed');
+        submitBtn.classList.remove('opacity-100', 'cursor-pointer');
+      }
+    });
+  </script>
+</body>
+</html>

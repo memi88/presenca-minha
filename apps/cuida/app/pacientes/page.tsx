@@ -70,6 +70,9 @@ export default async function Pacientes() {
       <div className={styles.topBar}>
         <p className={styles.greeting}>{profissional.nome}</p>
         <div className={styles.acoesTopo}>
+          <a className={styles.perfil} href="/experiencias">
+            experiências
+          </a>
           <a className={styles.perfil} href="/biblioteca/nova">
             propor conteúdo
           </a>

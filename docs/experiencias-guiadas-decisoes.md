@@ -16,6 +16,8 @@ Descoberto no meio desta auditoria (arquivos mudando no disco durante a sessão)
 
 **Conclusão prática:** código quase completo, só falta o corte de produção — não é tradução mecânica distante. Decisão sobre desenhar o schema de Experiências Guiadas direto em Drizzle/D1 (em vez de Postgres/RLS interino) depende de confirmação do Guilherme sobre o timing real do corte — pendente nesta conversa.
 
+**Atualização (2026-09-08): corte confirmado em produção real.** Commit `fd7f22a` ("Corte para Cloudflare (D1 + Better Auth) e conclusão de peças do redesign", 182 arquivos, 2026-09-07 21:21) — `packages/db` commitado, `wrangler.jsonc` com `d1_databases` commitado. Verificado direto contra o deploy ao vivo (`npx wrangler versions view`, versão `4fa8f7fe`, deployada 2026-09-08 00:30): binding `env.DB` (D1, `542a3db7-...`) ativo, secret `BETTER_AUTH_SECRET` configurado. **Produção já roda em D1/Better Auth — Supabase não é mais a base real.** Schema de Experiências Guiadas passa a ser desenhado direto em Drizzle/D1, sem etapa interina em Postgres.
+
 ---
 
 ## Auditoria — mapa do que existe hoje (antes do PRD)

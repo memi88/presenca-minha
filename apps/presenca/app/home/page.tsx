@@ -2,8 +2,8 @@ import { Suspense } from "react";
 
 import { redirect } from "next/navigation";
 
-import { and, desc, eq, gte } from "drizzle-orm";
-import { biblioteca, cadernoEntradas, profiles, profissionais } from "@presenca/db/schema";
+import { and, desc, eq, gte, ne } from "drizzle-orm";
+import { biblioteca, cadernoEntradas, experienciasInstancias, profiles, profissionais } from "@presenca/db/schema";
 
 import { getDb } from "@/lib/db";
 import { getSessao } from "@/lib/sessao";
@@ -147,8 +147,16 @@ export default async function Home() {
 
   const inicioHojeSaoPaulo = new Date(inicioDoDiaSaoPauloISO());
 
-  const [ultimaEntrada, entradasRevisitar, entradaPropria, fechamentoHoje, praticas, paginasLivroVivo, profissionalConectado] =
-    await Promise.all([
+  const [
+    ultimaEntrada,
+    entradasRevisitar,
+    entradaPropria,
+    fechamentoHoje,
+    praticas,
+    paginasLivroVivo,
+    profissionalConectado,
+    experienciaEmAndamento,
+  ] = await Promise.all([
       db.query.cadernoEntradas.findFirst({
         where: eq(cadernoEntradas.pacienteId, profile.id),
         orderBy: desc(cadernoEntradas.createdAt),
@@ -200,6 +208,17 @@ export default async function Home() {
             columns: { nome: true, fotoChave: true },
           })
         : Promise.resolve(undefined),
+      // Mecanismo de "notificação" decidido pra Experiências Guiadas
+      // (08/09/2026): sem push nativo nesta fase — reaparecer aqui é o
+      // sinal de "tem novidade" (nova etapa liberada, ou só continuar de
+      // onde parou). `concluida` não aparece — sem "visto"/devolutiva
+      // nova pra sinalizar ainda, escopo de uma fase futura.
+      db.query.experienciasInstancias.findFirst({
+        where: and(eq(experienciasInstancias.pacienteId, profile.id), ne(experienciasInstancias.estado, "concluida")),
+        orderBy: desc(experienciasInstancias.iniciadoEm),
+        columns: { id: true, estado: true },
+        with: { experiencia: { columns: { titulo: true } } },
+      }),
     ]);
   const temRevisitar = !!entradasRevisitar;
 
@@ -308,6 +327,20 @@ export default async function Home() {
         <Suspense fallback={null}>
           <LenteDoDiaCard presencaHoje={profile.presencaHoje} />
         </Suspense>
+
+        {experienciaEmAndamento && (
+          <a
+            className={styles.experienciaCard}
+            href={`/experiencias/instancia/${experienciaEmAndamento.id}`}
+            aria-label="Continuar experiência guiada"
+          >
+            <p className={styles.eyebrowTexto}>Experiência guiada</p>
+            <p className={styles.experienciaTitulo}>{experienciaEmAndamento.experiencia.titulo}</p>
+            <span className={styles.experienciaCta}>
+              {experienciaEmAndamento.estado === "aguardando_especialista" ? "Aguardando resposta →" : "Continuar →"}
+            </span>
+          </a>
+        )}
 
         {cardTerapeuta?.texto && profissionalConectado && (
           <section className={styles.terapeuta} aria-label="Do seu terapeuta">

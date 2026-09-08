@@ -411,6 +411,188 @@ export const embeddingRateLimit = sqliteTable("embedding_rate_limit", {
 // Postgres resolvia de graça).
 
 // ---------------------------------------------------------------------------
+// experiencias_guiadas + etapas/instâncias/respostas/consentimentos/
+// devolutivas — categoria nova de conteúdo (percurso com etapas, dias de
+// duração), além de Prática (ação pontual) e Livro Vivo (leitura). Nunca
+// existiu no Supabase — nasce direto em D1/Drizzle, sem etapa interina em
+// Postgres/RLS (ver docs/experiencias-guiadas-decisoes.md). Autorização
+// só em Server Action, mesmo padrão do resto do schema (comentário
+// "autorização" no lugar de "RLS antiga" porque não há RLS real anterior
+// pra documentar).
+// ---------------------------------------------------------------------------
+export const experienciasGuiadas = sqliteTable(
+  "experiencias_guiadas",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    titulo: text("titulo").notNull(),
+    tipo: text("tipo").notNull(), // 'autoguiada' | 'guiada_metodo' | 'acompanhada'
+    especialistaId: text("especialista_id").references(() => profissionais.id),
+    descricao: text("descricao").notNull(),
+    // Texto livre, ex: "4 etapas ao longo de alguns dias" — NUNCA número de
+    // minutos (regra do PRD: não prometer velocidade que a experiência não tem).
+    estimativaFormato: text("estimativa_formato"),
+    // Sem coluna de moderação (diferente de biblioteca.statusModeracao) —
+    // autoria é admin-direta (app/admin/experiencias-guiadas), não proposta
+    // de terceiro que precisa aprovação.
+    publicado: integer("publicado", { mode: "boolean" }).notNull().default(true),
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
+      .notNull()
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`),
+  },
+  (table) => [
+    index("experiencias_guiadas_especialista_id_idx").on(table.especialistaId),
+    check("experiencias_guiadas_tipo_check", sql`${table.tipo} in ('autoguiada', 'guiada_metodo', 'acompanhada')`),
+  ],
+);
+
+// Autorização: leitura liberada pra qualquer autenticado quando
+// `publicado=true` (Descoberta); escrita só pela tela de admin (checagem
+// contra a tabela `admins`, mesmo padrão de app/admin/biblioteca).
+
+export const experienciasEtapas = sqliteTable(
+  "experiencias_etapas",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    experienciaId: text("experiencia_id")
+      .notNull()
+      .references(() => experienciasGuiadas.id),
+    ordem: integer("ordem").notNull(),
+    conteudo: text("conteudo").notNull(),
+    tipoResposta: text("tipo_resposta").notNull().default("texto"), // 'texto' | 'escolha'
+    // Achado no mockup (docs/stitch_presen_a_home_guiada/
+    // presen_a_in_cio_da_experi_ncia_consentimento): nem toda etapa de uma
+    // experiência Acompanhada é lida pelo especialista — a Etapa 1 do
+    // mockup é explicitamente "sem devolutiva nesta fase". É por etapa,
+    // não um flag único pra experiência inteira.
+    compartilhadaComEspecialista: integer("compartilhada_com_especialista", { mode: "boolean" })
+      .notNull()
+      .default(false),
+    // Só quando tipoResposta='escolha' — visto no mockup de etapa em
+    // andamento (presen_a_etapa_em_andamento_guiada_pelo_m_todo):
+    // `orientacao` é o texto que aparece ao escolher aquela opção.
+    opcoes: text("opcoes", { mode: "json" }).$type<
+      Array<{ valor: string; rotulo: string; descricao?: string; orientacao?: string }>
+    >(),
+    // Mapa valor->próximaEtapaId, opcional — ausente/null = avança sempre
+    // pra próxima etapa por `ordem`, igual ao único mockup que temos.
+    ramificacoes: text("ramificacoes", { mode: "json" }).$type<Record<string, string>>(),
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
+      .notNull()
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`),
+  },
+  (table) => [
+    index("experiencias_etapas_experiencia_id_idx").on(table.experienciaId),
+    check("experiencias_etapas_tipo_resposta_check", sql`${table.tipoResposta} in ('texto', 'escolha')`),
+  ],
+);
+
+// Autorização: leitura segue a mesma regra da experiência-mãe (publicado).
+
+export const experienciasInstancias = sqliteTable(
+  "experiencias_instancias",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    pacienteId: text("paciente_id")
+      .notNull()
+      .references(() => profiles.id),
+    experienciaId: text("experiencia_id")
+      .notNull()
+      .references(() => experienciasGuiadas.id),
+    etapaAtualId: text("etapa_atual_id").references(() => experienciasEtapas.id),
+    estado: text("estado").notNull().default("em_andamento"),
+    iniciadoEm: integer("iniciado_em", { mode: "timestamp_ms" })
+      .notNull()
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`),
+    concluidoEm: integer("concluido_em", { mode: "timestamp_ms" }),
+  },
+  (table) => [
+    index("experiencias_instancias_paciente_id_idx").on(table.pacienteId),
+    index("experiencias_instancias_experiencia_id_idx").on(table.experienciaId),
+    check(
+      "experiencias_instancias_estado_check",
+      sql`${table.estado} in ('em_andamento', 'aguardando_especialista', 'concluida')`,
+    ),
+  ],
+);
+
+// Autorização: paciente lê/escreve só a própria instância
+// (pacienteId = profile.id da sessão); especialista lê só instâncias de
+// experiências onde é o especialistaId (join com experiencias_guiadas).
+
+export const experienciasRespostas = sqliteTable(
+  "experiencias_respostas",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    instanciaId: text("instancia_id")
+      .notNull()
+      .references(() => experienciasInstancias.id),
+    etapaId: text("etapa_id")
+      .notNull()
+      .references(() => experienciasEtapas.id),
+    // Pra tipoResposta='escolha', serializa `{escolha, nota}` como JSON
+    // string em código — sem coluna estruturada extra, mesmo padrão de
+    // `caderno_entradas.conteudo` (sempre texto livre na coluna).
+    conteudo: text("conteudo").notNull(),
+    respondidoEm: integer("respondido_em", { mode: "timestamp_ms" })
+      .notNull()
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`),
+  },
+  (table) => [index("experiencias_respostas_instancia_id_idx").on(table.instanciaId)],
+);
+
+// Autorização: mesma regra da instância-mãe (paciente dono, ou
+// especialista da experiência lendo só etapas marcadas
+// compartilhadaComEspecialista).
+
+export const experienciasConsentimentos = sqliteTable("experiencias_consentimentos", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  instanciaId: text("instancia_id")
+    .notNull()
+    .unique()
+    .references(() => experienciasInstancias.id),
+  consentido: integer("consentido", { mode: "boolean" }).notNull().default(false),
+  consentidoEm: integer("consentido_em", { mode: "timestamp_ms" }),
+  revogadoEm: integer("revogado_em", { mode: "timestamp_ms" }), // nulo enquanto ativo
+});
+
+// Autorização: paciente lê/escreve só o próprio consentimento (via
+// instância própria) — nunca herdado de outro consentimento (regra do
+// PRD, princípio 3: consentimento é por finalidade, nunca genérico).
+
+export const experienciasDevolutivas = sqliteTable(
+  "experiencias_devolutivas",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    instanciaId: text("instancia_id")
+      .notNull()
+      .references(() => experienciasInstancias.id),
+    especialistaId: text("especialista_id")
+      .notNull()
+      .references(() => profissionais.id),
+    conteudo: text("conteudo").notNull(),
+    criadoEm: integer("criado_em", { mode: "timestamp_ms" })
+      .notNull()
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`),
+  },
+  (table) => [index("experiencias_devolutivas_instancia_id_idx").on(table.instanciaId)],
+);
+
+// Autorização: paciente lê a própria devolutiva (via instância própria);
+// só o especialista da experiência escreve.
+
+// ---------------------------------------------------------------------------
 // Relations — só o suficiente pra `with: {...}` do Drizzle substituir os
 // embeds que o código atual já faz (`profissionais:autor_profissional_id(nome, tipo, ...)`
 // etc.) na Fase 4. Não é RLS nem validação, só ergonomia de leitura.
@@ -455,4 +637,60 @@ export const pacientesPreCadastroRelations = relations(pacientesPreCadastro, ({ 
     references: [profissionais.id],
   }),
   paciente: one(profiles, { fields: [pacientesPreCadastro.pacienteId], references: [profiles.id] }),
+}));
+
+export const experienciasGuiadasRelations = relations(experienciasGuiadas, ({ one, many }) => ({
+  especialista: one(profissionais, { fields: [experienciasGuiadas.especialistaId], references: [profissionais.id] }),
+  etapas: many(experienciasEtapas),
+}));
+
+export const experienciasEtapasRelations = relations(experienciasEtapas, ({ one }) => ({
+  experiencia: one(experienciasGuiadas, {
+    fields: [experienciasEtapas.experienciaId],
+    references: [experienciasGuiadas.id],
+  }),
+}));
+
+export const experienciasInstanciasRelations = relations(experienciasInstancias, ({ one, many }) => ({
+  paciente: one(profiles, { fields: [experienciasInstancias.pacienteId], references: [profiles.id] }),
+  experiencia: one(experienciasGuiadas, {
+    fields: [experienciasInstancias.experienciaId],
+    references: [experienciasGuiadas.id],
+  }),
+  etapaAtual: one(experienciasEtapas, {
+    fields: [experienciasInstancias.etapaAtualId],
+    references: [experienciasEtapas.id],
+  }),
+  respostas: many(experienciasRespostas),
+  consentimento: one(experienciasConsentimentos, {
+    fields: [experienciasInstancias.id],
+    references: [experienciasConsentimentos.instanciaId],
+  }),
+  devolutivas: many(experienciasDevolutivas),
+}));
+
+export const experienciasRespostasRelations = relations(experienciasRespostas, ({ one }) => ({
+  instancia: one(experienciasInstancias, {
+    fields: [experienciasRespostas.instanciaId],
+    references: [experienciasInstancias.id],
+  }),
+  etapa: one(experienciasEtapas, { fields: [experienciasRespostas.etapaId], references: [experienciasEtapas.id] }),
+}));
+
+export const experienciasConsentimentosRelations = relations(experienciasConsentimentos, ({ one }) => ({
+  instancia: one(experienciasInstancias, {
+    fields: [experienciasConsentimentos.instanciaId],
+    references: [experienciasInstancias.id],
+  }),
+}));
+
+export const experienciasDevolutivasRelations = relations(experienciasDevolutivas, ({ one }) => ({
+  instancia: one(experienciasInstancias, {
+    fields: [experienciasDevolutivas.instanciaId],
+    references: [experienciasInstancias.id],
+  }),
+  especialista: one(profissionais, {
+    fields: [experienciasDevolutivas.especialistaId],
+    references: [profissionais.id],
+  }),
 }));
