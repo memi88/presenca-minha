@@ -2,8 +2,11 @@
 
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { eq } from "drizzle-orm";
+import { biblioteca, profissionais } from "@presenca/db/schema";
 
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 import { CATEGORIAS_PRATICA } from "@/lib/categoriasPratica";
 
 export type PropostaState = { erro?: string; sucesso?: boolean };
@@ -32,34 +35,36 @@ export async function propor(_prev: PropostaState, formData: FormData): Promise<
     return { erro: "Escolha a categoria da prática." };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  const { data: profissional } = await supabase
-    .from("profissionais")
-    .select("id")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const db = await getDb();
+  const profissional = await db.query.profissionais.findFirst({
+    where: eq(profissionais.userId, sessao.user.id),
+    columns: { id: true },
+  });
   if (!profissional) redirect("/");
 
-  // publicado/status_moderacao não são setados aqui — o trigger
-  // biblioteca_forca_pendente (migration fase11_biblioteca_colaborativa)
-  // sempre força pendente/despublicado pra insert com profissional_autor_id
-  // preenchido, exceto quando quem insere é admin.
-  const { error } = await supabase.from("biblioteca").insert({
+  // `publicado: false` / `statusModeracao: "pendente"` substituem o
+  // trigger `biblioteca_forca_pendente` (migration
+  // fase11_biblioteca_colaborativa) — no Postgres ele forçava esses 2
+  // valores em todo insert com profissional_autor_id preenchido (exceto
+  // quando quem insere é admin), independente do que o insert mandasse.
+  // D1/SQLite não tem esse trigger portado; sem setar explicitamente aqui,
+  // a proposta entraria com os defaults da coluna (publicado=true,
+  // aprovado) — publicaria sem moderação, exatamente o que o trigger
+  // existia pra impedir.
+  await db.insert(biblioteca).values({
     tipo,
     titulo,
     conteudo,
     escopo,
     categoria: tipo === "pratica" ? categoria : null,
-    profissional_autor_id: profissional.id,
+    profissionalAutorId: profissional.id,
     autor: null,
+    publicado: false,
+    statusModeracao: "pendente",
   });
-
-  if (error) return { erro: error.message };
 
   return { sucesso: true };
 }

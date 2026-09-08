@@ -12,7 +12,7 @@ export function SairButton({ anonimo }: { anonimo: boolean }) {
     return (
       <form action={sair}>
         <button className={styles.sair} type="submit">
-          sair
+          Sair
         </button>
       </form>
     );
@@ -21,7 +21,7 @@ export function SairButton({ anonimo }: { anonimo: boolean }) {
   if (!confirmando) {
     return (
       <button className={styles.sair} type="button" onClick={() => setConfirmando(true)}>
-        sair
+        Sair
       </button>
     );
   }
@@ -33,15 +33,15 @@ export function SairButton({ anonimo }: { anonimo: boolean }) {
         acessar esse Diário depois.
       </p>
       <a className={styles.link} href="/conta">
-        criar minha conta antes →
+        Criar minha conta antes →
       </a>
       <form action={sair}>
         <button className={styles.confirmarSair} type="submit">
-          sair mesmo assim
+          Sair mesmo assim
         </button>
       </form>
       <button className={styles.sair} type="button" onClick={() => setConfirmando(false)}>
-        voltar
+        Voltar
       </button>
     </div>
   );

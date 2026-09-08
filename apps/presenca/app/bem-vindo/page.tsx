@@ -1,50 +1,57 @@
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { eq } from "drizzle-orm";
+import { profiles } from "@presenca/db/schema";
 
-import { PageHeader } from "../PageHeader";
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
+
+import { CirculoRespirando } from "../CirculoRespirando";
 import styles from "./page.module.css";
 
 export default async function BemVindo() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const sessao = await getSessao();
 
-  if (user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("nome")
-      .eq("id", user.id)
-      .maybeSingle();
+  if (sessao) {
+    const profile = await (await getDb()).query.profiles.findFirst({
+      where: eq(profiles.userId, sessao.user.id),
+      columns: { nome: true },
+    });
 
     redirect(profile?.nome ? "/home" : "/chegada");
   }
 
   return (
     <main className={styles.scene}>
-      <PageHeader voltar={{ href: "/", label: "‹" }} />
-      <div className={styles.content}>
-        <p className={styles.eyebrow}>bem-vindo</p>
-        <h1 className={styles.headline}>
-          Que bom ter{" "}
-          <br className={styles.quebra} />
-          você aqui.
-        </h1>
-        <div className={styles.opcoes}>
-          {/*
-            A conta só é criada de fato (sessão anônima, silenciosa) quando o
-            formulário de apelido/e-mail/senha em /chegada é enviado — este
-            link não faz nenhuma chamada ao Supabase.
-          */}
-          <a className={styles.ctaSolido} href="/chegada">
-            Quero criar meu espaço
-          </a>
-          <a className={styles.ctaContorno} href="/login">
-            Já possuo meu espaço
-          </a>
-        </div>
+      <div className={styles.espaco} />
+      <div className={styles.centro}>
+        <CirculoRespirando className={styles.logo} />
+        <h1 className={styles.wordmark}>Presença</h1>
+        {/*
+          A conta só é criada de fato (sessão anônima, silenciosa) quando o
+          formulário de apelido/e-mail/senha em /chegada é enviado — este
+          link não faz nenhuma chamada de autenticação.
+        */}
+        <a className={styles.entrar} href="/chegada">
+          <span>entrar</span>
+          <svg
+            className={styles.entrarIcone}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </a>
       </div>
+      <div className={styles.espaco} />
+      <footer className={styles.rodape}>
+        <a href="/login">Já possuo meu espaço</a>
+      </footer>
     </main>
   );
 }

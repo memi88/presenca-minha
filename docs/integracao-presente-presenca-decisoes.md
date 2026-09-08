@@ -222,3 +222,47 @@ Auditoria prévia (mesmo formato do P6) encontrou dois riscos concretos em `busc
 3. **Extração do helper não regride os 2 call sites existentes:** `criarEntrada` (`/diario`) e `guardarNoDiario` (bolha da Conversa) testados de novo depois da extração — ambos calcularam embedding e encontraram a conexão esperada corretamente, comportamento idêntico a antes.
 
 Typecheck limpo antes do deploy. `presenca.app`, `www.presenca.app`, `cuida.presenca.app` e `/fechamento` (307 sem sessão) confirmados saudáveis depois do deploy final. **P7 em produção real desde 2026-09-01** (Version ID final `e713538a`).
+
+---
+
+## P5 — Fase A (infraestrutura de sugestão de prática, sem lente): desenho aprovado (2026-09-04)
+
+Auditoria prévia (mesmo formato do P6/P7) confirmou que nada mudou desde a auditoria original do P5 (2026-08-31): nenhuma tool de sugestão, nenhuma busca vetorial contra `biblioteca`, `systemPromptConversa.ts` sem nenhuma menção a biblioteca/prática. P7 (entre as duas auditorias) só tocou `caderno_entradas`/`buscar_conexao_caderno`, não criou nenhum mecanismo de sugestão.
+
+**Escopo da Fase A:** o agente consegue sugerir uma prática real da biblioteca, baseada só na conversa, com origem rastreável — **sem nenhum contexto do Presente envolvido**. A lente entra só na Fase B, depois desta estar validada e aprovada em produção.
+
+**Decisão registrada explicitamente, pra não ser descoberta como surpresa depois:** o P5 vai ao ar **sem conteúdo real no pool de sugestão**. As 22 linhas existentes de `biblioteca` não têm `origin` preenchido, e não há curadoria retroativa planejada como parte deste deploy — é trabalho de conteúdo separado (mesmo processo manual já usado em `scripts/cadastrar-biblioteca.mjs`), não um esquecimento técnico. `buscar_pratica_relevante` exige `origin is not null` no WHERE (decisão de schema abaixo), então nenhuma prática aparece pro agente até isso ser curado — o código pode ir ao ar antes disso, mas fica funcionalmente inerte (fail-open, nunca erro) até a curadoria acontecer.
+
+### Desenho técnico aprovado
+
+1. **Schema** — nenhuma coluna existente (`tipo`, `ambiente`) serve. `tipo` descreve formato (`pagina_livro_vivo` | `pratica`), não origem; `ambiente` é coluna morta na prática (nenhuma query do app a lê — o claro/escuro real do app vem de `AmbienteShell.tsx`, calculado pela rota, não por essa coluna da biblioteca). Nova coluna `origin text`, nullable, `CHECK (origin IN ('TRADITIONAL_MAYA', 'LAW_OF_TIME', 'HUMAN_DESIGN', 'KABBALAH', 'PRESENTE', 'PRESENCA'))` — nullable de propósito, pra não quebrar as 22 linhas existentes; "sem origin não entra no pool" é aplicado no WHERE da função de match, não como `NOT NULL`.
+2. **`buscar_pratica_relevante`** — mesmo espírito de `buscar_conexao_caderno`, mas `security invoker` (biblioteca é conteúdo público, `publicado = true` já libera leitura pra `authenticated`) e `limit 3` (não 1 — o agente recebe candidatos e julga, não uma citação única já decidida). Confirmado que `biblioteca.embedding` já é `vector(384)` (mesma migration que ajustou `caderno_entradas`, `20260710024425_ajusta_embedding_384.sql` — o comentário original de criação da tabela, `vector(1536)`, ficou desatualizado).
+3. **Tool `sugerir_pratica`** — primeira tool do projeto com ciclo completo de ida-e-volta (`tool_use` → `tool_result` → continuação), diferente de `sinalizar_risco`/`sinalizar_encerramento` (sinal puro, sem parâmetro, sem `tool_result`). Guardrail contra over-triggering vive inteiro na `description` (texto exato em `lib/systemPromptConversa.ts`), mesmo padrão das outras duas tools — sem parágrafo dedicado no resto do prompt.
+4. **Tool `confirmar_pratica_mencionada`** (ajuste feito na revisão, antes de implementar) — sinal unidirecional (mesmo padrão de `sinalizar_risco`) que só existe pra distinguir "a prática foi oferecida ao modelo" de "a pessoa foi de fato informada sobre ela". Só entra nos `tools` da segunda chamada (a continuação); `sugerir_pratica` deliberadamente não entra de novo nessa lista — trava o cap de 1 round-trip por rodada estruturalmente, não só por convenção. `pratica_sugerida` só é gravada em `caderno_entradas` quando essa tool é chamada de verdade, com o `biblioteca_id` validado contra os candidatos reais que a busca retornou (defesa contra o modelo inventar um id).
+5. **Rastreabilidade** — `autor_tipo` permanece `'usuario'` (a policy de RLS que permite o paciente inserir no próprio Caderno é `for all using (auth.uid() = paciente_id and autor_tipo = 'usuario')` — como é `FOR ALL`, vale como `WITH CHECK` do insert; um `autor_tipo` novo exigiria migration de RLS, fora do escopo "sem mecanismo pesado"). Distinção só pelo `tipo = 'pratica_sugerida'`, paralelo ao `'pratica_indicada'` já existente pro caso do paciente guardar sozinho. Excluído de `/diario` junto com `fechamento_dia` (mesma lógica do P6 — registro de auditoria, não algo que a pessoa escreveu).
+6. **Extração:** `processarEventosStream` (texto/risco/encerramento) extraído em `api/conversa/route.ts` pra ser reaproveitado entre a primeira chamada e a continuação — evita duplicar o `for await` inteiro duas vezes no mesmo arquivo.
+
+### Bateria de teste da Fase A (a rodar antes do deploy final)
+
+1. Conversa que pede prática claramente → `sugerir_pratica` chamada, candidato relevante retornado.
+2. Conversa neutra, sem sinal → tool nunca chamada.
+3. Menção vaga → avaliar se o modelo espera clareza ou dispara cedo demais.
+4. Prática sugerida cita `origin` corretamente na fala — nunca "tradicional" sem fonte.
+5. **Modelo recebe candidatos, decide não mencionar nenhum → `confirmar_pratica_mencionada` nunca é chamada, nenhum registro criado.**
+
+**Pré-requisito de conteúdo pro teste 1 (lembrete do Guilherme, registrado aqui):** sem pelo menos 1-2 linhas reais de `biblioteca` com `origin` preenchido, o teste 1 não tem como passar de verdade — precisa de curadoria manual de 1-2 práticas de teste antes de rodar a bateria, mesmo que a curadoria completa das 22 linhas fique pra depois.
+
+### Fase A implementada, testada e EM PRODUÇÃO (2026-09-04)
+
+**Conteúdo de teste cadastrado antes da bateria** (`scripts/cadastrar-biblioteca.mjs`, atualizado nesta sessão pra suportar o campo `origin` — não existia antes desta coluna): 2 práticas reais, curtas, `origin = 'PRESENCA'`, embedding real calculado ("Três respirações antes de responder", "Nomear o que pesa"). As outras 22 linhas de `biblioteca` continuam sem `origin` — decisão já registrada acima, não revisitada aqui.
+
+**Achado de processo, não bloqueante:** entre a especificação e a implementação desta fase, uma sessão paralela consolidou todo o trabalho de P1-P7 num commit único (`7c35640`) e o branch avançou pra `redesign/visual-contemplative-warmth` com uma leva grande de mudanças visuais em andamento. Isso simplificou o deploy isolado (a base do worktree já vem com P1-P7 prontos, não precisa mais reconstruir arquivo por arquivo) mas também causou um descompasso real: minha edição de `diario/page.tsx` (feita antes dessa consolidação) tinha ficado baseada numa versão desatualizada do arquivo e, sem essa checagem, teria revertido silenciosamente a integração do `IntroEspaco` e o tracking de `ultimo_destino` que foram commitados nesse meio-tempo. Corrigido reextraindo a mudança do P5 sobre o HEAD real antes do deploy — nenhuma perda, mas vale registrar como lembrete de sempre checar a base antes de reaplicar uma edição feita em outra sessão.
+
+**5 cenários testados em produção real** (worktree isolado, rota de diagnóstico temporária removida e redeploy limpo confirmado depois):
+1. **Pedido claro de prática** ("ansioso antes de reunião difícil") — `sugerir_pratica` chamada, candidato correto encontrado ("Três respirações antes de responder"), mencionado na resposta, `confirmar_pratica_mencionada` chamada com o id certo, `pratica_sugerida` gravada com `biblioteca_ref_id` correto. Repetido com um segundo pedido diferente ("alongamento/dança") — mesmo resultado, o candidato mais próximo disponível foi oferecido e confirmado mesmo sendo um match aproximado (only 2 práticas no pool ainda).
+2. **Conversa neutra** — nenhum registro criado.
+3. **Menção vaga** ("acho que eu devia fazer alguma coisa a mais por mim, sei lá") — o modelo perguntou de volta em vez de sugerir, guardrail "na dúvida, não chame" funcionando.
+4. **Origem citada corretamente** — testável só parcialmente: os 2 candidatos de teste são `origin: PRESENCA` (autoral, não uma tradição), o modelo nunca inventou uma tradição pra eles em nenhuma resposta. Teste decisivo (citação correta de uma origem *tradicional* de verdade) só é possível depois de curadoria real de conteúdo não-PRESENCA — não fabricado aqui de propósito, seria o mesmo problema que o guardrail existe pra evitar.
+5. **Pedido fora do escopo do pool** ("cura energética com cristais, alinhar chakras") — o modelo recusou o assunto e redirecionou a conversa, sem mencionar nada; nenhum registro criado.
+
+Typecheck limpo antes do deploy. `presenca.app`, `www.presenca.app`, `cuida.presenca.app` confirmados saudáveis depois do deploy final. **P5 Fase A em produção real desde 2026-09-04** (Version ID final `0432f0bd`). Fase B (lente como contexto secundário) permanece bloqueada até esta fase acumular uso real e ser revisada.

@@ -1,11 +1,22 @@
 import { notFound, redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { and, desc, eq } from "drizzle-orm";
+import { biblioteca, profiles, profissionais } from "@presenca/db/schema";
 
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 import { PLACEHOLDER_LIVRO_VIVO, PLACEHOLDER_PRATICA, PLACEHOLDER_TERAPEUTA } from "@/lib/placeholders";
 
 import { PageHeader } from "../../PageHeader";
 import styles from "./page.module.css";
+
+// Mesmo padrão de app/home/page.tsx — corte sempre em fronteira de
+// palavra, nunca no meio.
+function trecho(texto: string, max: number): string {
+  if (texto.length <= max) return texto;
+  const corte = texto.slice(0, max);
+  return `${corte.slice(0, corte.lastIndexOf(" "))}…`;
+}
 
 // Página do Autor (docs/redesign/p_gina_do_autor_alice_guimar_es) — só pra
 // profissionais com conta, alcançada a partir de "ver perfil de X" em
@@ -14,34 +25,36 @@ import styles from "./page.module.css";
 // profissionais_leitura_publica) — sem isso, `notFound()` mais embaixo.
 export default async function Autor({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  const { data: profile } = await supabase.from("profiles").select("nome").eq("id", user.id).maybeSingle();
+  const db = await getDb();
+  const profile = await db.query.profiles.findFirst({
+    where: eq(profiles.userId, sessao.user.id),
+    columns: { nome: true },
+  });
   if (!profile?.nome) redirect("/chegada");
 
-  const [{ data: profissional }, { data: obras }] = await Promise.all([
-    supabase.from("profissionais").select("id, nome, tipo, forma_de_trabalho").eq("id", id).maybeSingle(),
-    supabase
-      .from("biblioteca")
-      .select("id, tipo, titulo")
-      .eq("profissional_autor_id", id)
-      .eq("publicado", true)
-      .eq("escopo", "publico")
-      .order("created_at", { ascending: false }),
+  const [profissional, obras] = await Promise.all([
+    db.query.profissionais.findFirst({
+      where: eq(profissionais.id, id),
+      columns: { id: true, nome: true, tipo: true, formaDeTrabalho: true },
+    }),
+    db.query.biblioteca.findMany({
+      where: and(eq(biblioteca.profissionalAutorId, id), eq(biblioteca.publicado, true), eq(biblioteca.escopo, "publico")),
+      orderBy: desc(biblioteca.createdAt),
+      columns: { id: true, tipo: true, titulo: true, conteudo: true },
+    }),
   ]);
 
   if (!profissional) notFound();
 
   const descricao =
-    profissional.tipo === "Outra" ? (profissional.forma_de_trabalho ?? profissional.tipo) : profissional.tipo;
+    profissional.tipo === "Outra" ? (profissional.formaDeTrabalho ?? profissional.tipo) : profissional.tipo;
 
   return (
     <main className={styles.scene}>
-      <PageHeader nome={profile.nome} atual={null} voltar={{ href: "/livro-vivo", label: "← voltar" }} />
+      <PageHeader titulo="Autor" nome={profile.nome} atual={null} voltar={{ href: "/livro-vivo" }} />
       <div className={styles.content}>
         <div
           className={styles.avatar}
@@ -49,7 +62,7 @@ export default async function Autor({ params }: { params: Promise<{ id: string }
           aria-hidden="true"
         />
         <p className={styles.eyebrow}>perfil do autor</p>
-        <h1 className={styles.nome}>{profissional.nome}</h1>
+        <h2 className={styles.nome}>{profissional.nome}</h2>
         <p className={styles.descricao}>{descricao}</p>
 
         {obras && obras.length > 0 && (
@@ -63,11 +76,16 @@ export default async function Autor({ params }: { params: Promise<{ id: string }
                     key={obra.id}
                     href={ehPratica ? `/praticas/${obra.id}` : `/livro-vivo/${obra.id}`}
                     className={styles.card}
-                    style={{ backgroundImage: `url(${ehPratica ? PLACEHOLDER_PRATICA : PLACEHOLDER_LIVRO_VIVO})` }}
                   >
-                    <div className={styles.cardOverlay}>
-                      <span className={styles.cardTipo}>{ehPratica ? "Prática" : "Livro Vivo"}</span>
-                      <span className={styles.cardTitulo}>{obra.titulo}</span>
+                    <div
+                      className={styles.cardImagem}
+                      style={{ backgroundImage: `url(${ehPratica ? PLACEHOLDER_PRATICA : PLACEHOLDER_LIVRO_VIVO})` }}
+                      aria-hidden="true"
+                    />
+                    <div className={styles.cardCorpo}>
+                      <span className={styles.cardBadge}>{ehPratica ? "Prática" : "Livro Vivo"}</span>
+                      <p className={styles.cardTitulo}>{obra.titulo}</p>
+                      <p className={styles.cardTexto}>{trecho(obra.conteudo, 90)}</p>
                     </div>
                   </a>
                 );

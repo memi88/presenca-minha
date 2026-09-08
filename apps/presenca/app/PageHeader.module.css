@@ -1,37 +1,60 @@
-/* Barra simples — monograma "p." (linka /home) + "voltar", sempre visível
-   no mobile. No desktop, some só quando a tela tem nav completo pra
-   mostrar no lugar dela (.linhaSimplesComNav); sem nav (.linhaSimplesSemNav),
-   continua visível também no desktop. Duas classes distintas de propósito
-   — evita empate de especificidade entre a regra de desktop de uma e da
-   outra (já mordi essa isca duas vezes nesta sessão). */
+/* Barra simples — seta de voltar (esquerda) + título centralizado —
+   docs/redesign/biblioteca_de_pr_ticas_imersiva_e_padronizada. Sempre
+   visível no mobile. No desktop, some só quando a tela tem nav completo
+   pra mostrar no lugar dela (.linhaSimplesComNav); sem nav
+   (.linhaSimplesSemNav), continua visível também no desktop. Duas classes
+   distintas de propósito — evita empate de especificidade entre a regra
+   de desktop de uma e da outra (já mordi essa isca duas vezes nesta
+   sessão).
+
+   A seta é `position: fixed`, com tamanho/cor/posição EXATAMENTE iguais
+   aos botões flutuantes de detalhe (`.voltarFlutuante` em
+   PainelPratica/PainelLeitura/lente.module.css) — círculo branco,
+   ícone escuro fixo, mesmo offset do canto — pedido explícito de
+   padronização depois de reparar que cada tela tinha um tratamento
+   diferente (sem círculo na barra, cores diferentes nos flutuantes,
+   quase invisível sobre fundo claro). Ficando fora do fluxo, o título
+   centraliza de verdade via `left:50%` (mesma técnica de
+   `.wordmarkCentro` em app/home/page.module.css), sem precisar de um
+   espaçador do lado direito só pra balancear. */
 .linhaSimples {
   position: relative;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
   width: 100%;
   padding: calc(clamp(20px, 3vw, 28px) + env(safe-area-inset-top)) clamp(24px, 4vw, 40px)
     clamp(20px, 3vw, 28px);
   box-sizing: border-box;
 }
 
-.monogramaLink {
-  display: flex;
-  color: var(--text);
-  text-decoration: none;
-}
-
-.monograma {
-  width: 22px;
-  height: 28px;
-}
-
 .voltarLink {
-  font: 500 13px/1 var(--font-bitter), sans-serif;
-  color: var(--text-link-muted);
+  position: fixed;
+  top: clamp(16px, 3vh, 28px);
+  left: clamp(16px, 3vw, 28px);
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(20, 16, 10, 0.18);
+  color: #2a2118;
   text-decoration: none;
+}
+
+.tituloBarra {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  max-width: calc(100% - 128px);
+  text-align: center;
+  font: 700 20px/1.2 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (min-width: 960px) {

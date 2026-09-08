@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 
-import { createClient } from "@presenca/supabase/server";
+import { getSessao } from "@/lib/sessao";
 
 type SugestaoLocal = {
   label: string;
@@ -37,11 +37,8 @@ function formatarLabel(cidade: string, estado: string | null, pais: string | nul
 // autocomplete (ao contrário do Nominatim puro, que desaconselha esse
 // padrão de uso na própria política de uso).
 export async function GET(request: NextRequest) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
+  const sessao = await getSessao();
+  if (!sessao) {
     return new Response(null, { status: 401 });
   }
 

@@ -10,10 +10,8 @@ import styles from "./page.module.css";
 export default function Privacidade() {
   return (
     <main className={styles.scene}>
-      <PageHeader voltar={{ href: "/home", label: "← voltar" }} />
+      <PageHeader titulo="Privacidade e Limites de Cuidado" voltar={{ href: "/home" }} />
       <div className={styles.content}>
-        <p className={styles.eyebrow}>privacidade e limites de cuidado</p>
-        <h1 className={styles.headline}>Privacidade e Limites de Cuidado</h1>
         <p className={styles.atualizado}>Última atualização: julho de 2026.</p>
 
         <nav className={styles.indice} aria-label="Índice">

@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@presenca/supabase"],
+  transpilePackages: ["@presenca/supabase", "@presenca/db"],
   async headers() {
     return [
       {

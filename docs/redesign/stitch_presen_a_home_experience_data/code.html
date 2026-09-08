@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Presença — Calibrar Experiência</title>
+<!-- Tailwind CSS v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Fraunces & Bitter & Spectral -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&amp;family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&amp;family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;display=swap" rel="stylesheet"/>
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'presenca-bg': '#f5eee6',
+            'presenca-sheet': '#fffbf7',
+            'presenca-surface': '#fcf7f0',
+            'presenca-input-bg': '#faf4ec',
+            'presenca-border': '#e5dac7',
+            'presenca-border-focus': '#b6873f',
+            'presenca-dark': '#2a2118',
+            'presenca-muted': '#7a6a52',
+            'presenca-accent': '#b6873f',
+            'presenca-accent-hover': '#9e7332',
+            'presenca-accent-deep': '#7c540e',
+          },
+          fontFamily: {
+            fraunces: ['Fraunces', 'serif'],
+            bitter: ['Bitter', 'serif'],
+            spectral: ['Spectral', 'serif'],
+          }
+        }
+      }
+    };
+  </script>
+<style data-purpose="custom-typography">
+    body {
+      font-family: 'Bitter', serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-color: #f3ece3;
+      color: #2a2118;
+    }
+    
+    /* Remove native date/time inner calendar icons to guarantee no generic library icons */
+    input[type="date"]::-webkit-inner-spin-button,
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-inner-spin-button,
+    input[type="time"]::-webkit-calendar-picker-indicator {
+      display: none;
+      -webkit-appearance: none;
+    }
+
+    /* Subtle backdrop blur mimic */
+    .sheet-shadow {
+      box-shadow: 0 -8px 32px rgba(42, 33, 24, 0.12), 0 -2px 8px rgba(42, 33, 24, 0.05);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex justify-center items-end bg-[#201811]/40 sm:p-4 selection:bg-[#f2dfc3] selection:text-[#2a2118]">
+<!-- BEGIN: BlurredBackgroundLayer -->
+<!-- Simulating the underlying Home Presença screen with soft warm blur as seen in reference SCREEN_8 -->
+<div aria-hidden="true" class="fixed inset-0 pointer-events-none -z-10 overflow-hidden filter blur-[5px] opacity-85 scale-105 bg-[#ece3d6]">
+<div class="max-w-md mx-auto min-h-screen px-5 pt-8 pb-20 flex flex-col justify-between">
+<!-- Top header simulation -->
+<div class="flex items-center justify-between text-[#2a2118]/70 py-2 border-b border-[#2a2118]/10">
+<span class="font-spectral text-sm tracking-widest uppercase">Presença</span>
+<span class="font-fraunces italic text-lg">M</span>
+</div>
+<!-- Greeting simulation -->
+<div class="my-6">
+<h1 class="font-fraunces text-3xl italic text-[#2a2118]">Bom dia, Maria</h1>
+<p class="font-spectral italic text-sm text-[#7a6a52] mt-1">Como você está hoje?</p>
+</div>
+<!-- Card simulation: Lente do dia -->
+<div class="bg-[#fcf7f0] rounded-2xl p-5 border border-[#e5dac7] shadow-sm mb-4">
+<span class="text-[10px] tracking-widest uppercase text-[#7c540e] font-spectral font-medium">Lente do dia • 24 de Maio</span>
+<h2 class="font-fraunces text-xl text-[#2a2118] mt-1 mb-2">A Impermanência da Pressa</h2>
+<p class="font-spectral text-xs text-[#7a6a52] leading-relaxed">Observe como a urgência muitas vezes é uma construção da mente...</p>
+</div>
+<!-- Bottom Card simulation -->
+<div class="bg-[#fcf7f0] rounded-2xl p-4 border border-[#e5dac7] shadow-sm">
+<p class="font-fraunces italic text-sm text-[#2a2118]">"Lembre-se da técnica de ancoragem que discutimos ontem..."</p>
+</div>
+</div>
+</div>
+<!-- END: BlurredBackgroundLayer -->
+<!-- BEGIN: ModalBackdrop -->
+<!-- Dimmer layer over blurred background -->
+<div aria-hidden="true" class="fixed inset-0 bg-[#2a2118]/45 transition-opacity"></div>
+<!-- END: ModalBackdrop -->
+<!-- BEGIN: BottomSheet -->
+<main aria-labelledby="modal-title" aria-modal="true" class="relative z-10 w-full max-w-lg bg-presenca-sheet rounded-t-[32px] sheet-shadow border-t border-presenca-border flex flex-col max-h-[92vh] overflow-y-auto" role="dialog">
+<!-- Drag Handle and Close Button Area -->
+<header class="relative pt-3 pb-1 px-6 flex items-center justify-center">
+<!-- Drag Handle -->
+<div aria-hidden="true" class="w-10 h-1 rounded-full bg-[#d6c7b2]"></div>
+<!-- Dismiss Button (Organic SVG Cross) -->
+<button aria-label="Fechar painel" class="absolute right-5 top-4 w-8 h-8 flex items-center justify-center rounded-full text-presenca-muted hover:text-presenca-dark hover:bg-presenca-surface active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-presenca-accent/50" type="button">
+<svg class="w-4 h-4 stroke-current" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 16 16">
+<line x1="3.5" x2="12.5" y1="3.5" y2="12.5"></line>
+<line x1="12.5" x2="3.5" y1="3.5" y2="12.5"></line>
+</svg>
+</button>
+</header>
+<!-- Content Body -->
+<div class="px-6 pt-3 pb-8 sm:px-8">
+<!-- BEGIN: HeaderGroup -->
+<div class="text-left mb-6 pr-6">
+<!-- Eyebrow -->
+<span class="block text-[11px] font-spectral tracking-[0.16em] uppercase text-presenca-accent-deep font-semibold mb-2">
+          Quer uma experiência melhor?
+        </span>
+<!-- Expressive Title -->
+<h2 class="font-fraunces italic font-normal text-2xl sm:text-[26px] leading-[1.3] text-presenca-dark tracking-tight" id="modal-title">
+          Esses dados ajudam a calibrar como esse espaço te acompanha.
+        </h2>
+</div>
+<!-- END: HeaderGroup -->
+<!-- BEGIN: CalibrationForm -->
+<form action="#" class="space-y-4" method="POST" onsubmit="event.preventDefault();">
+<!-- Field 1: Birth Date (Mandatory) -->
+<div>
+<label class="block font-bitter text-xs font-medium text-presenca-dark mb-1.5 pl-0.5" for="birth-date">
+            Data de nascimento <span class="font-spectral italic text-presenca-accent-deep text-[11px] font-normal ml-0.5">(obrigatório)</span>
+</label>
+<div class="relative">
+<input class="w-full h-12 px-4 bg-presenca-input-bg rounded-2xl border border-presenca-border text-presenca-dark placeholder:text-[#a3947f] font-bitter text-sm transition-colors focus:bg-white focus:border-presenca-border-focus focus:ring-1 focus:ring-presenca-border-focus focus:outline-none" id="birth-date" inputmode="numeric" name="birthDate" placeholder="dd/mm/aaaa" required="" type="text"/>
+</div>
+</div>
+<!-- Field 2: Birth Place (Optional) -->
+<div>
+<label class="block font-bitter text-xs font-medium text-presenca-dark mb-1.5 pl-0.5" for="birth-place">
+            Local de nascimento <span class="font-spectral italic text-presenca-muted text-[11px] font-normal ml-0.5">(opcional)</span>
+</label>
+<div class="relative">
+<input class="w-full h-12 px-4 bg-presenca-input-bg rounded-2xl border border-presenca-border text-presenca-dark placeholder:text-[#a3947f] font-bitter text-sm transition-colors focus:bg-white focus:border-presenca-border-focus focus:ring-1 focus:ring-presenca-border-focus focus:outline-none" id="birth-place" name="birthPlace" placeholder="Cidade, estado (opcional)" type="text"/>
+</div>
+</div>
+<!-- Field 3: Birth Time (Optional) -->
+<div>
+<label class="block font-bitter text-xs font-medium text-presenca-dark mb-1.5 pl-0.5" for="birth-time">
+            Hora de nascimento <span class="font-spectral italic text-presenca-muted text-[11px] font-normal ml-0.5">(opcional)</span>
+</label>
+<div class="relative">
+<input class="w-full h-12 px-4 bg-presenca-input-bg rounded-2xl border border-presenca-border text-presenca-dark placeholder:text-[#a3947f] font-bitter text-sm transition-colors focus:bg-white focus:border-presenca-border-focus focus:ring-1 focus:ring-presenca-border-focus focus:outline-none" id="birth-time" inputmode="numeric" name="birthTime" placeholder="hh:mm (opcional)" type="text"/>
+</div>
+</div>
+<!-- Reassuring Note -->
+<p class="font-spectral italic text-[13px] leading-relaxed text-presenca-muted pt-1 pb-2 px-0.5">
+          Não sabe a hora? Sem problema — alguns insights ficam menos precisos, mas você ainda é bem-vindo aqui.
+        </p>
+<!-- BEGIN: Actions -->
+<div class="pt-3 space-y-3">
+<!-- Primary Action Button -->
+<button class="w-full h-12 rounded-full bg-presenca-accent hover:bg-presenca-accent-hover text-[#fffbf7] font-bitter font-medium text-sm tracking-wide shadow-sm active:scale-[0.99] transition-all flex items-center justify-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-presenca-accent/60 focus:ring-offset-2" type="submit">
+            Salvar e continuar
+          </button>
+<!-- Secondary Dismissive Text Link -->
+<button class="w-full py-2 text-center font-bitter text-xs text-presenca-muted hover:text-presenca-dark hover:underline transition-colors focus:outline-none focus:underline" type="button">
+            Pular por enquanto
+          </button>
+</div>
+<!-- END: Actions -->
+</form>
+<!-- END: CalibrationForm -->
+</div>
+</main>
+<!-- END: BottomSheet -->
+</body></html>

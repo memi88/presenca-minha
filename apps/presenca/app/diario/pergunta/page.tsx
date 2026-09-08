@@ -1,6 +1,10 @@
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { desc, eq } from "drizzle-orm";
+import { cadernoEntradas, profiles } from "@presenca/db/schema";
+
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 
 import { PageHeader } from "../../PageHeader";
 import { RespostaForm } from "./RespostaForm";
@@ -15,31 +19,30 @@ import styles from "./page.module.css";
 // exporta isso — replicado aqui de propósito, é uma checagem de 2 campos,
 // não vale extrair só por isso).
 export default async function DiarioPergunta() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  const { data: profile } = await supabase.from("profiles").select("nome").eq("id", user.id).maybeSingle();
+  const db = await getDb();
+  const profile = await db.query.profiles.findFirst({
+    where: eq(profiles.userId, sessao.user.id),
+    columns: { id: true, nome: true },
+  });
   if (!profile?.nome) redirect("/chegada");
 
-  const { data: ultimaEntrada } = await supabase
-    .from("caderno_entradas")
-    .select("id, autor_tipo, tipo, conteudo")
-    .eq("paciente_id", user.id)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  const ultimaEntrada = await db.query.cadernoEntradas.findFirst({
+    where: eq(cadernoEntradas.pacienteId, profile.id),
+    orderBy: desc(cadernoEntradas.createdAt),
+    columns: { autorTipo: true, tipo: true, conteudo: true },
+  });
 
-  const perguntaEmAberto = ultimaEntrada?.autor_tipo === "profissional" && ultimaEntrada?.tipo === "pergunta";
+  const perguntaEmAberto = ultimaEntrada?.autorTipo === "profissional" && ultimaEntrada?.tipo === "pergunta";
   // Sem pergunta pendente — nada focado pra mostrar, manda pro Diário
   // completo em vez de uma tela vazia.
   if (!perguntaEmAberto || !ultimaEntrada?.conteudo) redirect("/diario");
 
   return (
     <main className={styles.scene}>
-      <PageHeader nome={profile.nome} atual="escrever" voltar={{ href: "/home", label: "← voltar" }} />
+      <PageHeader titulo="Diário" nome={profile.nome} atual="escrever" voltar={{ href: "/home" }} />
       <div className={styles.content}>
         <blockquote className={styles.pergunta}>“{ultimaEntrada.conteudo}”</blockquote>
         <RespostaForm />

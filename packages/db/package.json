@@ -1,0 +1,31 @@
+{
+  "name": "@presenca/db",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "auth:generate": "better-auth generate --config src/auth.ts --output src/auth.schema.ts -y",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate:local": "wrangler d1 migrations apply presenca-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply presenca-db --remote"
+  },
+  "exports": {
+    ".": "./src/auth.ts",
+    "./schema": "./src/schema.ts",
+    "./client": "./src/auth-client.ts",
+    "./db": "./src/db.ts"
+  },
+  "dependencies": {
+    "@better-auth/drizzle-adapter": "^1.7.2",
+    "better-auth": "^1.7.2",
+    "better-auth-cloudflare": "^0.3.1",
+    "drizzle-orm": "^0.45.0"
+  },
+  "devDependencies": {
+    "@better-auth/cli": "1.5.0-beta.13",
+    "@cloudflare/workers-types": "latest",
+    "drizzle-kit": "latest",
+    "typescript": "^5.7.0",
+    "wrangler": "latest"
+  }
+}

@@ -12,6 +12,17 @@
   padding: 0 clamp(24px, 3vw, 40px);
 }
 
+/* Card único embrulhando Google + form (mockup
+   criar_conta_continuidade_do_cuidado) — antes os campos ficavam soltos
+   direto no fundo da página, sem card, e o Google vinha depois do
+   e-mail/senha (agora primeiro, igual ao mockup). */
+.card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: clamp(24px, 3vw, 32px);
+}
+
 .eyebrow {
   font: 600 12px/1 var(--font-bitter), sans-serif;
   letter-spacing: 0.24em;
@@ -21,7 +32,7 @@
 }
 
 .headline {
-  font: italic 300 clamp(30px, 2.2vw, 38px) / 1.28 var(--font-fraunces), Georgia, serif;
+  font: 300 clamp(30px, 2.2vw, 38px) / 1.28 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: 8px;
 }
@@ -76,21 +87,31 @@
   color: var(--text-faint);
 }
 
-.ctaSecundario {
+.ctaGoogle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   width: 100%;
-  background: none;
+  background: var(--bg-elevated);
   color: var(--text);
-  font: 600 clamp(16px, 1vw, 17px) / 1 var(--font-bitter), sans-serif;
-  padding: clamp(16px, 1.1vw, 19px);
-  border-radius: 30px;
+  font: 600 clamp(15px, 1vw, 16px) / 1 var(--font-bitter), sans-serif;
+  padding: clamp(15px, 1.1vw, 18px);
+  border-radius: 14px;
   text-align: center;
   border: 1px solid var(--border);
   cursor: pointer;
 }
 
-.ctaSecundario:disabled {
+.ctaGoogle:disabled {
   opacity: 0.6;
   cursor: default;
+}
+
+.ctaGoogleIcone {
+  flex: none;
+  width: 20px;
+  height: 20px;
 }
 
 .agoraNao {

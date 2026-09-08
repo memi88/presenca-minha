@@ -1,25 +1,34 @@
-import { CATEGORIAS_PRATICA } from "@/lib/categoriasPratica";
+import { CATEGORIAS_PRATICA, type CategoriaPratica } from "@/lib/categoriasPratica";
 import { PLACEHOLDER_PRATICA } from "@/lib/placeholders";
 
 import { AutoriaBiblioteca } from "../AutoriaBiblioteca";
-import { IntroEspaco } from "../IntroEspaco";
+import { IconeSetaEsquerda } from "../IconeSetaEsquerda";
 import { PageHeader } from "../PageHeader";
 import { guardarPratica } from "./[id]/actions";
 import { FolegoInline } from "./FolegoInline";
+import { IconeCategoria } from "./IconeCategoria";
 import styles from "./PainelPratica.module.css";
 
 export type ItemPratica = {
   id: string;
-  titulo: string;
+  titulo: string | null;
   slug: string | null;
   conteudo: string;
   categoria?: string | null;
-  profissional_autor_id?: string | null;
-  profissionais?: { nome: string; tipo: string; forma_de_trabalho: string | null } | null;
+  profissionalAutorId?: string | null;
+  profissionalAutor?: { nome: string; tipo: string | null; formaDeTrabalho: string | null } | null;
 };
 
 function rotuloCategoria(categoria: string | null | undefined): string | null {
   return CATEGORIAS_PRATICA.find((c) => c.valor === categoria)?.rotulo ?? null;
+}
+
+// Corta o corpo da prática num preview curto pro card da grade — sempre em
+// fronteira de palavra, nunca no meio (mesmo padrão de app/home/page.tsx).
+function trecho(texto: string, max: number): string {
+  if (texto.length <= max) return texto;
+  const corte = texto.slice(0, max);
+  return `${corte.slice(0, corte.lastIndexOf(" "))}…`;
 }
 
 // Slugs cuja prática é uma experiência interativa embutida (FolegoInline),
@@ -36,12 +45,15 @@ export function ehPraticaInterativa(pratica: ItemPratica): boolean {
 }
 
 type Props = {
-  variante: "lista" | "detalhe";
-  nome: string;
-  praticas: ItemPratica[];
+  // nome/praticas só importam pra TelaSelecao (variante "lista") — a rota
+  // de detalhe (/praticas/[id]) não passa isso, já que TelaDetalhe não tem
+  // lista lateral nem PageHeader. categoriaAtiva importa pros dois: filtra
+  // a grade em TelaSelecao e preserva o filtro no link de voltar de
+  // TelaDetalhe.
+  nome?: string;
+  praticas?: ItemPratica[];
   praticaAtiva: ItemPratica | null;
   jaGuardada: boolean;
-  introExpandidaInicialmente: boolean;
   mostrarCtaConectar: boolean;
   categoriaAtiva?: string | null;
 };
@@ -54,12 +66,10 @@ type Props = {
 function TelaSelecao({
   nome,
   praticas,
-  introExpandidaInicialmente,
   categoriaAtiva,
 }: {
   nome: string;
   praticas: ItemPratica[];
-  introExpandidaInicialmente: boolean;
   categoriaAtiva: string | null;
 }) {
   const praticasFiltradas = categoriaAtiva
@@ -68,15 +78,13 @@ function TelaSelecao({
 
   return (
     <main className={styles.scene}>
-      <PageHeader nome={nome} atual="pratica" voltar={{ href: "/home", label: "← voltar" }} />
+      <PageHeader titulo="Práticas" nome={nome} atual="pratica" voltar={{ href: "/home" }} />
       <div className={styles.selecaoCentro}>
-        <IntroEspaco espaco="praticas" expandidaInicialmente={introExpandidaInicialmente} />
-        <p className={styles.eyebrow}>Práticas</p>
-        <h1 className={styles.tituloSelecao}>
+        <h2 className={styles.tituloSelecao}>
           Pequenas práticas,{" "}
           <br className={styles.quebra} />à vontade.
-        </h1>
-        <p className={styles.subtitulo}>escolha pelo tempo que você tem</p>
+        </h2>
+        <p className={styles.subtitulo}>Escolha pelo tempo que você tem</p>
 
         <div className={styles.filtros}>
           <a href="/praticas" className={`${styles.filtroPill} ${!categoriaAtiva ? styles.filtroPillAtivo : ""}`}>
@@ -100,15 +108,39 @@ function TelaSelecao({
             {praticasFiltradas.map((pratica) => (
               <a
                 key={pratica.id}
-                href={rotaDePratica(pratica)}
+                href={
+                  categoriaAtiva ? `${rotaDePratica(pratica)}?categoria=${categoriaAtiva}` : rotaDePratica(pratica)
+                }
                 className={styles.cardFoto}
                 style={{ backgroundImage: `url(${PLACEHOLDER_PRATICA})` }}
               >
                 <div className={styles.cardFotoOverlay}>
                   {rotuloCategoria(pratica.categoria) && (
-                    <span className={styles.cardFotoCategoria}>{rotuloCategoria(pratica.categoria)}</span>
+                    <span className={styles.cardFotoCategoria}>
+                      <IconeCategoria
+                        categoria={pratica.categoria as CategoriaPratica}
+                        className={styles.cardFotoCategoriaIcone}
+                      />
+                      {rotuloCategoria(pratica.categoria)}
+                    </span>
                   )}
                   <span className={styles.cardFotoTitulo}>{pratica.titulo}</span>
+                  <span className={styles.cardFotoTexto}>{trecho(pratica.conteudo, 90)}</span>
+                  <span className={styles.cardFotoCta}>
+                    Iniciar
+                    <svg
+                      className={styles.cardFotoCtaIcone}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                  </span>
                 </div>
               </a>
             ))}
@@ -119,100 +151,77 @@ function TelaSelecao({
   );
 }
 
-// Dois painéis lado a lado no desktop (lista + prática, igual ao Livro
-// Vivo) — só existe quando já há uma prática ativa; o estado de escolha
-// (nada selecionado ainda) é a TelaSelecao acima, não este componente.
+// Foto hero + coluna única, foco numa prática só — sem lista de outras
+// práticas ao lado (docs/redesign/detalhes_da_pr_tica_h_brido). Pra ver
+// outra prática, volta pra grade (TelaSelecao) — decisão explícita, troca
+// a navegação lateral por fidelidade ao mockup.
 function TelaDetalhe({
-  nome,
-  praticas,
   praticaAtiva,
   jaGuardada,
-  introExpandidaInicialmente,
   mostrarCtaConectar,
+  categoriaAtiva,
 }: {
-  nome: string;
-  praticas: ItemPratica[];
   praticaAtiva: ItemPratica;
   jaGuardada: boolean;
-  introExpandidaInicialmente: boolean;
   mostrarCtaConectar: boolean;
+  categoriaAtiva: string | null;
 }) {
   const interativa = ehPraticaInterativa(praticaAtiva);
   const paragrafos = !interativa ? praticaAtiva.conteudo.split(/\n{2,}/).filter(Boolean) : [];
+  const voltarHref = categoriaAtiva ? `/praticas?categoria=${categoriaAtiva}` : "/praticas";
+
+  // Prática interativa (FolegoInline) já tem sua própria experiência
+  // completa (cartão pra começar → cena escura imersiva) — não precisa da
+  // foto hero por cima, só o botão de voltar flutuante.
+  if (interativa) {
+    return (
+      <main className={styles.detalheScene}>
+        <a className={styles.voltarFlutuante} href={voltarHref} aria-label="Voltar para práticas">
+          <IconeSetaEsquerda />
+        </a>
+        <div className={styles.detalheInterativo}>
+          <FolegoInline titulo={praticaAtiva.titulo ?? ""} />
+        </div>
+      </main>
+    );
+  }
 
   return (
-    <main className={styles.scene}>
-      <PageHeader nome={nome} atual="pratica" voltar={{ href: "/home", label: "← voltar" }} />
-      <div className={styles.duasColunas}>
-        <div className={styles.painelLista}>
-          <p className={styles.eyebrow}>Práticas</p>
-          <h1 className={styles.titulo}>
-            Pequenas práticas,{" "}
-            <br className={styles.quebra} />à vontade.
-          </h1>
-          <p className={styles.subtitulo}>escolha pelo tempo que você tem</p>
-
-          <div className={styles.lista}>
-            {praticas.map((pratica) => {
-              const ativa = pratica.id === praticaAtiva.id;
-              return (
-                <a
-                  key={pratica.id}
-                  href={rotaDePratica(pratica)}
-                  className={`${styles.item} ${ativa ? styles.itemAtivo : ""}`}
-                >
-                  <span className={styles.itemIcone} aria-hidden="true" />
-                  <span className={styles.itemTitulo}>{pratica.titulo}</span>
-                </a>
-              );
-            })}
-          </div>
+    <main className={styles.detalheScene}>
+      <a className={styles.voltarFlutuante} href={voltarHref} aria-label="Voltar para práticas">
+        <IconeSetaEsquerda />
+      </a>
+      <div className={styles.detalheHero} style={{ backgroundImage: `url(${PLACEHOLDER_PRATICA})` }} aria-hidden="true" />
+      <div className={styles.detalheConteudo}>
+        {rotuloCategoria(praticaAtiva.categoria) && (
+          <p className={styles.detalheCategoria}>{rotuloCategoria(praticaAtiva.categoria)}</p>
+        )}
+        <h1 className={styles.tituloLeitura}>{praticaAtiva.titulo}</h1>
+        <div className={styles.corpo}>
+          {paragrafos.map((paragrafo, i) => (
+            <p key={i} className={styles.paragrafo}>
+              {paragrafo}
+            </p>
+          ))}
         </div>
-
-        <div className={styles.painelConteudo}>
-          {interativa ? (
-            <>
-              <a className={styles.voltarMobileDetalhe} href="/praticas">
-                ‹ Práticas
-              </a>
-              <IntroEspaco espaco="praticas" expandidaInicialmente={introExpandidaInicialmente} />
-              <FolegoInline titulo={praticaAtiva.titulo} />
-            </>
+        {praticaAtiva.profissionalAutorId && praticaAtiva.profissionalAutor && (
+          <AutoriaBiblioteca
+            profissionalId={praticaAtiva.profissionalAutorId}
+            nome={praticaAtiva.profissionalAutor.nome}
+            tipo={praticaAtiva.profissionalAutor.tipo ?? "Outra"}
+            formaDeTrabalho={praticaAtiva.profissionalAutor.formaDeTrabalho}
+            mostrarCta={mostrarCtaConectar}
+          />
+        )}
+        <div className={styles.rodape}>
+          {jaGuardada ? (
+            <span className={styles.guardado}>Guardado no seu diário ✓</span>
           ) : (
-            <>
-              <a className={styles.voltarMobileDetalhe} href="/praticas">
-                ‹ Práticas
-              </a>
-              <IntroEspaco espaco="praticas" expandidaInicialmente={introExpandidaInicialmente} />
-              <h2 className={styles.tituloLeitura}>{praticaAtiva.titulo}</h2>
-              <div className={styles.corpo}>
-                {paragrafos.map((paragrafo, i) => (
-                  <p key={i} className={styles.paragrafo}>
-                    {paragrafo}
-                  </p>
-                ))}
-              </div>
-              <div className={styles.rodape}>
-                {jaGuardada ? (
-                  <span className={styles.guardado}>guardado no seu diário ✓</span>
-                ) : (
-                  <form action={guardarPratica.bind(null, praticaAtiva.id)}>
-                    <button className={styles.guardar} type="submit">
-                      guardar esta prática
-                    </button>
-                  </form>
-                )}
-              </div>
-              {praticaAtiva.profissional_autor_id && praticaAtiva.profissionais && (
-                <AutoriaBiblioteca
-                  profissionalId={praticaAtiva.profissional_autor_id}
-                  nome={praticaAtiva.profissionais.nome}
-                  tipo={praticaAtiva.profissionais.tipo}
-                  formaDeTrabalho={praticaAtiva.profissionais.forma_de_trabalho}
-                  mostrarCta={mostrarCtaConectar}
-                />
-              )}
-            </>
+            <form action={guardarPratica.bind(null, praticaAtiva.id)}>
+              <button className={styles.guardar} type="submit">
+                Guardar esta prática
+              </button>
+            </form>
           )}
         </div>
       </div>
@@ -221,32 +230,22 @@ function TelaDetalhe({
 }
 
 export function PainelPratica({
-  nome,
-  praticas,
+  nome = "",
+  praticas = [],
   praticaAtiva,
   jaGuardada,
-  introExpandidaInicialmente,
   mostrarCtaConectar,
   categoriaAtiva = null,
 }: Props) {
   if (!praticaAtiva) {
-    return (
-      <TelaSelecao
-        nome={nome}
-        praticas={praticas}
-        introExpandidaInicialmente={introExpandidaInicialmente}
-        categoriaAtiva={categoriaAtiva}
-      />
-    );
+    return <TelaSelecao nome={nome} praticas={praticas} categoriaAtiva={categoriaAtiva} />;
   }
   return (
     <TelaDetalhe
-      nome={nome}
-      praticas={praticas}
       praticaAtiva={praticaAtiva}
       jaGuardada={jaGuardada}
-      introExpandidaInicialmente={introExpandidaInicialmente}
       mostrarCtaConectar={mostrarCtaConectar}
+      categoriaAtiva={categoriaAtiva}
     />
   );
 }

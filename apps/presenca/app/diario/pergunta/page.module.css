@@ -20,7 +20,7 @@
 }
 
 .pergunta {
-  font: italic 300 clamp(24px, 2.4vw, 32px) / 1.4 var(--font-fraunces), Georgia, serif;
+  font: italic 400 clamp(26px, 2.8vw, 36px) / 1.35 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin: 0 0 36px;
 }
@@ -48,16 +48,17 @@
     var(--bg-elevated) 32px
   );
   line-height: 32px;
-  font: italic 400 clamp(15px, 1vw, 16.5px) / 32px var(--font-fraunces), Georgia, serif;
+  font: 400 clamp(15px, 1vw, 16.5px) / 32px var(--font-fraunces), Georgia, serif;
   color: var(--text);
 }
 
 .textarea::placeholder {
+  font-style: italic;
   color: var(--text-subtle);
 }
 
 .cta {
-  align-self: flex-start;
+  align-self: center;
   margin-top: 4px;
   background: var(--accent-strong);
   color: var(--cta-text);

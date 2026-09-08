@@ -1,6 +1,10 @@
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { eq } from "drizzle-orm";
+import { admins, profissionais, profiles } from "@presenca/db/schema";
+
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 
 import { PageHeader } from "../PageHeader";
 import { SairButton } from "./SairButton";
@@ -15,63 +19,75 @@ function formatarNascimento(data: string, hora: string | null, local: string | n
 }
 
 export default async function Perfil() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("nome, data_nascimento, hora_nascimento, local_nascimento, profissional_id")
-    .eq("id", user.id)
-    .maybeSingle();
+  const db = await getDb();
+  const profile = await db.query.profiles.findFirst({
+    where: eq(profiles.userId, sessao.user.id),
+    columns: {
+      nome: true,
+      dataNascimento: true,
+      horaNascimento: true,
+      localNascimento: true,
+      profissionalId: true,
+    },
+  });
   if (!profile?.nome) redirect("/chegada");
 
   let nomeProfissional: string | null = null;
-  if (profile.profissional_id) {
-    const { data: profissional } = await supabase
-      .from("profissionais")
-      .select("nome")
-      .eq("id", profile.profissional_id)
-      .maybeSingle();
+  if (profile.profissionalId) {
+    const profissional = await db.query.profissionais.findFirst({
+      where: eq(profissionais.id, profile.profissionalId),
+      columns: { nome: true },
+    });
     nomeProfissional = profissional?.nome ?? null;
   }
 
-  const { data: admin } = await supabase.from("admins").select("user_id").eq("user_id", user.id).maybeSingle();
+  const admin = await db.query.admins.findFirst({ where: eq(admins.userId, sessao.user.id) });
 
   return (
     <main className={styles.scene}>
-      <PageHeader nome={profile.nome} atual={null} voltar={{ href: "/home", label: "← voltar" }} />
+      <PageHeader titulo="Perfil" nome={profile.nome} atual={null} voltar={{ href: "/home" }} />
       <div className={styles.content}>
-        <p className={styles.eyebrow}>perfil</p>
-        <h1 className={styles.headline}>{profile.nome}</h1>
+        <h2 className={styles.headline}>{profile.nome}</h2>
+
+        {/* Único caminho persistente até aqui desde que "recursos de
+            cuidado →" saiu da Home (redesign) — Recursos é a única coisa
+            que a Fase 8/PRD §7 exige que nunca suma, nem no estado
+            "confuso" (ver `reduzido` em app/home/page.tsx). */}
+        <div className={styles.secao}>
+          <p className={styles.rotulo}>cuidado</p>
+          <a className={styles.link} href="/recursos">
+            Recursos de cuidado →
+          </a>
+        </div>
 
         <div className={styles.secao}>
           <p className={styles.rotulo}>e-mail</p>
-          {user.email ? (
-            <p className={styles.valor}>{user.email}</p>
-          ) : (
+          {sessao.user.isAnonymous ? (
             <a className={styles.link} href="/conta">
-              conta ainda não convertida — guardar meu espaço →
+              Conta ainda não convertida — guardar meu espaço →
             </a>
+          ) : (
+            <p className={styles.valor}>{sessao.user.email}</p>
           )}
         </div>
 
         <div className={styles.secao}>
           <p className={styles.rotulo}>nascimento</p>
-          {profile.data_nascimento ? (
+          {profile.dataNascimento ? (
             <>
               <p className={styles.valor}>
-                {formatarNascimento(profile.data_nascimento, profile.hora_nascimento, profile.local_nascimento)}
+                {formatarNascimento(profile.dataNascimento, profile.horaNascimento, profile.localNascimento)}
               </p>
               <a className={styles.link} href="/perfil/nascimento">
-                editar →
+                Editar →
               </a>
             </>
           ) : (
             <a className={styles.link} href="/perfil/nascimento">
-              adicionar data de nascimento →
+              Adicionar data de nascimento →
             </a>
           )}
         </div>
@@ -80,11 +96,11 @@ export default async function Perfil() {
           <p className={styles.rotulo}>profissional</p>
           {nomeProfissional ? (
             <a className={styles.link} href="/terapia">
-              conectado(a) com {nomeProfissional} →
+              Conectado(a) com {nomeProfissional} →
             </a>
           ) : (
             <a className={styles.link} href="/terapia">
-              conectar com um profissional →
+              Conectar com um profissional →
             </a>
           )}
         </div>
@@ -93,12 +109,12 @@ export default async function Perfil() {
           <div className={styles.secao}>
             <p className={styles.rotulo}>admin</p>
             <a className={styles.link} href="/admin/biblioteca">
-              painel de aprovação da biblioteca →
+              Painel de aprovação da biblioteca →
             </a>
           </div>
         )}
 
-        <SairButton anonimo={user.is_anonymous === true} />
+        <SairButton anonimo={sessao.user.isAnonymous === true} />
       </div>
     </main>
   );

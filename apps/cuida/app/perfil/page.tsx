@@ -1,22 +1,22 @@
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { eq } from "drizzle-orm";
+import { profissionais } from "@presenca/db/schema";
+
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 
 import { PerfilForm } from "./PerfilForm";
 import styles from "./page.module.css";
 
 export default async function Perfil() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  const { data: profissional } = await supabase
-    .from("profissionais")
-    .select("nome")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const profissional = await (await getDb()).query.profissionais.findFirst({
+    where: eq(profissionais.userId, sessao.user.id),
+    columns: { nome: true },
+  });
   if (!profissional) redirect("/");
 
   return (

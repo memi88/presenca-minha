@@ -27,3 +27,20 @@ ANTHROPIC_API_KEY=
 # Endpoint genérico não exige autenticação — sem essa variável, a lente
 # some silenciosamente (fail-open).
 PRESENTE_SERVICE_URL=
+
+# Better Auth (migração Supabase→Cloudflare, lib/auth.ts) — mesmo valor
+# tem que estar configurado nos dois apps (Presença e Cuida), já que
+# compartilham o mesmo D1. Gere um valor aleatório (ex:
+# `openssl rand -base64 32`) — nunca reaproveite entre ambientes
+# diferentes (dev/produção).
+BETTER_AUTH_SECRET=
+
+# OAuth do Google (Continuar com o Google) — criar em
+# https://console.cloud.google.com/apis/credentials, tipo "Web
+# application", com o redirect URI
+# `<seu domínio>/api/auth/callback/google`. Sem essas duas variáveis,
+# login por e-mail/senha e sessão anônima continuam funcionando — só o
+# botão do Google fica indisponível (Better Auth já degrada sozinho,
+# só loga um aviso).
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=

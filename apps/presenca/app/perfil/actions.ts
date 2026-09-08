@@ -1,11 +1,12 @@
 "use server";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { getAuth } from "@/lib/auth";
 
 export async function sair() {
-  const supabase = await createClient();
-  await supabase.auth.signOut();
+  const auth = await getAuth();
+  await auth.api.signOut({ headers: await headers() });
   redirect("/");
 }

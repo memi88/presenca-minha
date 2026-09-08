@@ -14,6 +14,21 @@
     "binding": "AI",
     "remote": true
   },
+  // Migrations reais moram em packages/db/migrations (geradas por
+  // `drizzle-kit generate` a partir de packages/db/src/schema.ts) —
+  // migrations_dir só aponta pra lá, nunca duplicar o SQL aqui. Em
+  // produção é o mesmo D1 do apps/cuida (mesmo database_id); em dev
+  // local, cada app emula o próprio D1 num arquivo separado (por isso
+  // "wrangler d1 migrations apply presenca-db --local" precisa rodar uma
+  // vez dentro de cada app, não só uma vez no monorepo).
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "presenca-db",
+      "database_id": "542a3db7-5eb6-47a8-8050-c8bd04a13e2e",
+      "migrations_dir": "../../packages/db/migrations"
+    }
+  ],
   "observability": {
     "enabled": true
   }

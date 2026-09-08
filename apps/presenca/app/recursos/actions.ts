@@ -2,25 +2,24 @@
 
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { eq } from "drizzle-orm";
+import { alertasRisco, profiles } from "@presenca/db/schema";
+
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 
 export async function avisarProfissional() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("profissional_id")
-    .eq("id", user.id)
-    .maybeSingle();
-  if (!profile?.profissional_id) redirect("/recursos");
+  const db = await getDb();
+  const profile = await db.query.profiles.findFirst({
+    where: eq(profiles.userId, sessao.user.id),
+    columns: { id: true, profissionalId: true },
+  });
+  if (!profile?.profissionalId) redirect("/recursos");
 
-  await supabase
-    .from("alertas_risco")
-    .insert({ paciente_id: user.id, profissional_id: profile.profissional_id });
+  await db.insert(alertasRisco).values({ pacienteId: profile.id, profissionalId: profile.profissionalId });
 
   redirect("/recursos");
 }

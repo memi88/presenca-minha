@@ -2,8 +2,11 @@
 
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { eq } from "drizzle-orm";
+import { profissionais } from "@presenca/db/schema";
 
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 import { TIPOS_PROFISSIONAL } from "@/lib/tiposProfissional";
 
 export type CompletarPerfilState = { erro?: string };
@@ -22,21 +25,18 @@ export async function completarPerfil(_prev: CompletarPerfilState, formData: For
     return { erro: "Descreve rapidamente sua abordagem." };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  const { error } = await supabase
-    .from("profissionais")
-    .update({
+  const db = await getDb();
+  await db
+    .update(profissionais)
+    .set({
       tipo,
-      forma_de_trabalho: tipo === "Outra" ? formaDeTrabalho : null,
-      usa_linguagens_simbolicas: usaLinguagensSimbolicas,
+      formaDeTrabalho: tipo === "Outra" ? formaDeTrabalho : null,
+      usaLinguagensSimbolicas,
     })
-    .eq("user_id", user.id);
-  if (error) return { erro: error.message };
+    .where(eq(profissionais.userId, sessao.user.id));
 
   redirect(next);
 }

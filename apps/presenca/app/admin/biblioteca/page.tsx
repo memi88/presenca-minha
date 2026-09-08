@@ -1,19 +1,13 @@
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { and, asc, count, desc, eq } from "drizzle-orm";
+import { admins, biblioteca } from "@presenca/db/schema";
+
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 
 import { aprovar, recusar, tirarDoAr } from "./actions";
 import styles from "./page.module.css";
-
-type ItemBiblioteca = {
-  id: string;
-  tipo: string;
-  titulo: string | null;
-  conteudo: string;
-  escopo: string;
-  autor: string | null;
-  profissionais: { nome: string } | null;
-};
 
 const ROTULO_TIPO: Record<string, string> = {
   pagina_livro_vivo: "página do Livro Vivo",
@@ -30,8 +24,8 @@ const POR_PAGINA = 10;
 type StatusFiltro = "pendente" | "publicado";
 type TipoFiltro = "todos" | "pagina_livro_vivo" | "pratica";
 
-function nomeAutor(item: ItemBiblioteca): string {
-  return item.profissionais?.nome ?? item.autor ?? "—";
+function nomeAutor(item: { profissionalAutor: { nome: string } | null; autor: string | null }): string {
+  return item.profissionalAutor?.nome ?? item.autor ?? "—";
 }
 
 function linkFiltro(params: { status: StatusFiltro; tipo: TipoFiltro; page: number }): string {
@@ -44,13 +38,11 @@ export default async function AdminBiblioteca({
 }: {
   searchParams: Promise<{ status?: string; tipo?: string; page?: string }>;
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  const sessao = await getSessao();
+  if (!sessao) redirect("/login");
 
-  const { data: admin } = await supabase.from("admins").select("user_id").eq("user_id", user.id).maybeSingle();
+  const db = await getDb();
+  const admin = await db.query.admins.findFirst({ where: eq(admins.userId, sessao.user.id) });
   if (!admin) redirect("/home");
 
   const params = await searchParams;
@@ -58,20 +50,26 @@ export default async function AdminBiblioteca({
   const tipo: TipoFiltro =
     params.tipo === "pagina_livro_vivo" || params.tipo === "pratica" ? params.tipo : "todos";
   const page = Math.max(1, Number(params.page) || 1);
-  const inicio = (page - 1) * POR_PAGINA;
-  const fim = inicio + POR_PAGINA - 1;
+  const offset = (page - 1) * POR_PAGINA;
 
-  let query = supabase
-    .from("biblioteca")
-    .select("id, tipo, titulo, conteudo, escopo, autor, profissionais:profissional_autor_id(nome)", {
-      count: "exact",
-    });
-  query = status === "pendente" ? query.eq("status_moderacao", "pendente") : query.eq("publicado", true);
-  if (tipo !== "todos") query = query.eq("tipo", tipo);
-  query = query.order("created_at", { ascending: status === "pendente" }).range(inicio, fim);
+  const condicao = and(
+    status === "pendente" ? eq(biblioteca.statusModeracao, "pendente") : eq(biblioteca.publicado, true),
+    tipo !== "todos" ? eq(biblioteca.tipo, tipo) : undefined,
+  );
 
-  const { data: itens, count } = await query.returns<ItemBiblioteca[]>();
-  const totalPaginas = Math.max(1, Math.ceil((count ?? 0) / POR_PAGINA));
+  const [itens, contagem] = await Promise.all([
+    db.query.biblioteca.findMany({
+      where: condicao,
+      orderBy: status === "pendente" ? asc(biblioteca.createdAt) : desc(biblioteca.createdAt),
+      limit: POR_PAGINA,
+      offset,
+      columns: { id: true, tipo: true, titulo: true, conteudo: true, escopo: true, autor: true },
+      with: { profissionalAutor: { columns: { nome: true } } },
+    }),
+    db.select({ total: count() }).from(biblioteca).where(condicao),
+  ]);
+  const total = contagem[0]?.total ?? 0;
+  const totalPaginas = Math.max(1, Math.ceil(total / POR_PAGINA));
 
   return (
     <main className={styles.scene}>
@@ -116,12 +114,12 @@ export default async function AdminBiblioteca({
       </div>
 
       <p className={styles.contagem}>
-        {count ?? 0} {count === 1 ? "item" : "itens"}
+        {total} {total === 1 ? "item" : "itens"}
       </p>
 
-      {!itens?.length && <p className={styles.vazio}>Nada por aqui com esse filtro.</p>}
+      {!itens.length && <p className={styles.vazio}>Nada por aqui com esse filtro.</p>}
 
-      {itens?.map((item) => (
+      {itens.map((item) => (
         <div key={item.id} className={styles.item}>
           <div className={styles.itemTopo}>
             <span className={styles.itemTitulo}>{item.titulo}</span>
@@ -140,20 +138,20 @@ export default async function AdminBiblioteca({
               <>
                 <form action={aprovar.bind(null, item.id)}>
                   <button className={styles.aprovar} type="submit">
-                    aprovar
+                    Aprovar
                   </button>
                 </form>
                 <form className={styles.recusarForm} action={recusar.bind(null, item.id)}>
-                  <input className={styles.motivoInput} type="text" name="motivo" placeholder="motivo (opcional)" />
+                  <input className={styles.motivoInput} type="text" name="motivo" placeholder="Motivo (opcional)" />
                   <button className={styles.recusar} type="submit">
-                    recusar
+                    Recusar
                   </button>
                 </form>
               </>
             ) : (
               <form action={tirarDoAr.bind(null, item.id)}>
                 <button className={styles.recusar} type="submit">
-                  tirar do ar
+                  Tirar do ar
                 </button>
               </form>
             )}
@@ -165,20 +163,20 @@ export default async function AdminBiblioteca({
         <div className={styles.paginacao}>
           {page > 1 ? (
             <a className={styles.paginaLink} href={linkFiltro({ status, tipo, page: page - 1 })}>
-              ← anterior
+              ← Anterior
             </a>
           ) : (
-            <span className={styles.paginaLinkDesabilitado}>← anterior</span>
+            <span className={styles.paginaLinkDesabilitado}>← Anterior</span>
           )}
           <span className={styles.paginaAtual}>
             {page} de {totalPaginas}
           </span>
           {page < totalPaginas ? (
             <a className={styles.paginaLink} href={linkFiltro({ status, tipo, page: page + 1 })}>
-              próxima →
+              Próxima →
             </a>
           ) : (
-            <span className={styles.paginaLinkDesabilitado}>próxima →</span>
+            <span className={styles.paginaLinkDesabilitado}>Próxima →</span>
           )}
         </div>
       )}

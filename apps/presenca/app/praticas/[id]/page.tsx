@@ -1,62 +1,60 @@
 import { notFound, redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { and, eq } from "drizzle-orm";
+import { biblioteca, cadernoEntradas, profiles } from "@presenca/db/schema";
+
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 
 import { ehPraticaInterativa, PainelPratica, type ItemPratica } from "../PainelPratica";
 
-export default async function LeituraPratica({ params }: { params: Promise<{ id: string }> }) {
+// `categoria` só serve pra preservar o filtro ativo da grade no link de
+// voltar (TelaDetalhe em PainelPratica.tsx) — nunca filtra a prática em
+// si, uma prática aberta direto sempre abre igual. Mesmo padrão de
+// confiança de app/praticas/page.tsx (sem validação contra
+// CATEGORIAS_PRATICA — um valor inválido só faria o link de volta cair
+// numa categoria vazia, sem quebrar nada).
+export default async function LeituraPratica({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ categoria?: string }>;
+}) {
   const { id } = await params;
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const { categoria } = await searchParams;
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("nome, intro_praticas_vista_em, profissional_id")
-    .eq("id", user.id)
-    .maybeSingle();
+  const db = await getDb();
+  const profile = await db.query.profiles.findFirst({
+    where: eq(profiles.userId, sessao.user.id),
+    columns: { id: true, nome: true, profissionalId: true },
+  });
   if (!profile?.nome) redirect("/chegada");
 
-  const primeiraEntrada = !profile.intro_praticas_vista_em;
-  if (primeiraEntrada) {
-    await supabase.from("profiles").update({ intro_praticas_vista_em: new Date().toISOString() }).eq("id", user.id);
-  }
-
-  const { data: praticas } = await supabase
-    .from("biblioteca")
-    .select(
-      "id, titulo, slug, conteudo, profissional_autor_id, profissionais:profissional_autor_id(nome, tipo, forma_de_trabalho)",
-    )
-    .eq("tipo", "pratica")
-    .eq("publicado", true)
-    .order("created_at", { ascending: false })
-    .returns<ItemPratica[]>();
-
-  const praticaAtiva = praticas?.find((p) => p.id === id);
+  const praticaAtiva = await db.query.biblioteca.findFirst({
+    where: and(eq(biblioteca.id, id), eq(biblioteca.tipo, "pratica"), eq(biblioteca.publicado, true)),
+    columns: { id: true, titulo: true, slug: true, conteudo: true, categoria: true, profissionalAutorId: true },
+    with: { profissionalAutor: { columns: { nome: true, tipo: true, formaDeTrabalho: true } } },
+  });
   if (!praticaAtiva) notFound();
 
   let jaGuardada = false;
   if (!ehPraticaInterativa(praticaAtiva)) {
-    const { data } = await supabase
-      .from("caderno_entradas")
-      .select("id")
-      .eq("paciente_id", user.id)
-      .eq("biblioteca_ref_id", praticaAtiva.id)
-      .maybeSingle();
-    jaGuardada = !!data;
+    const entrada = await db.query.cadernoEntradas.findFirst({
+      where: and(eq(cadernoEntradas.pacienteId, profile.id), eq(cadernoEntradas.bibliotecaRefId, praticaAtiva.id)),
+      columns: { id: true },
+    });
+    jaGuardada = !!entrada;
   }
 
   return (
     <PainelPratica
-      variante="detalhe"
-      nome={profile.nome}
-      praticas={praticas ?? []}
       praticaAtiva={praticaAtiva}
       jaGuardada={jaGuardada}
-      introExpandidaInicialmente={primeiraEntrada}
-      mostrarCtaConectar={!profile.profissional_id}
+      mostrarCtaConectar={!profile.profissionalId}
+      categoriaAtiva={categoria ?? null}
     />
   );
 }

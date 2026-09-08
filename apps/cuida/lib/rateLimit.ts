@@ -1,24 +1,42 @@
 import "server-only";
 
-import type { createClient } from "@presenca/supabase/server";
+import { sql } from "drizzle-orm";
+import type { Db } from "@presenca/db/db";
+import { embeddingRateLimit } from "@presenca/db/schema";
 
 /**
- * Rate limit por usuário pras chamadas de embedding (Server Actions) — ver
- * migration `rate_limit_embedding`. Complementa o limite por IP que já
- * existe em services/ia (por trás do mesmo Cloudflare/NAT, IP não distingue
- * usuários). Mesmo padrão do Presença (apps/presenca/lib/rateLimit.ts).
+ * Rate limit por usuário pras chamadas de embedding (Server Actions) —
+ * reimplementa a RPC `pode_calcular_embedding` do Supabase (ver
+ * apps/presenca/lib/rateLimit.ts — mesmo D1, mesma tabela, mesmo padrão)
+ * como um único `insert ... on conflict do update ... returning`.
  *
- * Se a própria checagem falhar (RPC indisponível, tabela ausente), libera —
- * mesmo espírito de `lib/embed.ts`: infra auxiliar não deveria travar a
- * escrita de quem está usando o app.
+ * Se a própria checagem falhar, libera — mesmo espírito de
+ * `lib/embed.ts`: infra auxiliar não deveria travar a escrita de quem
+ * está usando o app.
  */
 export async function podeCalcularEmbedding(
-  supabase: Awaited<ReturnType<typeof createClient>>,
+  db: Db,
+  userId: string,
+  limite = 20,
+  janelaSegundos = 600,
 ): Promise<boolean> {
-  const { data, error } = await supabase.rpc("pode_calcular_embedding");
-  if (error) {
-    console.error("podeCalcularEmbedding: falha ao checar rate limit", error);
+  try {
+    const agora = Date.now();
+    const limiteJanela = agora - janelaSegundos * 1000;
+    const [linha] = await db
+      .insert(embeddingRateLimit)
+      .values({ userId, janelaInicio: new Date(agora), contagem: 1 })
+      .onConflictDoUpdate({
+        target: embeddingRateLimit.userId,
+        set: {
+          janelaInicio: sql`case when ${embeddingRateLimit.janelaInicio} < ${limiteJanela} then ${agora} else ${embeddingRateLimit.janelaInicio} end`,
+          contagem: sql`case when ${embeddingRateLimit.janelaInicio} < ${limiteJanela} then 1 else ${embeddingRateLimit.contagem} + 1 end`,
+        },
+      })
+      .returning({ contagem: embeddingRateLimit.contagem });
+    return (linha?.contagem ?? 0) <= limite;
+  } catch (erro) {
+    console.error("podeCalcularEmbedding: falha ao checar rate limit", erro);
     return true;
   }
-  return data === true;
 }

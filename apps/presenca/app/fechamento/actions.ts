@@ -3,14 +3,19 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { eq } from "drizzle-orm";
+import { cadernoEntradas, profiles } from "@presenca/db/schema";
 
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 import { processarConexaoEntrada } from "@/lib/conexaoCaderno";
 
-// Nunca chama redirect() aqui dentro — esta action é invocada direto do
-// client (não via <form action>), mesmo padrão de guardarNoDiario/
-// TelaFechamento em app/conversa/actions.ts: quem navega pra /home depois
-// é o componente client, com window.location.href, após aguardar o await.
+// Nunca chama redirect() aqui dentro (exceto o guard de sessão abaixo) —
+// esta action é invocada direto do client (não via <form action>), mesmo
+// padrão de guardarNoDiario/TelaFechamento em app/conversa/actions.ts.
+// Quem fecha o modal depois é o componente client (FechamentoTrigger.tsx),
+// sem navegação — o fechamento agora é um modal sobre a Home, não uma
+// rota própria (ver comentário em FechamentoTrigger.tsx).
 
 /** Traceability pro P7 (memória do Presença, ainda não implementada) —
  * `tipo = "fechamento_dia"` é o que distingue este registro de uma entrada
@@ -21,7 +26,8 @@ import { processarConexaoEntrada } from "@/lib/conexaoCaderno";
  * real (ex: um array de respostas) quebra o módulo de forma silenciosa:
  * nenhum erro no build, só um 500 genérico ("Server Components render")
  * na hora de chamar a action, sem stack trace nem log — descoberto
- * testando de verdade. `FechamentoForm.tsx` define as opções localmente. */
+ * testando de verdade. `app/home/FechamentoTrigger.tsx` define as opções
+ * localmente. */
 export type RespostaRapida = "algo_encontrou_eco" | "percebi_de_outra_maneira" | "nada_em_especial";
 
 const ROTULO_RESPOSTA_RAPIDA: Record<RespostaRapida, string> = {
@@ -47,25 +53,28 @@ export async function salvarFechamento(respostaRapida: RespostaRapida | null, te
   const texto = textoLivre.trim();
   if (!respostaRapida && !texto) return;
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  const { data: entrada, error } = await supabase
-    .from("caderno_entradas")
-    .insert({
-      paciente_id: user.id,
-      autor_tipo: "usuario",
+  const db = await getDb();
+  const profile = await db.query.profiles.findFirst({
+    where: eq(profiles.userId, sessao.user.id),
+    columns: { id: true },
+  });
+  if (!profile) redirect("/chegada");
+
+  const [entrada] = await db
+    .insert(cadernoEntradas)
+    .values({
+      pacienteId: profile.id,
+      autorTipo: "usuario",
       tipo: "fechamento_dia",
       conteudo: texto || ROTULO_RESPOSTA_RAPIDA[respostaRapida as RespostaRapida],
-      fechamento_resposta_rapida: respostaRapida,
+      fechamentoRespostaRapida: respostaRapida,
     })
-    .select("id")
-    .single();
-  if (error) {
-    console.error("salvarFechamento: falha ao inserir entrada", error);
+    .returning({ id: cadernoEntradas.id });
+  if (!entrada) {
+    console.error("salvarFechamento: falha ao inserir entrada");
     return;
   }
 
@@ -80,6 +89,6 @@ export async function salvarFechamento(respostaRapida: RespostaRapida | null, te
   // nunca é reproduzido como "padrão da pessoa" na UI de conexão.
   if (texto) {
     const { ctx } = await getCloudflareContext({ async: true });
-    ctx.waitUntil(processarConexaoEntrada(supabase, entrada.id, texto));
+    ctx.waitUntil(processarConexaoEntrada(db, sessao.user.id, profile.id, entrada.id, texto));
   }
 }

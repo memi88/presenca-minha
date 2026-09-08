@@ -2,7 +2,11 @@
 
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { eq } from "drizzle-orm";
+import { pacientesPreCadastro, profissionais } from "@presenca/db/schema";
+
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 
 export type PreCadastroState = { erro?: string; link?: string; nome?: string };
 
@@ -16,34 +20,30 @@ export async function preCadastrarPaciente(
 
   if (!nome) return { erro: "Diz o nome do paciente." };
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  const { data: profissional } = await supabase
-    .from("profissionais")
-    .select("id")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const db = await getDb();
+  const profissional = await db.query.profissionais.findFirst({
+    where: eq(profissionais.userId, sessao.user.id),
+    columns: { id: true },
+  });
   if (!profissional) redirect("/");
 
-  const { data, error } = await supabase
-    .from("pacientes_pre_cadastro")
-    .insert({
-      profissional_id: profissional.id,
+  const [registro] = await db
+    .insert(pacientesPreCadastro)
+    .values({
+      profissionalId: profissional.id,
       nome,
       caracteristicas: caracteristicas || null,
       anotacoes: anotacoes || null,
     })
-    .select("token_convite")
-    .single();
+    .returning({ tokenConvite: pacientesPreCadastro.tokenConvite });
 
-  if (error || !data) {
-    return { erro: error?.message ?? "Não foi possível criar o pré-cadastro agora." };
+  if (!registro) {
+    return { erro: "Não foi possível criar o pré-cadastro agora." };
   }
 
   const base = process.env.NEXT_PUBLIC_PRESENCA_URL ?? "";
-  return { link: `${base}/convite/${data.token_convite}`, nome };
+  return { link: `${base}/convite/${registro.tokenConvite}`, nome };
 }

@@ -34,14 +34,25 @@ export type DailyPresent = {
 };
 
 /**
- * Chave de cache com a data civil em America/Sao_Paulo (mesmo fuso do
- * Presente) — não é um TTL numérico rolante: na virada do dia, uma chave
- * nova passa a ser usada, então nunca serve a lente de ontem depois da
- * meia-noite. A URL é só uma chave interna, nunca chamada de verdade.
+ * Data civil em America/Sao_Paulo (mesmo fuso do Presente), formato
+ * YYYY-MM-DD — chave do dia pra tudo que depende de "qual lente é a de
+ * hoje": o cache HTTP abaixo e a tabela `lente_reacoes`
+ * (app/lente-do-dia/actions.ts). Precisa ser a mesma função nos dois
+ * lugares — se a reação usasse outro cálculo de "hoje", um dia poderia
+ * ficar com reação gravada pro dia errado perto da virada da meia-noite.
+ */
+export function dataCivilHoje(): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" }).format(new Date());
+}
+
+/**
+ * Chave de cache com a data civil em America/Sao_Paulo — não é um TTL
+ * numérico rolante: na virada do dia, uma chave nova passa a ser usada,
+ * então nunca serve a lente de ontem depois da meia-noite. A URL é só uma
+ * chave interna, nunca chamada de verdade.
  */
 function chaveCacheLenteHoje(): Request {
-  const dataSaoPaulo = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" }).format(new Date());
-  return new Request(`https://cache.interno.presenca.app/lente-do-dia/${dataSaoPaulo}`);
+  return new Request(`https://cache.interno.presenca.app/lente-do-dia/${dataCivilHoje()}`);
 }
 
 /**
@@ -60,10 +71,17 @@ function chaveCacheLenteHoje(): Request {
  * Home não mostrar a lente por um momento.
  */
 async function buscarPayloadComCache(url: string): Promise<unknown | null> {
-  const cache = caches.default;
+  // `caches.default` só existe no runtime real dos Workers — em `pnpm dev`
+  // (Next.js puro, sem o adapter do OpenNext) `caches` nem está definida, e
+  // acessá-la direto lança ReferenceError antes mesmo do fetch acontecer
+  // (silenciado pelo catch de `buscarLenteGenerica`, então a Lente do dia
+  // simplesmente nunca aparecia em dev local, sem erro visível na tela).
+  // Fallback: busca sem cache — correto em dev (dado sempre fresco) e sem
+  // efeito em produção real (lá `caches` sempre existe).
+  const cache = typeof caches !== "undefined" ? caches.default : null;
   const chave = chaveCacheLenteHoje();
 
-  const emCache = await cache.match(chave);
+  const emCache = await cache?.match(chave);
   if (emCache) return emCache.json();
 
   const resposta = await fetch(url, { signal: AbortSignal.timeout(15_000) });
@@ -72,7 +90,7 @@ async function buscarPayloadComCache(url: string): Promise<unknown | null> {
     return null;
   }
   const bruto = await resposta.text();
-  await cache.put(
+  await cache?.put(
     chave,
     new Response(bruto, {
       headers: { "content-type": "application/json", "cache-control": "public, max-age=86400" },

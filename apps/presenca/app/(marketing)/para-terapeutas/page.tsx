@@ -65,7 +65,7 @@ export default function ParaTerapeutas() {
           <div className={precos.plano}>
             <div className={precos.planoNome}>Início</div>
             <div className={precos.planoValor}>R$ 89</div>
-            <div className={precos.planoSub}>por mês · até 5 pacientes</div>
+            <div className={precos.planoSub}>Por mês · até 5 pacientes</div>
             <ul className={precos.planoLista}>
               <li>Diário e biblioteca colaborativa</li>
             </ul>
@@ -73,7 +73,7 @@ export default function ParaTerapeutas() {
           <div className={precos.planoDestaque}>
             <div className={precos.planoNome}>Consultório</div>
             <div className={precos.planoValor}>R$ 219</div>
-            <div className={precos.planoSub}>por mês · 6 a 15 pacientes</div>
+            <div className={precos.planoSub}>Por mês · 6 a 15 pacientes</div>
             <ul className={precos.planoLista}>
               <li>Pré-cadastro com link pessoal</li>
             </ul>
@@ -81,7 +81,7 @@ export default function ParaTerapeutas() {
           <div className={precos.plano}>
             <div className={precos.planoNome}>Consultório+</div>
             <div className={precos.planoValor}>R$ 429</div>
-            <div className={precos.planoSub}>por mês · 16 a 30 pacientes</div>
+            <div className={precos.planoSub}>Por mês · 16 a 30 pacientes</div>
             <ul className={precos.planoLista}>
               <li>Prioridade em suporte</li>
             </ul>

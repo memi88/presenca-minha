@@ -1,29 +1,35 @@
 import type { Metadata, Viewport } from "next";
-import { Bitter, Fraunces, Spectral } from "next/font/google";
+import { Bitter, Fraunces } from "next/font/google";
 
-import { createClient } from "@presenca/supabase/server";
+import { eq } from "drizzle-orm";
+import { profiles } from "@presenca/db/schema";
 
 import { temAcessoLiberado } from "@/lib/acessoMobile";
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 
 import { AmbienteShell } from "./AmbienteShell";
 import "./globals.css";
 
-// Spectral fica carregado (ainda usado em CSS existente enquanto a
-// migração pro sistema novo avança tela por tela — docs/redesign). Fraunces
-// (display/headline/body) e Bitter (label/botão/navegação) são o par do
-// redesign (docs/redesign/presenca-handoff-claude-code.md §2).
-const spectral = Spectral({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-spectral",
-  display: "swap",
-});
-
+// Fraunces (display/headline/body) e Bitter (label/botão/navegação) são o
+// par do redesign (docs/redesign/presenca-handoff-claude-code.md §2) — todas
+// as telas logadas já migraram, nenhum CSS aqui referencia mais Spectral
+// (esse continua só em apps/cuida, sistema visual próprio e deliberadamente
+// diferente).
+//
+// weight: "variable" + axes: ["opsz"] — Fraunces é fonte variável com eixo
+// de tamanho óptico (9 a 144): sem isso, pesos fixos (300/400/500) vinham
+// com um corte pensado pra texto pequeno, com traço mais grosso — nos
+// headlines grandes do redesign (40-56px) isso lia como "quase negrito"
+// mesmo em peso 300. Os mockups do Stitch já pediam esse eixo explicitamente
+// (`Fraunces:ital,opsz,wght@0,9..144,300...`). Com opsz, o navegador ajusta
+// o traço automaticamente pro tamanho renderizado (font-optical-sizing:auto
+// é o padrão do CSS, não precisa configurar nada a mais).
 const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
+  weight: "variable",
   style: ["normal", "italic"],
+  axes: ["opsz"],
   variable: "--font-fraunces",
   display: "swap",
 });
@@ -54,23 +60,19 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const sessao = await getSessao();
 
   let acessoLiberado = true;
-  if (user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("acesso_liberado")
-      .eq("id", user.id)
-      .maybeSingle();
+  if (sessao) {
+    const profile = await (await getDb()).query.profiles.findFirst({
+      where: eq(profiles.userId, sessao.user.id),
+      columns: { acessoLiberado: true },
+    });
     acessoLiberado = temAcessoLiberado(profile);
   }
 
   return (
-    <html lang="pt-BR" className={`${spectral.variable} ${fraunces.variable} ${bitter.variable}`}>
+    <html lang="pt-BR" className={`${fraunces.variable} ${bitter.variable}`}>
       <body>
         <AmbienteShell acessoLiberado={acessoLiberado}>{children}</AmbienteShell>
       </body>

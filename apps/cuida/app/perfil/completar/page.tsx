@@ -1,6 +1,10 @@
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { eq } from "drizzle-orm";
+import { profissionais } from "@presenca/db/schema";
+
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 
 import { CompletarPerfilForm } from "./CompletarPerfilForm";
 import styles from "./page.module.css";
@@ -11,17 +15,13 @@ export default async function CompletarPerfil({
   searchParams: Promise<{ next?: string }>;
 }) {
   const { next } = await searchParams;
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  const { data: profissional } = await supabase
-    .from("profissionais")
-    .select("tipo, forma_de_trabalho, usa_linguagens_simbolicas")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const profissional = await (await getDb()).query.profissionais.findFirst({
+    where: eq(profissionais.userId, sessao.user.id),
+    columns: { tipo: true, formaDeTrabalho: true, usaLinguagensSimbolicas: true },
+  });
   if (!profissional) redirect("/");
 
   return (
@@ -36,8 +36,8 @@ export default async function CompletarPerfil({
           <CompletarPerfilForm
             next={next && next.startsWith("/") ? next : "/pacientes"}
             tipoAtual={profissional.tipo}
-            formaDeTrabalhoAtual={profissional.forma_de_trabalho}
-            usaLinguagensSimbolicasAtual={profissional.usa_linguagens_simbolicas}
+            formaDeTrabalhoAtual={profissional.formaDeTrabalho}
+            usaLinguagensSimbolicasAtual={profissional.usaLinguagensSimbolicas}
           />
         </div>
       </div>

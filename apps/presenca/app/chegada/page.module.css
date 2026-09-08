@@ -1,29 +1,11 @@
 .scene {
-  position: relative;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background-image: url("/images/claro.png");
-  background-size: cover;
-  background-position: center;
-}
-
-.scene::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(247, 240, 228, 0.55),
-    rgba(247, 240, 228, 0.82) 42%,
-    rgba(247, 240, 228, 0.95) 100%
-  );
-  pointer-events: none;
+  background: var(--bg);
 }
 
 .content {
-  position: relative;
-  z-index: 1;
   width: 100%;
   max-width: clamp(420px, 34vw, 640px);
   margin: auto;
@@ -39,8 +21,9 @@
 }
 
 .headline {
-  font: italic 300 clamp(32px, 2.6vw, 44px) / 1.28 var(--font-fraunces), Georgia, serif;
+  font: 300 clamp(34px, 3vw, 44px) / 1.2 var(--font-fraunces), Georgia, serif;
   color: var(--text);
+  text-align: center;
   margin-bottom: 8px;
 }
 
@@ -72,6 +55,22 @@
   margin-bottom: 10px;
 }
 
+/* Separa o apelido (obrigatório) do e-mail/senha (opcionais) — mesmo
+   agrupamento do mockup (docs/redesign/chegada_identidade_e_escolha). */
+.divisor {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 22px 0 18px;
+}
+
+.opcionalLabel {
+  font: 600 11px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 12px;
+}
+
 .escape {
   font: italic 300 12.5px/1.4 var(--font-fraunces), Georgia, serif;
   color: var(--text-faint);
@@ -95,6 +94,39 @@
 .cta:disabled {
   opacity: 0.6;
   cursor: default;
+}
+
+/* Card informativo (mockup: docs/redesign/chegada_identidade_e_escolha) —
+   diferente do .consentimento abaixo (checkbox real, gate de submit), este
+   é só contexto/tranquilização, sempre visível. */
+.transparenciaCard {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: rgba(198, 154, 74, 0.1);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin: 22px 0 18px;
+}
+
+.transparenciaIcone {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+  margin-top: 2px;
+}
+
+.transparenciaTitulo {
+  font: 600 13px/1 var(--font-bitter), sans-serif;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.transparenciaTexto {
+  font: 400 13px/1.55 var(--font-fraunces), Georgia, serif;
+  color: var(--text-muted);
 }
 
 .consentimento {

@@ -1,0 +1,126 @@
+/* Leitura dedicada da Lente do dia (docs/redesign/
+   lente_do_dia_leitura_ambiente_claro e .../contexto_ambiente_claro) —
+   ambiente claro sempre (não está em PREFIXOS_ESCUROS do AmbienteShell),
+   mesmo tratamento de "foco single-item" das outras seções: sem lista ao
+   lado, só um botão "‹" flutuante pra voltar. Compartilhado entre
+   page.tsx (leitura) e contexto/page.tsx (explicação da derivação). */
+.scene {
+  position: relative;
+  min-height: 100dvh;
+  background: var(--bg);
+}
+
+.voltarFlutuante {
+  position: fixed;
+  top: clamp(16px, 3vh, 28px);
+  left: clamp(16px, 3vw, 28px);
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(20, 16, 10, 0.18);
+  color: #2a2118;
+  text-decoration: none;
+}
+
+.conteudo {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: clamp(72px, 12vh, 100px) clamp(24px, 4vw, 40px) clamp(48px, 6vh, 72px);
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  font: 600 11px/1 var(--font-bitter), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+}
+
+.eyebrowIcone {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+
+.rotulo {
+  font: 600 11px/1 var(--font-bitter), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin: 32px 0 10px;
+}
+
+/* .bloco (usado em contexto/page.tsx) já carrega o espaçamento entre
+   blocos via `.bloco + .bloco` abaixo — sem isso, `:first-of-type`
+   reseta por elemento pai, então o rótulo de cada bloco (sempre o
+   primeiro <p> ali dentro) zeraria o próprio espaço, inclusive o do
+   segundo bloco. */
+.bloco > .rotulo {
+  margin-top: 0;
+}
+
+.bloco + .bloco {
+  margin-top: 24px;
+}
+
+.paragrafo {
+  font: 400 clamp(18px, 1.2vw, 20px) / 1.8 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+  margin-bottom: 18px;
+}
+
+/* Gostei/Não gostei (app/lente-do-dia/actions.ts) — form com botão em vez
+   de link, por isso o reset de aparência de botão dentro de `.pill`
+   abaixo. Clicar de novo na mesma reação desfaz (ver reagirLente). */
+.reacoes {
+  display: flex;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.reacoes form {
+  margin: 0;
+}
+
+/* Pílula compartilhada — mesmo tratamento visual em Gostei/Não gostei
+   (botão) e Conversar sobre isso/Entender de onde vem (link), pedido
+   explícito de fidelidade ao mockup (que usa CTA em pílula, não link
+   sublinhado solto). */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 9px 18px;
+  font: 500 13px/1 var(--font-bitter), sans-serif;
+  color: var(--text-muted);
+  background: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.reacaoPillAtiva {
+  color: var(--bg);
+  background: var(--text);
+  border-color: var(--text);
+}
+
+.rodapeAcoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.bloco:last-child .paragrafo:last-child {
+  margin-bottom: 0;
+}

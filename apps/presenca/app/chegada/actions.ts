@@ -1,28 +1,42 @@
 "use server";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { APIError } from "better-auth/api";
+import { eq } from "drizzle-orm";
+import { profiles } from "@presenca/db/schema";
 
+import { getAuth } from "@/lib/auth";
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 import { type SalvarNascimentoState, lerDadosNascimentoDoForm, salvarESagendarNascimento } from "@/lib/nascimento";
 
 export type CadastroState = { erro?: string };
 
 // Etapa 1 do cadastro — apelido, com e-mail/senha opcionais na mesma tela.
-// A sessão anônima (signInAnonymously) acontece aqui, silenciosamente, na
-// primeira vez que alguém chega sem sessão nenhuma — igual sempre foi,
-// só que agora unificada com o passo do apelido em vez de acontecer antes,
-// no clique de /bem-vindo. Se e-mail/senha vierem preenchidos, viram conta
-// permanente por cima dessa mesma sessão via updateUser (mesma função que
-// /conta usa pra converter depois) — nunca signUp() direto, porque isso
-// deixaria a pessoa sem sessão nenhuma até confirmar o e-mail (ver
-// docs/presenca-prd.md seção 5: login anônimo existe exatamente pra nunca
-// ter esse intervalo sem sessão).
+// A sessão anônima acontece aqui, silenciosamente, na primeira vez que
+// alguém chega sem sessão nenhuma — igual sempre foi, só que agora
+// unificada com o passo do apelido em vez de acontecer antes, no clique
+// de /bem-vindo.
+//
+// Quando e-mail/senha vêm preenchidos junto (mesma visita, sem sessão
+// nenhuma ainda), pula o passo anônimo e cria a conta real direto — não
+// tem por que fabricar uma sessão anônima só pra promovê-la no mesmo
+// request (frágil: `auth.api.signUpEmail` decide "é uma promoção?" lendo
+// a sessão do cookie QUE CHEGOU nesta requisição, e o cookie que a
+// própria action acabou de escrever nesta mesma execução não é
+// reobservável assim). Quando a sessão anônima já existe de uma visita
+// anterior e a pessoa preenche e-mail/senha só agora (ex.: reabriu
+// /chegada, ou converteu em /conta), aí sim é uma promoção de verdade —
+// o cookie anônimo já chegou legitimamente nesta requisição, e
+// `onLinkAccount` (packages/db/src/auth.ts) repassa profiles/profissionais
+// pro id novo antes do Better Auth apagar o usuário anônimo. Testado ao
+// vivo nos dois casos na Fase 4.
 export async function cadastrar(_prev: CadastroState, formData: FormData): Promise<CadastroState> {
   const nome = String(formData.get("nome") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
   const senha = String(formData.get("senha") ?? "");
-  const captchaToken = String(formData.get("captchaToken") ?? "").trim() || undefined;
 
   if (!nome) return { erro: "Diz pra gente como te chamar." };
   if ((email && !senha) || (!email && senha)) {
@@ -32,30 +46,34 @@ export async function cadastrar(_prev: CadastroState, formData: FormData): Promi
     return { erro: "A senha precisa ter pelo menos 8 caracteres." };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user: existente },
-  } = await supabase.auth.getUser();
+  const auth = await getAuth();
+  const sessaoAtual = await getSessao();
 
-  let user = existente;
-  if (!user) {
-    const { data, error } = await supabase.auth.signInAnonymously(
-      captchaToken ? { options: { captchaToken } } : undefined,
-    );
-    if (error || !data.user) {
-      return { erro: error?.message ?? "Não foi possível abrir seu espaço agora. Tenta de novo?" };
+  let userId: string;
+  try {
+    if (email && senha) {
+      const resultado = await auth.api.signUpEmail({
+        body: { email, password: senha, name: nome },
+        headers: await headers(),
+      });
+      userId = resultado.user.id;
+    } else if (sessaoAtual) {
+      userId = sessaoAtual.user.id;
+    } else {
+      const resultado = await auth.api.signInAnonymous({ headers: await headers() });
+      userId = resultado.user.id;
     }
-    user = data.user;
+  } catch (erro) {
+    const mensagem = erro instanceof APIError ? erro.message : "Não foi possível abrir seu espaço agora. Tenta de novo?";
+    return { erro: mensagem };
   }
 
-  // Sem trigger de auto-criação (decisão da Fase 0): esta é a primeira
-  // escrita em `profiles`, por isso upsert em vez de update.
-  const { error: erroPerfil } = await supabase.from("profiles").upsert({ id: user.id, nome });
-  if (erroPerfil) throw erroPerfil;
-
-  if (email && senha) {
-    const { error: erroConta } = await supabase.auth.updateUser({ email, password: senha });
-    if (erroConta) return { erro: erroConta.message };
+  const db = await getDb();
+  const existente = await db.query.profiles.findFirst({ where: eq(profiles.userId, userId) });
+  if (existente) {
+    await db.update(profiles).set({ nome }).where(eq(profiles.userId, userId));
+  } else {
+    await db.insert(profiles).values({ userId, nome });
   }
 
   // Redireciona pra /chegada (não direto pra /home): com o nome já salvo,
@@ -72,13 +90,11 @@ export async function salvarNascimentoCadastro(
   const lido = lerDadosNascimentoDoForm(formData);
   if ("erro" in lido) return lido;
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  const resultado = await salvarESagendarNascimento(supabase, user.id, lido.dados);
+  const db = await getDb();
+  const resultado = await salvarESagendarNascimento(db, sessao.user.id, lido.dados);
   if (resultado.erro) return resultado;
 
   redirect("/home");
@@ -91,16 +107,14 @@ export async function salvarNascimentoCadastro(
 // nesse momento específico. Não impede o convite de aparecer de novo depois
 // em /home — os dois sinais são independentes.
 export async function pularNascimentoCadastro() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  await supabase
-    .from("profiles")
-    .update({ nascimento_pulado_no_cadastro_em: new Date().toISOString() })
-    .eq("id", user.id);
+  const db = await getDb();
+  await db
+    .update(profiles)
+    .set({ nascimentoPuladoNoCadastroEm: new Date() })
+    .where(eq(profiles.userId, sessao.user.id));
 
   redirect("/home");
 }

@@ -50,7 +50,7 @@ export function FolegoInline({ titulo }: { titulo: string }) {
         <h2 className={styles.tituloLeitura}>{titulo}</h2>
         <p className={styles.descricaoInterativa}>Uma prática guiada, no seu ritmo.</p>
         <button className={styles.abrirPratica} type="button" onClick={() => setIniciada(true)}>
-          começar →
+          Começar →
         </button>
       </div>
     );
@@ -85,10 +85,10 @@ export function FolegoInline({ titulo }: { titulo: string }) {
 
         <div className={styles.rodape}>
           <button className={styles.pausar} type="button" onClick={() => setPausado((p) => !p)}>
-            {pausado ? "continuar" : "pausar"}
+            {pausado ? "Continuar" : "Pausar"}
           </button>
           <button className={styles.encerrar} type="button" onClick={() => setIniciada(false)}>
-            encerrar quando quiser — cada respiração já conta
+            Encerrar quando quiser — cada respiração já conta
           </button>
         </div>
       </div>

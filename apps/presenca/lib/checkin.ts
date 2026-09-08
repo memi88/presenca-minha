@@ -1,27 +1,13 @@
 const DOZE_HORAS_MS = 12 * 60 * 60 * 1000;
-const DOIS_DIAS_MS = 2 * 24 * 60 * 60 * 1000;
 
 /**
  * O humor do check-in ("como está sua presença hoje?") não fica fresco pra
- * sempre — depois de um tempo ele para de fazer sentido como sinal pra
- * ordenar o menu da Home (`lib/menuHome.ts`). 12h é um proxy simples pra
- * "outro momento do dia", sem entrar em fuso horário / dia de calendário.
- * Não decide mais se a pessoa cai no check-in — isso é `precisaVisitaCheckin`.
+ * sempre — depois de 12h para de fazer sentido como sinal pra reduzir a tela
+ * no estado "confuso" (`reduzido` em app/home/page.tsx). O gatilho em si
+ * (MoodTrigger) fica sempre disponível — este check só afeta esse sinal
+ * secundário, não se o modal aparece.
  */
 export function precisaCheckin(presencaHojeEm: string | null): boolean {
   if (!presencaHojeEm) return true;
   return Date.now() - new Date(presencaHojeEm).getTime() > DOZE_HORAS_MS;
-}
-
-/**
- * Decide se a Home mostra o check-in no lugar do headline normal (absorvido
- * do antigo /hoje pro próprio bloco de saudação) — baseado em quanto tempo
- * faz desde a última *visita* (não desde a última resposta de humor). Quem
- * visita todo dia nunca cai aqui, mesmo que o humor de ontem já tenha
- * "esfriado" — nesse caso a Home usa "continue de onde você parou" em vez
- * de perguntar de novo.
- */
-export function precisaVisitaCheckin(ultimaVisitaEm: string | null): boolean {
-  if (!ultimaVisitaEm) return true;
-  return Date.now() - new Date(ultimaVisitaEm).getTime() >= DOIS_DIAS_MS;
 }

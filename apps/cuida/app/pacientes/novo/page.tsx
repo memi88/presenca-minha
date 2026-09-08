@@ -1,22 +1,22 @@
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { eq } from "drizzle-orm";
+import { profissionais } from "@presenca/db/schema";
+
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 
 import { PreCadastroForm } from "./PreCadastroForm";
 import styles from "./page.module.css";
 
 export default async function NovoPaciente() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  const { data: profissional } = await supabase
-    .from("profissionais")
-    .select("id, tipo")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const profissional = await (await getDb()).query.profissionais.findFirst({
+    where: eq(profissionais.userId, sessao.user.id),
+    columns: { id: true, tipo: true },
+  });
   if (!profissional) redirect("/");
 
   // Gate proposital (docs/presenca-extensao-terapeutas-biblioteca copy.md

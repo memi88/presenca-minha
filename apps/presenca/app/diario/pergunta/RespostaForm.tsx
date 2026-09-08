@@ -26,12 +26,12 @@ export function RespostaForm() {
       <textarea
         className={styles.textarea}
         name="conteudo"
-        placeholder="responda com calma, sem pressa..."
+        placeholder="Responda com calma, sem pressa..."
         rows={6}
         required
       />
       <button className={styles.cta} type="submit" disabled={pending}>
-        responder no diário
+        Responder no diário
       </button>
     </form>
   );

@@ -9,6 +9,15 @@ body {
   height: 100%;
 }
 
+/* Fallback pro overscroll/rubber-band do iOS (mostra o que tem atrás de
+   tudo, além de qualquer wrapper) — sempre claro aqui porque `--ambiente`
+   só existe dentro do AmbienteShell (ver AmbienteShell.module.css), não
+   em body; páginas de dentro do app escuras (Livro Vivo/Diário) já
+   pintam o próprio wrapper por cima disso. */
+body {
+  background: var(--bg);
+}
+
 /* Tokens de tema — ambiente claro (default) e escuro (PRD seção 6). Claro =
    hex já repetidos em várias telas antes da Fase 5 (nenhuma cor nova, só
    nomeada); escuro = hex reais do mockup (docs/Presenca Jornada em

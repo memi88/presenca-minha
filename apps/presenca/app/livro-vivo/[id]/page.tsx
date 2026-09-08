@@ -1,58 +1,55 @@
 import { notFound, redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { and, eq } from "drizzle-orm";
+import { biblioteca, cadernoEntradas, profiles } from "@presenca/db/schema";
 
-import { PainelLeitura, type ItemPagina } from "../PainelLeitura";
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
+import { momentoValido } from "@/lib/momentosVida";
 
-export default async function LeituraLivroVivo({ params }: { params: Promise<{ id: string }> }) {
+import { PainelLeitura } from "../PainelLeitura";
+
+// `momento` só serve pra preservar o filtro ativo do acervo no link de
+// voltar (TelaDetalhe em PainelLeitura.tsx) — nunca é usado pra filtrar a
+// leitura em si, uma página aberta direto sempre abre igual.
+export default async function LeituraLivroVivo({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ momento?: string }>;
+}) {
   const { id } = await params;
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const { momento } = await searchParams;
+  const momentoAtivo = momentoValido(momento);
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("nome, intro_livro_vivo_vista_em, profissional_id")
-    .eq("id", user.id)
-    .maybeSingle();
+  const db = await getDb();
+  const profile = await db.query.profiles.findFirst({
+    where: eq(profiles.userId, sessao.user.id),
+    columns: { id: true, nome: true, profissionalId: true },
+  });
   if (!profile?.nome) redirect("/chegada");
 
-  const primeiraEntrada = !profile.intro_livro_vivo_vista_em;
-  if (primeiraEntrada) {
-    await supabase
-      .from("profiles")
-      .update({ intro_livro_vivo_vista_em: new Date().toISOString() })
-      .eq("id", user.id);
-  }
-
-  const { data: paginas } = await supabase
-    .from("biblioteca")
-    .select("id, titulo, conteudo, profissional_autor_id, profissionais:profissional_autor_id(nome, tipo, forma_de_trabalho)")
-    .eq("tipo", "pagina_livro_vivo")
-    .order("created_at", { ascending: false })
-    .returns<ItemPagina[]>();
-
-  const paginaAtiva = paginas?.find((p) => p.id === id);
+  const paginaAtiva = await db.query.biblioteca.findFirst({
+    where: and(eq(biblioteca.id, id), eq(biblioteca.tipo, "pagina_livro_vivo")),
+    columns: { id: true, titulo: true, conteudo: true, profissionalAutorId: true },
+    with: { profissionalAutor: { columns: { nome: true, tipo: true, formaDeTrabalho: true } } },
+  });
   if (!paginaAtiva) notFound();
 
-  const { data: jaGuardada } = await supabase
-    .from("caderno_entradas")
-    .select("id")
-    .eq("paciente_id", user.id)
-    .eq("biblioteca_ref_id", paginaAtiva.id)
-    .maybeSingle();
+  const jaGuardada = await db.query.cadernoEntradas.findFirst({
+    where: and(eq(cadernoEntradas.pacienteId, profile.id), eq(cadernoEntradas.bibliotecaRefId, paginaAtiva.id)),
+    columns: { id: true },
+  });
 
   return (
     <PainelLeitura
-      variante="detalhe"
-      nome={profile.nome}
-      paginas={paginas ?? []}
       paginaAtiva={paginaAtiva}
       jaGuardada={!!jaGuardada}
-      introExpandidaInicialmente={primeiraEntrada}
-      mostrarCtaConectar={!profile.profissional_id}
+      mostrarCtaConectar={!profile.profissionalId}
+      momentoAtivo={momentoAtivo}
     />
   );
 }

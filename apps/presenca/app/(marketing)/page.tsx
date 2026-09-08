@@ -1,7 +1,11 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { eq } from "drizzle-orm";
+import { profiles } from "@presenca/db/schema";
+
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 
 import { CirculoRespirando } from "../CirculoRespirando";
 import styles from "./page.module.css";
@@ -12,17 +16,13 @@ const MENSAGEM_WHATSAPP = encodeURIComponent(
 );
 
 export default async function MarketingHome() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const sessao = await getSessao();
 
-  if (user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("nome")
-      .eq("id", user.id)
-      .maybeSingle();
+  if (sessao) {
+    const profile = await (await getDb()).query.profiles.findFirst({
+      where: eq(profiles.userId, sessao.user.id),
+      columns: { nome: true },
+    });
 
     redirect(profile?.nome ? "/home" : "/chegada");
   }
@@ -142,7 +142,7 @@ export default async function MarketingHome() {
                 <span className={styles.paraQuemPrecoValor}>R$ 89</span>
                 <span className={styles.paraQuemPrecoUnidade}>/mês</span>
               </div>
-              <p className={styles.paraQuemPrecoSub}>até 5 pacientes ativos</p>
+              <p className={styles.paraQuemPrecoSub}>Até 5 pacientes ativos</p>
               <ul className={styles.paraQuemBeneficios}>
                 <li>Cobrança só por paciente ativo</li>
                 <li>Diário e biblioteca colaborativa</li>

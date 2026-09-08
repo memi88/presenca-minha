@@ -27,18 +27,18 @@ export function AutoriaBiblioteca({ profissionalId, nome, tipo, formaDeTrabalho,
   return (
     <div className={styles.wrap}>
       <button className={styles.gatilho} type="button" onClick={() => setExpandido((v) => !v)}>
-        escrito por {nome}
+        Escrito por {nome}
       </button>
       {expandido && (
         <div className={styles.cartao}>
           <p className={styles.nome}>{nome}</p>
           <p className={styles.descricao}>{descricao}</p>
           <a className={styles.cta} href={`/autor/${profissionalId}`}>
-            ver perfil de {nome}
+            Ver perfil de {nome}
           </a>
           {mostrarCta && (
             <a className={styles.cta} href="/terapia">
-              conectar com {nome}
+              Conectar com {nome}
             </a>
           )}
         </div>

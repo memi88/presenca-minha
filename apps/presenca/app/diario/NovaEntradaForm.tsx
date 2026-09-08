@@ -20,18 +20,18 @@ export function NovaEntradaForm({ temProfissional }: { temProfissional: boolean 
       <textarea
         className={styles.textarea}
         name="conteudo"
-        placeholder="o que você quer guardar hoje…"
+        placeholder="O que você quer guardar hoje…"
         required
       />
       {temProfissional && (
         <label className={styles.compartilharLabel}>
           <input type="checkbox" name="compartilhar" />
-          também compartilhar com meu terapeuta
+          Também compartilhar com meu terapeuta
         </label>
       )}
       <div>
         <button className={styles.cta} type="submit" disabled={pending}>
-          guardar
+          Guardar
         </button>
       </div>
     </form>

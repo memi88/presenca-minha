@@ -16,7 +16,7 @@ export function ConectarForm() {
         className={styles.field}
         type="text"
         name="codigo"
-        placeholder="código do profissional"
+        placeholder="Código do profissional"
         autoComplete="off"
         required
       />
@@ -27,7 +27,7 @@ export function ConectarForm() {
         </span>
       </label>
       <button className={styles.cta} type="submit" disabled={pending || !aceitou}>
-        conectar
+        Conectar
       </button>
     </form>
   );

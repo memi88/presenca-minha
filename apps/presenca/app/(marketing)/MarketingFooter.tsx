@@ -3,7 +3,7 @@ import styles from "./MarketingFooter.module.css";
 export function MarketingFooter() {
   return (
     <footer className={styles.footer}>
-      <span className={styles.wordmark}>presença · uma obra em construção</span>
+      <span className={styles.wordmark}>Presença · uma obra em construção</span>
       <div className={styles.links}>
         <a className={styles.link} href="/para-voce">
           Para você

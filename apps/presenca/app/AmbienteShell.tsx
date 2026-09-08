@@ -16,7 +16,14 @@ import styles from "./AmbienteShell.module.css";
 // deste token).
 const PREFIXOS_ESCUROS = ["/livro-vivo", "/diario"];
 
+// /diario/pergunta é claro por decisão do mockup (docs/redesign/
+// pergunta_do_terapeuta) — tela focada e independente, herdava o escuro
+// só por começar com "/diario". Exceção explícita, não some do prefixo
+// pai porque o resto do Diário continua escuro.
+const EXCECOES_CLARAS = ["/diario/pergunta"];
+
 function ambienteDaRota(pathname: string): "claro" | "escuro" {
+  if (EXCECOES_CLARAS.some((p) => pathname === p || pathname.startsWith(`${p}/`))) return "claro";
   const escuro = PREFIXOS_ESCUROS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
   return escuro ? "escuro" : "claro";
 }
@@ -30,16 +37,6 @@ type Props = {
 export function AmbienteShell({ children, acessoLiberado }: Props) {
   const pathname = usePathname();
   const ambiente = ambienteDaRota(pathname);
-
-  // Registra o service worker mínimo (public/sw.js) — sem ele, o Chrome
-  // nunca dispara beforeinstallprompt (InstalarPWABanner.tsx fica sem
-  // botão, só a instrução manual de iOS). Roda uma vez só: este componente
-  // não desmonta entre navegações (só o pathname muda a key da div interna).
-  useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js").catch(() => {});
-    }
-  }, []);
 
   // O bloqueio (docs/presenca-extensao-app-mobile.md §2) só existe dentro
   // do app empacotado — o site continua aberto normalmente pra quem acessa

@@ -17,7 +17,7 @@ export function ConfirmarConviteForm({ token }: { token: string }) {
         className={styles.input}
         type="email"
         name="email"
-        placeholder="seu e-mail"
+        placeholder="Seu e-mail"
         autoComplete="email"
         required
       />
@@ -25,13 +25,13 @@ export function ConfirmarConviteForm({ token }: { token: string }) {
         className={styles.input}
         type="password"
         name="senha"
-        placeholder="crie uma senha (mín. 8 caracteres)"
+        placeholder="Crie uma senha (mín. 8 caracteres)"
         autoComplete="new-password"
         minLength={8}
         required
       />
       <button className={styles.cta} type="submit" disabled={pending || !aceitou}>
-        sim, sou eu — criar conta
+        Sim, sou eu — criar conta
       </button>
       <label className={styles.consentimento}>
         <input type="checkbox" checked={aceitou} onChange={(e) => setAceitou(e.target.checked)} />

@@ -1,41 +1,40 @@
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { eq } from "drizzle-orm";
+import { profiles, profissionais } from "@presenca/db/schema";
 
-import { IntroEspaco } from "../IntroEspaco";
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
+
 import { PageHeader } from "../PageHeader";
 import { ConversaExperiencia } from "./ConversaExperiencia";
 import styles from "./page.module.css";
 
 export default async function Conversa() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("nome, profissional_id, intro_conversa_vista_em")
-    .eq("id", user.id)
-    .maybeSingle();
+  const db = await getDb();
+  const profile = await db.query.profiles.findFirst({
+    where: eq(profiles.userId, sessao.user.id),
+    columns: { nome: true, profissionalId: true },
+  });
   if (!profile?.nome) redirect("/chegada");
 
-  const primeiraEntrada = !profile.intro_conversa_vista_em;
-
-  // Sinal pro "continue de onde você parou" da Home (lib/menuHome.ts).
-  await supabase.from("profiles").update({ ultimo_destino: "conversa" }).eq("id", user.id);
-  if (primeiraEntrada) {
-    await supabase.from("profiles").update({ intro_conversa_vista_em: new Date().toISOString() }).eq("id", user.id);
-  }
+  // Nome real pro botão "Enviar resumo para [nome]" da tela de fechamento
+  // (mockup fechamento_da_conversa_momento_de_pausa) — sem isso, o botão
+  // não tem como dizer pra quem está enviando.
+  const profissional = profile.profissionalId
+    ? await db.query.profissionais.findFirst({
+        where: eq(profissionais.id, profile.profissionalId),
+        columns: { nome: true },
+      })
+    : undefined;
 
   return (
     <main className={styles.scene}>
-      <PageHeader nome={profile.nome} atual="conversa" voltar={{ href: "/home", label: "← voltar" }} />
-      <div className={styles.introAlinhamento}>
-        <IntroEspaco espaco="conversa" expandidaInicialmente={primeiraEntrada} />
-      </div>
-      <ConversaExperiencia temProfissional={!!profile.profissional_id} />
+      <PageHeader titulo="Conversa" nome={profile.nome} atual="conversa" voltar={{ href: "/home" }} />
+      <ConversaExperiencia nomeProfissional={profissional?.nome ?? null} />
     </main>
   );
 }

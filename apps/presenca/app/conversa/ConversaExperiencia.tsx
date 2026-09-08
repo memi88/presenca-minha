@@ -18,7 +18,7 @@ type LinhaStream =
 
 const SEGUNDOS_ATE_REDIRECT = 5;
 
-export function ConversaExperiencia({ temProfissional }: { temProfissional: boolean }) {
+export function ConversaExperiencia({ nomeProfissional }: { nomeProfissional: string | null }) {
   const [mensagens, setMensagens] = useState<Mensagem[]>([]);
   const [texto, setTexto] = useState("");
   const [enviando, setEnviando] = useState(false);
@@ -108,7 +108,7 @@ export function ConversaExperiencia({ temProfissional }: { temProfissional: bool
   }
 
   if (tela === "fechamento") {
-    return <TelaFechamento onContinuar={() => setTela("chat")} temProfissional={temProfissional} />;
+    return <TelaFechamento onContinuar={() => setTela("chat")} nomeProfissional={nomeProfissional} />;
   }
 
   const aguardandoPrimeiroToken = enviando && mensagens.at(-1)?.content === "";
@@ -118,7 +118,7 @@ export function ConversaExperiencia({ temProfissional }: { temProfissional: bool
       <div className={styles.lista} ref={listaRef}>
         {mensagens.length > 0 && (
           <button className={styles.encerrarManual} type="button" onClick={() => setTela("fechamento")}>
-            encerrar por hoje
+            Encerrar por hoje
           </button>
         )}
 
@@ -144,7 +144,7 @@ export function ConversaExperiencia({ temProfissional }: { temProfissional: bool
         ))}
 
         {aguardandoPrimeiroToken && (
-          <div className={styles.digitando} aria-label="digitando">
+          <div className={styles.digitando} aria-label="Digitando">
             <span />
             <span />
             <span />
@@ -163,7 +163,7 @@ export function ConversaExperiencia({ temProfissional }: { temProfissional: bool
           className={styles.textarea}
           value={texto}
           onChange={(e) => setTexto(e.target.value)}
-          placeholder="o que você quer dizer…"
+          placeholder="O que você quer dizer…"
           disabled={enviando}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -172,8 +172,24 @@ export function ConversaExperiencia({ temProfissional }: { temProfissional: bool
             }
           }}
         />
-        <button className={styles.cta} type="submit" disabled={enviando || !texto.trim()}>
-          enviar
+        <button
+          className={styles.enviarBotao}
+          type="submit"
+          disabled={enviando || !texto.trim()}
+          aria-label="Enviar"
+        >
+          <svg
+            className={styles.enviarIcone}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
         </button>
       </form>
     </>
@@ -199,7 +215,7 @@ function CardTransicaoRisco() {
         direta.
       </p>
       <a className={styles.cta} href="/recursos">
-        ir para recursos →
+        Ir para recursos →
       </a>
     </div>
   );
@@ -211,26 +227,39 @@ function CardTransicaoRisco() {
  * memória (a conversa em si nunca é persistida, mas o estado do
  * componente continua vivo enquanto a pessoa não sair de /conversa).
  */
+// 3 ações reais (mockup fechamento_da_conversa_momento_de_pausa) — antes
+// era 1 botão "Encerrar por hoje" + checkbox "compartilhar", achado nesta
+// revisão. Debaixo do capô continua a mesma action (guardarNoDiario com
+// `compartilhar` true/false), já que "enviar resumo pro terapeuta" e
+// "guardar no diário" são o mesmo tipo de registro no schema (uma entrada
+// de `caderno_entradas`, só com `compartilhar` diferente) — não existe
+// resumo gerado automaticamente da conversa (P7, "memória do Presença",
+// ainda não implementada, ver actions.ts de app/fechamento), então as 2
+// ações continuam operando sobre a mesma palavra/reflexão digitada à mão,
+// não um resumo automático do que foi dito.
 function TelaFechamento({
   onContinuar,
-  temProfissional,
+  nomeProfissional,
 }: {
   onContinuar: () => void;
-  temProfissional: boolean;
+  nomeProfissional: string | null;
 }) {
   const [palavra, setPalavra] = useState("");
-  const [compartilhar, setCompartilhar] = useState(false);
   const [salvando, setSalvando] = useState(false);
 
-  async function encerrar() {
+  async function guardar(compartilhar: boolean) {
     if (salvando) return;
     setSalvando(true);
-    const texto = palavra.trim();
-    if (texto) {
-      await guardarNoDiario(texto, compartilhar);
-    }
+    await guardarNoDiario(palavra.trim(), compartilhar);
     window.location.href = "/home";
   }
+
+  function ignorar() {
+    if (salvando) return;
+    window.location.href = "/home";
+  }
+
+  const semTexto = !palavra.trim();
 
   return (
     <div className={styles.cardFechamento}>
@@ -242,25 +271,27 @@ function TelaFechamento({
         type="text"
         value={palavra}
         onChange={(e) => setPalavra(e.target.value)}
-        placeholder="uma palavra…"
+        placeholder="Uma palavra…"
         disabled={salvando}
       />
-      {temProfissional && (
-        <label className={styles.fechamentoCompartilhar}>
-          <input
-            type="checkbox"
-            checked={compartilhar}
-            onChange={(e) => setCompartilhar(e.target.checked)}
-            disabled={salvando}
-          />
-          compartilhar esse registro com meu terapeuta
-        </label>
+      <button className={styles.cta} type="button" onClick={() => guardar(false)} disabled={salvando || semTexto}>
+        Guardar no Diário
+      </button>
+      {nomeProfissional && (
+        <button
+          className={styles.ctaContornado}
+          type="button"
+          onClick={() => guardar(true)}
+          disabled={salvando || semTexto}
+        >
+          Enviar resumo para {nomeProfissional}
+        </button>
       )}
-      <button className={styles.ctaContornado} type="button" onClick={encerrar} disabled={salvando}>
-        encerrar por hoje
+      <button className={styles.fechamentoIgnorar} type="button" onClick={ignorar} disabled={salvando}>
+        Ignorar
       </button>
       <button className={styles.fechamentoVoltar} type="button" onClick={onContinuar} disabled={salvando}>
-        ainda quero continuar
+        Ainda quero continuar
       </button>
     </div>
   );

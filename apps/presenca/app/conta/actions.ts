@@ -1,8 +1,15 @@
 "use server";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { APIError } from "better-auth/api";
+import { eq } from "drizzle-orm";
+import { profiles } from "@presenca/db/schema";
+
+import { getAuth } from "@/lib/auth";
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 
 export type ConverterContaState = { erro?: string };
 
@@ -22,18 +29,29 @@ export async function converterConta(
     return { erro: "A senha precisa ter pelo menos 8 caracteres." };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  // Converte a sessão anônima em permanente preservando o mesmo auth.uid()
-  // — não é um cadastro novo, é a mesma pessoa ganhando uma credencial
-  // recuperável. Ver docs/presenca-prd.md seção 3.2 / checklist Fase 1.
-  const { error } = await supabase.auth.updateUser({ email, password: senha });
-  if (error) {
-    return { erro: error.message };
+  const db = await getDb();
+  const profile = await db.query.profiles.findFirst({
+    where: eq(profiles.userId, sessao.user.id),
+    columns: { nome: true },
+  });
+
+  const auth = await getAuth();
+  try {
+    // `signUpEmail` enquanto a sessão atual é anônima aciona o
+    // `onLinkAccount` (packages/db/src/auth.ts) — converte a sessão
+    // anônima em permanente repassando profiles/profissionais pro id
+    // novo, não é um cadastro do zero. Ver mesmo comentário em
+    // app/chegada/actions.ts.
+    await auth.api.signUpEmail({
+      body: { email, password: senha, name: profile?.nome ?? sessao.user.name },
+      headers: await headers(),
+    });
+  } catch (erro) {
+    const mensagem = erro instanceof APIError ? erro.message : "Não foi possível guardar seu espaço agora.";
+    return { erro: mensagem };
   }
 
   redirect(next);

@@ -6,11 +6,16 @@ import styles from "./layout.module.css";
 
 // Identidade visual só do site público (marketing) — Fraunces + Inter,
 // carregadas aqui dentro (escopo desse route group) pra não afetar em nada
-// a experiência logada do app, que usa Spectral (ver app/layout.tsx).
+// a experiência logada do app (ver app/layout.tsx, mesmo Fraunces mas com
+// Bitter no lugar de Inter).
+// weight: "variable" + axes: ["opsz"] — mesmo motivo do app/layout.tsx: sem
+// o eixo de tamanho óptico, Fraunces em peso leve nos headlines grandes do
+// site (40px+) vinha com traço mais grosso que o pretendido.
 const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
+  weight: "variable",
   style: ["normal", "italic"],
+  axes: ["opsz"],
   variable: "--font-fraunces",
   display: "swap",
 });

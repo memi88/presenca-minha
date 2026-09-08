@@ -60,7 +60,7 @@ export default function ParaVoce() {
           <div className={precos.plano}>
             <div className={precos.planoNome}>Mensal</div>
             <div className={precos.planoValor}>R$ 34</div>
-            <div className={precos.planoSub}>por mês</div>
+            <div className={precos.planoSub}>Por mês</div>
             <ul className={precos.planoLista}>
               <li>Acesso completo ao Presença</li>
               <li>Cancele quando quiser</li>

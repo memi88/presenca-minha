@@ -1,30 +1,26 @@
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { and, desc, eq, gte } from "drizzle-orm";
+import { biblioteca, cadernoEntradas, profiles, profissionais } from "@presenca/db/schema";
 
-import { precisaCheckin, precisaVisitaCheckin } from "@/lib/checkin";
-import {
-  HEADLINE_CONTINUAR,
-  HEADLINE_CONTINUAR_SEM_HISTORICO,
-  HEADLINE_MOOD,
-  HEADLINE_RETOMADA,
-  destinoIdDeUltimoDestino,
-  listaDestinos,
-  ordemComDestaque,
-  ordemPorMood,
-  ordenarPorMomento,
-  tagDoMomento,
-} from "@/lib/menuHome";
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
+import { precisaCheckin } from "@/lib/checkin";
+import { ordenarPorMomento, tagDoMomento } from "@/lib/menuHome";
 import { montarPresenceDailyContext } from "@/lib/presenceDailyContext";
 import { PLACEHOLDER_LIVRO_VIVO, PLACEHOLDER_PRATICA, PLACEHOLDER_TERAPEUTA } from "@/lib/placeholders";
 import { atualizarStreak } from "@/lib/streak";
 
 import { BottomNav } from "../BottomNav";
 import { CirculoRespirando } from "../CirculoRespirando";
+import { IconeLente } from "../IconeLente";
+import { IconeLivroVivo } from "../IconeLivroVivo";
+import { IconePraticas } from "../IconePraticas";
 import { MonogramaP } from "../MonogramaP";
 import { rotaDePratica } from "../praticas/PainelPratica";
-import { adiarConversao, adiarNascimento, registrarPresenca } from "./actions";
-import { InstalarPWABanner } from "./InstalarPWABanner";
+import { adiarNascimento, registrarPresenca } from "./actions";
+import { FechamentoTrigger } from "./FechamentoTrigger";
+import { MoodTrigger } from "./MoodTrigger";
 import styles from "./page.module.css";
 
 // Corta um texto longo (reflexão do terapeuta, conteúdo de prática) num
@@ -35,66 +31,79 @@ function trecho(texto: string, max: number): string {
   return `${corte.slice(0, corte.lastIndexOf(" "))}…`;
 }
 
-// Saudação por hora do dia — separada do menu de destinos (que varia por
-// sinal, ver lib/menuHome.ts). Esta aqui é só o "bom dia/boa tarde/boa
-// noite" de topo.
+// Saudação por hora do dia — só o "bom dia/boa tarde/boa noite" de topo.
 function saudacao(): string {
   const hora = new Date().getHours();
-  if (hora < 5) return "boa noite";
-  if (hora < 12) return "bom dia";
-  if (hora < 18) return "boa tarde";
-  return "boa noite";
+  if (hora < 5) return "Boa noite";
+  if (hora < 12) return "Bom dia";
+  if (hora < 18) return "Boa tarde";
+  return "Boa noite";
 }
 
-// Antes vivia em app/hoje/page.tsx — absorvido pelo bloco de saudação da
-// Home no redesign (docs/redesign/presenca-redesign-sistema-visual-status.md
-// §5). Mesmas 5 opções de sempre.
-const OPCOES_PRESENCA = [
-  { valor: "confuso", rotulo: "Confuso" },
-  { valor: "em_paz", rotulo: "Em paz" },
-  { valor: "cansado", rotulo: "Cansado" },
-  { valor: "curioso", rotulo: "Curioso" },
-  { valor: "nao_sei", rotulo: "Não sei responder" },
-] as const;
+// Data de hoje pro eyebrow da "Lente do dia" (docs/redesign/
+// home_presen_a_cones_svgs_inline_refinados) — dia real, nunca inventado.
+function dataDeHoje(): string {
+  return new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "long" }).format(new Date());
+}
+
+// Início do dia civil em America/Sao_Paulo, como instante ISO — Brasil não
+// usa horário de verão desde 2019, então o offset fixo "-03:00" já resolve
+// certo o instante (sem precisar de Intl pra achar o offset, só pra achar
+// a data). Mesma ideia de lib/present.ts:dataCivilHoje() (duplicado aqui
+// por ser um helper pequeno, mesmo padrão de trecho()/dataDeHoje() acima).
+// Usado pela regra do convite de fechamento (mostrarFechamento abaixo).
+function inicioDoDiaSaoPauloISO(): string {
+  const dataSaoPaulo = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" }).format(new Date());
+  return `${dataSaoPaulo}T00:00:00-03:00`;
+}
+
+// Hora atual em America/Sao_Paulo (0-23) — regra do convite de fechamento:
+// só aparece depois das 18h ou na segunda visita do dia, o que vier
+// primeiro (ver mostrarFechamento abaixo).
+function horaAtualSaoPaulo(): number {
+  return Number(
+    new Intl.DateTimeFormat("en-US", { timeZone: "America/Sao_Paulo", hour: "numeric", hourCycle: "h23" }).format(
+      new Date(),
+    ),
+  );
+}
 
 const DIAS_PARA_CONVITE_NASCIMENTO = 3;
 
-// O stub solto de database.types.ts não conhece a relação
-// caderno_entradas.biblioteca_ref_id → biblioteca — sem isso, o embed
-// `biblioteca:biblioteca_ref_id(...)` quebra o typecheck (mesmo problema
-// documentado em AutoriaBiblioteca/praticas/[id]/page.tsx).
 type UltimaEntradaHome = {
-  autor_tipo: string;
+  autorTipo: string;
   tipo: string;
   conteudo: string;
-  biblioteca_ref_id: string | null;
-  biblioteca: { id: string; titulo: string; tipo: string } | null;
+  bibliotecaRefId: string | null;
+  bibliotecaRef: { id: string; titulo: string | null; tipo: string } | null;
 };
 
 // "Do seu terapeuta" varia por tipo — o terapeuta escolhe isso na hora de
 // escrever (EntradaForm.tsx no Cuida): pergunta manda pra tela de
 // resposta focada; prática/página indicada apontam pro item de verdade
-// (biblioteca_ref_id, estruturado, não mais texto livre) quando a
+// (bibliotecaRefId, estruturado, não mais texto livre) quando a
 // referência existe e ainda está publicada; reflexão/símbolo (ou uma
 // indicação sem referência válida) são só a citação, sem CTA.
 function montarCardTerapeuta(
   entrada: UltimaEntradaHome,
 ): { texto: string; ctaLabel: string | null; ctaHref: string | null } {
-  const ref = entrada.biblioteca;
+  const ref = entrada.bibliotecaRef;
   if (entrada.tipo === "pergunta") {
     return { texto: entrada.conteudo, ctaLabel: "Responder →", ctaHref: "/diario/pergunta" };
   }
   if (entrada.tipo === "pratica_indicada" && ref) {
+    const titulo = ref.titulo ?? "essa prática";
     return {
-      texto: entrada.conteudo || `indicou a prática "${ref.titulo}"`,
-      ctaLabel: `Ver prática: ${ref.titulo} →`,
+      texto: entrada.conteudo || `indicou a prática "${titulo}"`,
+      ctaLabel: `Ver prática: ${titulo} →`,
       ctaHref: `/praticas/${ref.id}`,
     };
   }
   if (entrada.tipo === "pagina_indicada" && ref) {
+    const titulo = ref.titulo ?? "essa página";
     return {
-      texto: entrada.conteudo || `indicou a página "${ref.titulo}"`,
-      ctaLabel: `Ler no Livro Vivo: ${ref.titulo} →`,
+      texto: entrada.conteudo || `indicou a página "${titulo}"`,
+      ctaLabel: `Ler no Livro Vivo: ${titulo} →`,
       ctaHref: `/livro-vivo/${ref.id}`,
     };
   }
@@ -102,127 +111,126 @@ function montarCardTerapeuta(
 }
 
 export default async function Home() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  if (!user) redirect("/");
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select(
-      "nome, lembrete_conversao_em, presenca_hoje, presenca_hoje_em, ultima_visita_em, ultimo_destino, data_nascimento, streak_dias_consecutivos, streak_atualizado_em, lembrete_nascimento_em, profissional_id",
-    )
-    .eq("id", user.id)
-    .maybeSingle();
+  const db = await getDb();
+  const profile = await db.query.profiles.findFirst({
+    where: eq(profiles.userId, sessao.user.id),
+    columns: {
+      id: true,
+      nome: true,
+      presencaHoje: true,
+      presencaHojeEm: true,
+      ultimaVisitaEm: true,
+      dataNascimento: true,
+      streakDiasConsecutivos: true,
+      streakAtualizadoEm: true,
+      lembreteNascimentoEm: true,
+      profissionalId: true,
+    },
+  });
 
   if (!profile?.nome) redirect("/chegada");
-  // Gatilho do check-in: 2+ dias desde a última VISITA (não desde a última
-  // resposta de humor) — ver lib/checkin.ts. Antes redirecionava pra
-  // /hoje; agora o check-in acontece dentro do próprio bloco de saudação
-  // (ver JSX abaixo), sem sair da página.
-  const precisaCheckinAgora = precisaVisitaCheckin(profile.ultima_visita_em);
 
-  // O humor só continua guiando a ordem do menu enquanto estiver "fresco"
-  // (mesma janela de 12h de sempre) — depois disso a Home usa outro sinal
-  // (pergunta em aberto ou "continue de onde parou"), não repete a
-  // pergunta de novo fora de hora.
-  const moodFresco = !precisaCheckin(profile.presenca_hoje_em);
+  // O humor só continua "fresco" por 12h (lib/checkin.ts) — depois disso
+  // ainda aparece como o mood atual no gatilho da Home, só para de reduzir
+  // a tela (ver `reduzido` abaixo).
+  const moodFresco = !precisaCheckin(profile.presencaHojeEm ? profile.presencaHojeEm.toISOString() : null);
 
   // "Confuso" só reduz a tela (esconde Terapia) enquanto o humor está
   // fresco — não faz sentido esconder por causa de uma resposta de dias atrás.
-  const reduzido = moodFresco && profile.presenca_hoje === "confuso";
-
-  const mostrarConviteConversao =
-    user.is_anonymous === true &&
-    (!profile.lembrete_conversao_em || new Date(profile.lembrete_conversao_em) <= new Date());
+  const reduzido = moodFresco && profile.presencaHoje === "confuso";
 
   // Sinal interno pra decidir quando convidar a personalizar a experiência
   // (nascimento, PRD §5) — nunca exibido como contador (lib/streak.ts).
   const { streak, atualizadoEm: streakAtualizadoEm } = atualizarStreak(
-    profile.streak_dias_consecutivos ?? 0,
-    profile.streak_atualizado_em,
+    profile.streakDiasConsecutivos ?? 0,
+    profile.streakAtualizadoEm,
     new Date(),
   );
 
-  const [
-    { data: ultimaEntrada },
-    { data: entradasRevisitar },
-    { data: entradaPropria },
-    presenceDailyContext,
-    { data: praticas },
-    { data: paginasLivroVivo },
-    { data: profissionalConectado },
-  ] = await Promise.all([
-    supabase
-      .from("caderno_entradas")
-      .select("autor_tipo, tipo, conteudo, biblioteca_ref_id, biblioteca:biblioteca_ref_id(id, titulo, tipo)")
-      .eq("paciente_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .returns<UltimaEntradaHome[]>()
-      .maybeSingle(),
-    reduzido
-      ? Promise.resolve({ data: null })
-      : supabase
-          .from("caderno_entradas")
-          .select("id")
-          .eq("paciente_id", user.id)
-          .eq("revisitar", true)
-          .limit(1)
-          .maybeSingle(),
-    supabase
-      .from("caderno_entradas")
-      .select("id")
-      .eq("paciente_id", user.id)
-      .eq("autor_tipo", "usuario")
-      .limit(1)
-      .maybeSingle(),
-    montarPresenceDailyContext(profile.presenca_hoje),
-    // "Prática Sugerida" — mesmo sinal de curadoria do Livro Vivo (tag do
-    // humor de hoje), não uma prática indicada explicitamente por um
-    // profissional: o formulário do Cuida (EntradaForm.tsx) grava
-    // "prática indicada" como texto livre no caderno, sem apontar pra um
-    // item específico da biblioteca — não existe esse vínculo estruturado
-    // hoje. limit(20): só o primeiro item depois de ordenado é usado, não
-    // precisa do catálogo inteiro.
-    supabase
-      .from("biblioteca")
-      .select("id, titulo, slug, conteudo, tags_momento_vida")
-      .eq("tipo", "pratica")
-      .eq("publicado", true)
-      .order("created_at", { ascending: false })
-      .limit(20),
-    supabase
-      .from("biblioteca")
-      .select("id, titulo, conteudo, tags_momento_vida")
-      .eq("tipo", "pagina_livro_vivo")
-      .eq("publicado", true)
-      .order("created_at", { ascending: false })
-      .limit(6),
-    profile.profissional_id
-      ? supabase.from("profissionais").select("nome").eq("id", profile.profissional_id).maybeSingle()
-      : Promise.resolve({ data: null }),
-  ]);
-  const dailyPresent = presenceDailyContext.dailyPresent;
+  const inicioHojeSaoPaulo = new Date(inicioDoDiaSaoPauloISO());
 
-  const perguntaEmAberto = ultimaEntrada?.autor_tipo === "profissional" && ultimaEntrada?.tipo === "pergunta";
+  const [ultimaEntrada, entradasRevisitar, entradaPropria, fechamentoHoje, presenceDailyContext, praticas, paginasLivroVivo, profissionalConectado] =
+    await Promise.all([
+      db.query.cadernoEntradas.findFirst({
+        where: eq(cadernoEntradas.pacienteId, profile.id),
+        orderBy: desc(cadernoEntradas.createdAt),
+        columns: { autorTipo: true, tipo: true, conteudo: true, bibliotecaRefId: true },
+        with: { bibliotecaRef: { columns: { id: true, titulo: true, tipo: true } } },
+      }),
+      reduzido
+        ? Promise.resolve(undefined)
+        : db.query.cadernoEntradas.findFirst({
+            where: and(eq(cadernoEntradas.pacienteId, profile.id), eq(cadernoEntradas.revisitar, true)),
+            columns: { id: true },
+          }),
+      db.query.cadernoEntradas.findFirst({
+        where: and(eq(cadernoEntradas.pacienteId, profile.id), eq(cadernoEntradas.autorTipo, "usuario")),
+        columns: { id: true },
+      }),
+      // Regra do convite de fechamento (mostrarFechamento abaixo): já
+      // fechou hoje esconde o convite de vez, não só nesta visita.
+      db.query.cadernoEntradas.findFirst({
+        where: and(
+          eq(cadernoEntradas.pacienteId, profile.id),
+          eq(cadernoEntradas.tipo, "fechamento_dia"),
+          gte(cadernoEntradas.createdAt, inicioHojeSaoPaulo),
+        ),
+        columns: { id: true },
+      }),
+      montarPresenceDailyContext(profile.presencaHoje),
+      // "Prática Sugerida" — mesmo sinal de curadoria do Livro Vivo (tag do
+      // humor de hoje), não uma prática indicada explicitamente por um
+      // profissional: o formulário do Cuida (EntradaForm.tsx) grava
+      // "prática indicada" como texto livre no caderno, sem apontar pra um
+      // item específico da biblioteca — não existe esse vínculo estruturado
+      // hoje. limit(20): só o primeiro item depois de ordenado é usado, não
+      // precisa do catálogo inteiro.
+      db.query.biblioteca.findMany({
+        where: and(eq(biblioteca.tipo, "pratica"), eq(biblioteca.publicado, true)),
+        orderBy: desc(biblioteca.createdAt),
+        limit: 20,
+        columns: { id: true, titulo: true, slug: true, conteudo: true, tagsMomentoVida: true },
+      }),
+      db.query.biblioteca.findMany({
+        where: and(eq(biblioteca.tipo, "pagina_livro_vivo"), eq(biblioteca.publicado, true)),
+        orderBy: desc(biblioteca.createdAt),
+        limit: 6,
+        columns: { id: true, titulo: true, conteudo: true, tagsMomentoVida: true },
+      }),
+      profile.profissionalId
+        ? db.query.profissionais.findFirst({
+            where: eq(profissionais.id, profile.profissionalId),
+            columns: { nome: true },
+          })
+        : Promise.resolve(undefined),
+    ]);
+  const dailyPresent = presenceDailyContext.dailyPresent;
   const temRevisitar = !!entradasRevisitar;
 
+  // Convite de fechamento (pedido explícito, 04/09/2026): só aparece na
+  // segunda visita do dia em diante, ou depois das 18h (o que vier
+  // primeiro) — `profile.ultimaVisitaEm` ainda é a visita ANTERIOR
+  // aqui, porque o UPDATE que grava a visita atual só acontece mais
+  // embaixo. Uma vez fechado o dia, some de vez (não só nesta visita).
+  const segundaVisitaOuMais = !!profile.ultimaVisitaEm && profile.ultimaVisitaEm >= inicioHojeSaoPaulo;
+  const mostrarFechamento = !fechamentoHoje && (segundaVisitaOuMais || horaAtualSaoPaulo() >= 18);
+
   // Mostra a última entrada só enquanto ela for a coisa mais recente no
-  // caderno (autor_tipo profissional). Assim que a pessoa escreve algo, o
+  // caderno (autorTipo profissional). Assim que a pessoa escreve algo, o
   // card some sozinho — sem precisar de uma flag de "lida". Reduzido
   // (humor "confuso") também esconde, mesma lógica que já reduz o resto
   // da tela.
   const cardTerapeuta =
-    !reduzido && profissionalConectado?.nome && ultimaEntrada?.autor_tipo === "profissional"
+    !reduzido && profissionalConectado?.nome && ultimaEntrada?.autorTipo === "profissional"
       ? montarCardTerapeuta(ultimaEntrada)
       : null;
 
-  const tag = tagDoMomento(profile.presenca_hoje);
-  const praticaDestaque = ordenarPorMomento(praticas ?? [], tag)[0] ?? null;
-  const livroVivoDestaques = ordenarPorMomento(paginasLivroVivo ?? [], tag);
+  const tag = tagDoMomento(profile.presencaHoje);
+  const praticaDestaque = ordenarPorMomento(praticas, tag)[0] ?? null;
+  const livroVivoDestaques = ordenarPorMomento(paginasLivroVivo, tag);
 
   // Gatilho de nascimento: streak de 3 dias OU já escreveu ao menos uma
   // entrada própria no Diário, o que vier primeiro — sinal de que a pessoa
@@ -230,262 +238,179 @@ export default async function Home() {
   // natural, em vez de mais fricção logo no cadastro.
   const mostrarConviteNascimento =
     (streak >= DIAS_PARA_CONVITE_NASCIMENTO || !!entradaPropria) &&
-    !profile.data_nascimento &&
-    (!profile.lembrete_nascimento_em || new Date(profile.lembrete_nascimento_em) <= new Date());
+    !profile.dataNascimento &&
+    (!profile.lembreteNascimentoEm || profile.lembreteNascimentoEm <= new Date());
 
-  // As três categorias que decidem o menu — nunca rotulam a pessoa de
-  // volta, só escolhem qual convite mostrar (PRD §7).
-  let headline: string;
-  let ordemIds;
-  if (moodFresco) {
-    headline = HEADLINE_MOOD;
-    ordemIds = ordemPorMood(profile.presenca_hoje);
-  } else if (perguntaEmAberto) {
-    headline = HEADLINE_RETOMADA;
-    ordemIds = ordemComDestaque("escrever");
-  } else {
-    const destinoId = destinoIdDeUltimoDestino(profile.ultimo_destino);
-    headline = destinoId ? HEADLINE_CONTINUAR : HEADLINE_CONTINUAR_SEM_HISTORICO;
-    ordemIds = ordemComDestaque(destinoId);
-  }
-  const destaqueId = ordemIds[0];
-  const destinos = listaDestinos(ordemIds);
-
-  // Só registra a visita (e avança o streak) quando o check-in não está
-  // pendente — do contrário, a pessoa nem respondeu ainda e essa mesma
-  // atualização (via registrarPresenca) faria o prompt sumir sozinho no
-  // próximo refresh, pulando a pergunta. Enquanto pendente, quem marca
-  // ultima_visita_em é a própria resposta.
-  if (!precisaCheckinAgora) {
-    await supabase
-      .from("profiles")
-      .update({
-        ultima_visita_em: new Date().toISOString(),
-        streak_dias_consecutivos: streak,
-        streak_atualizado_em: streakAtualizadoEm,
-      })
-      .eq("id", user.id);
-  }
+  // Marca a visita (e avança o streak) a cada carregamento da Home — mesmo
+  // padrão incondicional das outras telas (ver `ultimo_destino` em
+  // conversa/livro-vivo/praticas/diario). Antes disso dependia do check-in
+  // já ter sido respondido; o check-in agora é um modal sempre disponível
+  // (MoodTrigger), não bloqueia mais o carregamento da página.
+  await db
+    .update(profiles)
+    .set({
+      ultimaVisitaEm: new Date(),
+      streakDiasConsecutivos: streak,
+      streakAtualizadoEm,
+    })
+    .where(eq(profiles.id, profile.id));
 
   return (
     <main className={styles.scene}>
-      <div className={styles.topBar}>
-        <div className={styles.topBarEsquerda}>
+      <div className={styles.atmosfera} aria-hidden="true" />
+      <div className={styles.topBarFundo}>
+        <div className={styles.topBar}>
           <a className={styles.monogramaLink} href="/home" aria-label="Página inicial">
             <MonogramaP className={styles.monograma} />
           </a>
-          <p className={styles.wordmarkDesktop}>
-            <CirculoRespirando className={styles.wordmarkDot} />
-            presença
-          </p>
+          <div className={styles.topBarDireita}>
+            <nav className={styles.navDesktop}>
+              <a className={styles.navItem} href="/conversa">
+                Conversa
+              </a>
+              <a className={styles.navItem} href="/livro-vivo">
+                Livro Vivo
+              </a>
+              <a className={styles.navItem} href="/diario">
+                Diário
+              </a>
+              <a className={styles.navItem} href="/praticas">
+                Práticas
+              </a>
+            </nav>
+            <a className={styles.menuAvatar} href="/perfil" aria-label="Perfil">
+              {profile.nome.charAt(0).toUpperCase()}
+            </a>
+          </div>
         </div>
-        <div className={styles.topBarDireita}>
-          <p className={styles.greeting}>
-            {saudacao()}, {profile.nome}
-          </p>
-          <nav className={styles.navDesktop}>
-            <a className={styles.navItem} href="/conversa">
-              Conversa
-            </a>
-            <a className={styles.navItem} href="/livro-vivo">
-              Livro Vivo
-            </a>
-            <a className={styles.navItem} href="/diario">
-              Diário
-            </a>
-            <a className={styles.navItem} href="/praticas">
-              Práticas
-            </a>
-          </nav>
-          <a className={styles.menuAvatar} href="/perfil" aria-label="Perfil">
-            {profile.nome.charAt(0).toUpperCase()}
-          </a>
-        </div>
+        <a className={styles.wordmarkCentro} href="/home">
+          <CirculoRespirando className={styles.wordmarkDot} />
+          Presença
+        </a>
       </div>
 
-      {!precisaCheckinAgora && mostrarConviteConversao && (
+      {mostrarConviteNascimento && (
         <div className={styles.convite}>
           <p>
-            Quer poder voltar de qualquer lugar? <a href="/conta">guardar meu espaço</a>
-          </p>
-          <form action={adiarConversao}>
-            <button type="submit" className={styles.conviteDispensar}>
-              agora não
-            </button>
-          </form>
-        </div>
-      )}
-
-      {!precisaCheckinAgora && !mostrarConviteConversao && mostrarConviteNascimento && (
-        <div className={styles.convite}>
-          <p>
-            Quer personalizar sua presença? <a href="/perfil/nascimento">contar sua chegada ao mundo</a>
+            Quer personalizar sua presença? <a href="/perfil/nascimento">Contar sua chegada ao mundo</a>
           </p>
           <form action={adiarNascimento}>
             <button type="submit" className={styles.conviteDispensar}>
-              agora não
+              Agora não
             </button>
           </form>
         </div>
       )}
 
-      {!precisaCheckinAgora && (
-        <InstalarPWABanner oculto={mostrarConviteConversao || mostrarConviteNascimento} />
-      )}
-
       <div className={styles.bottom}>
-        <p className={styles.greetingDesktop}>
-          {saudacao()}, {profile.nome}.
-        </p>
+        <div className={styles.saudacaoBloco}>
+          <p className={styles.saudacaoGrande}>
+            {saudacao()}, {profile.nome}.
+          </p>
+          <MoodTrigger moodAtual={profile.presencaHoje} registrarPresenca={registrarPresenca} />
+        </div>
 
-        {precisaCheckinAgora ? (
-          <section aria-label="Como está sua presença hoje">
-            <p className={styles.headline}>Como está sua presença hoje?</p>
-            <div className={styles.checkinOpcoes}>
-              {OPCOES_PRESENCA.map((opcao) => (
-                <form key={opcao.valor} action={registrarPresenca.bind(null, opcao.valor)}>
-                  <button className={styles.pilula} type="submit">
-                    {opcao.rotulo}
-                  </button>
-                </form>
+        {mostrarFechamento && <FechamentoTrigger />}
+
+        {dailyPresent && (
+          <a className={styles.lente} href="/lente-do-dia" aria-label="Lente do dia">
+            <div className={styles.eyebrow}>
+              <IconeLente className={styles.eyebrowIcone} />
+              <span>Lente do dia · {dataDeHoje()}</span>
+            </div>
+            <p className={styles.lenteTexto}>{trecho(dailyPresent.reflection, 140)}</p>
+            <div className={styles.lenteRodape}>
+              <span className={styles.lenteCta}>Ler</span>
+            </div>
+          </a>
+        )}
+
+        {cardTerapeuta?.texto && profissionalConectado && (
+          <section className={styles.terapeuta} aria-label="Do seu terapeuta">
+            <div
+              className={styles.terapeutaAvatar}
+              style={{ backgroundImage: `url(${PLACEHOLDER_TERAPEUTA})` }}
+              aria-hidden="true"
+            />
+            <div>
+              <p className={styles.lenteRotulo}>{profissionalConectado.nome}</p>
+              <p className={styles.terapeutaTexto}>“{trecho(cardTerapeuta.texto, 220)}”</p>
+              {cardTerapeuta.ctaLabel && cardTerapeuta.ctaHref && (
+                <a className={styles.terapeutaCta} href={cardTerapeuta.ctaHref}>
+                  {cardTerapeuta.ctaLabel}
+                </a>
+              )}
+            </div>
+          </section>
+        )}
+
+        {praticaDestaque && (
+          <section aria-label="Prática sugerida">
+            <div className={styles.eyebrow}>
+              <IconePraticas className={styles.eyebrowIcone} />
+              <span>Prática sugerida</span>
+            </div>
+            <a
+              className={styles.praticaSugerida}
+              href={rotaDePratica(praticaDestaque)}
+              style={{ backgroundImage: `url(${PLACEHOLDER_PRATICA})` }}
+              aria-label={`Prática sugerida: ${praticaDestaque.titulo}`}
+            >
+              <div className={styles.praticaSugeridaOverlay}>
+                <h3 className={styles.praticaSugeridaTitulo}>{praticaDestaque.titulo}</h3>
+                <p className={styles.praticaSugeridaTexto}>{trecho(praticaDestaque.conteudo, 110)}</p>
+                <span className={styles.praticaSugeridaCta}>
+                  Iniciar prática
+                  <svg
+                    className={styles.praticaSugeridaCtaIcone}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </div>
+            </a>
+          </section>
+        )}
+
+        {livroVivoDestaques.length > 0 && (
+          <section className={styles.livroVivo} aria-label="Livro Vivo">
+            <div className={styles.livroVivoTopo}>
+              <div className={styles.eyebrow}>
+                <IconeLivroVivo className={styles.eyebrowIcone} />
+                <span>Livro Vivo</span>
+              </div>
+              <a className={styles.livroVivoVerTudo} href="/livro-vivo">
+                Ver acervo
+              </a>
+            </div>
+            <div className={styles.livroVivoCarrossel}>
+              {livroVivoDestaques.map((pagina) => (
+                <a
+                  key={pagina.id}
+                  className={styles.livroVivoCard}
+                  href={`/livro-vivo/${pagina.id}`}
+                  style={{ backgroundImage: `url(${PLACEHOLDER_LIVRO_VIVO})` }}
+                >
+                  <p className={styles.livroVivoCardTitulo}>{pagina.titulo}</p>
+                </a>
               ))}
             </div>
           </section>
-        ) : (
-          <>
-            <p className={styles.headline}>{headline}</p>
+        )}
 
-            {dailyPresent && (
-              <section className={styles.lente} aria-label="Uma lente para hoje">
-                <p className={styles.lenteRotulo}>Uma lente para hoje</p>
-                <p className={styles.lenteTexto}>{dailyPresent.reflection}</p>
-                <p className={styles.lenteRotulo}>Uma pergunta</p>
-                <p className={styles.lenteTexto}>{dailyPresent.question}</p>
-                <div className={styles.lenteAcoes}>
-                  <a className={styles.lenteConversar} href="/conversa">
-                    Conversar sobre isso
-                  </a>
-                  <details className={styles.lenteDetalhes}>
-                    <summary>Entender de onde vem</summary>
-                    <p>
-                      <strong>{dailyPresent.derivationSummary.tomHoje}</strong> —{" "}
-                      {dailyPresent.derivationSummary.textoCuradoTom}
-                    </p>
-                    <p>
-                      <strong>{dailyPresent.derivationSummary.seloHoje}</strong> —{" "}
-                      {dailyPresent.derivationSummary.textoCuradoSelo}
-                    </p>
-                  </details>
-                </div>
-              </section>
-            )}
-
-            {cardTerapeuta?.texto && profissionalConectado && (
-              <section className={styles.terapeuta} aria-label="Do seu terapeuta">
-                <div
-                  className={styles.terapeutaAvatar}
-                  style={{ backgroundImage: `url(${PLACEHOLDER_TERAPEUTA})` }}
-                  aria-hidden="true"
-                />
-                <div>
-                  <p className={styles.lenteRotulo}>{profissionalConectado.nome}</p>
-                  <p className={styles.terapeutaTexto}>“{trecho(cardTerapeuta.texto, 220)}”</p>
-                  {cardTerapeuta.ctaLabel && cardTerapeuta.ctaHref && (
-                    <a className={styles.terapeutaCta} href={cardTerapeuta.ctaHref}>
-                      {cardTerapeuta.ctaLabel}
-                    </a>
-                  )}
-                </div>
-              </section>
-            )}
-
-            {/* Convite pro fechamento do dia (P6) — mesmo contexto visual da
-                lente, mas decoplado dela: aparece independente de dailyPresent
-                existir (docs/integracao-presente-presenca-decisoes.md). Nunca
-                um gate — só um convite discreto, sem obrigatoriedade. */}
-            <a className={styles.fechamentoConvite} href="/fechamento">
-              Como foi seu dia? →
+        {temRevisitar && (
+          <div className={styles.links}>
+            <a className={styles.linkSecundario} href="/diario">
+              Voltar a algo que você guardou →
             </a>
-
-            {praticaDestaque && (
-              <a
-                className={styles.praticaSugerida}
-                href={rotaDePratica(praticaDestaque)}
-                style={{ backgroundImage: `url(${PLACEHOLDER_PRATICA})` }}
-                aria-label={`Prática sugerida: ${praticaDestaque.titulo}`}
-              >
-                <div className={styles.praticaSugeridaOverlay}>
-                  <p className={styles.lenteRotuloClaro}>Prática sugerida</p>
-                  <h3 className={styles.praticaSugeridaTitulo}>{praticaDestaque.titulo}</h3>
-                  <p className={styles.praticaSugeridaTexto}>{trecho(praticaDestaque.conteudo, 110)}</p>
-                  <span className={styles.praticaSugeridaCta}>Iniciar prática</span>
-                </div>
-              </a>
-            )}
-
-            <div className={styles.pilulas}>
-              {destinos.map((destino) => {
-                const emDestaque = destino.id === destaqueId;
-                const classe = emDestaque ? styles.pilulaDestaque : styles.pilula;
-                if (!destino.rota) {
-                  // Fallback pra um destino futuro sem rota ainda — hoje os 4
-                  // destinos já têm rota real, nenhum cai aqui.
-                  return (
-                    <span key={destino.id} className={`${classe} ${styles.pilulaDesabilitada}`}>
-                      {destino.rotulo}
-                    </span>
-                  );
-                }
-                // "escrever algo" leva direto pra tela focada de resposta
-                // quando é por causa de uma pergunta em aberto (mesmo
-                // sinal que decide o headline acima) — em vez do Diário
-                // completo, que é o destino padrão dessa pílula.
-                const rota =
-                  destino.id === "escrever" && perguntaEmAberto ? "/diario/pergunta" : destino.rota;
-                return (
-                  <a key={destino.id} className={classe} href={rota}>
-                    {destino.rotulo}
-                  </a>
-                );
-              })}
-            </div>
-
-            {livroVivoDestaques.length > 0 && (
-              <section className={styles.livroVivo} aria-label="Livro Vivo">
-                <div className={styles.livroVivoTopo}>
-                  <p className={styles.lenteRotulo}>Livro Vivo</p>
-                  <a className={styles.livroVivoVerTudo} href="/livro-vivo">
-                    ver acervo
-                  </a>
-                </div>
-                <div className={styles.livroVivoCarrossel}>
-                  {livroVivoDestaques.map((pagina) => (
-                    <a
-                      key={pagina.id}
-                      className={styles.livroVivoCard}
-                      href={`/livro-vivo/${pagina.id}`}
-                      style={{ backgroundImage: `url(${PLACEHOLDER_LIVRO_VIVO})` }}
-                    >
-                      <p className={styles.livroVivoCardTitulo}>{pagina.titulo}</p>
-                    </a>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            <div className={styles.links}>
-              {temRevisitar && (
-                <a className={styles.linkSecundario} href="/diario">
-                  voltar a algo que você guardou →
-                </a>
-              )}
-              {/* Incondicional — Recursos é a única coisa que a Fase 8/PRD §7
-                  exige que nunca suma, nem no estado "confuso". */}
-              <a className={styles.linkSecundario} href="/recursos">
-                recursos de cuidado →
-              </a>
-            </div>
-          </>
+          </div>
         )}
       </div>
 

@@ -367,3 +367,57 @@ export const TOOL_SINALIZAR_ENCERRAMENTO: Anthropic.Tool = {
     properties: {},
   },
 };
+
+/**
+ * P5 Fase A (integracao-presente-presenca-decisoes.md) — primeira tool do
+ * projeto com efeito real de ida-e-volta: diferente de
+ * TOOL_SINALIZAR_RISCO/TOOL_SINALIZAR_ENCERRAMENTO (sinal puro, sem
+ * parâmetro, servidor nunca completa o ciclo tool_result), esta é
+ * executada de verdade (busca vetorial em `buscar_pratica_relevante`) e
+ * o resultado volta pro modelo numa segunda chamada — ver
+ * api/conversa/route.ts. A description é o único lugar que rege quando
+ * ela é chamada (mesmo padrão das outras duas — sem parágrafo dedicado
+ * no resto do system prompt), por isso o guardrail contra
+ * over-triggering mora inteiro aqui.
+ */
+export const TOOL_SUGERIR_PRATICA: Anthropic.Tool = {
+  name: "sugerir_pratica",
+  description:
+    "Chame esta ferramenta só quando algo que a PRÓPRIA PESSOA disse nesta conversa pedir concretamente por uma prática — ela está buscando algo pra fazer, não só conversando. Não chame por a conversa estar acontecendo, por ter passado um tempo, por parecer um bom momento, ou pra preencher silêncio. Na dúvida, não chame — é melhor a pessoa pedir de novo do que uma sugestão cedo demais. Passe em `situacao` uma frase curta descrevendo o que a pessoa está vivendo agora, nas palavras dela quando possível. A ferramenta devolve até 3 práticas candidatas, cada uma com sua origem; você decide se alguma serve de verdade e como mencionar — ou não mencionar nenhuma, se nenhuma combinar. Nunca apresente uma prática como de uma tradição específica sem citar a origem que a ferramenta devolveu; se nada vier ou nada servir, não invente.",
+  input_schema: {
+    type: "object",
+    properties: {
+      situacao: {
+        type: "string",
+        description: "O que a pessoa está vivendo agora, em poucas palavras — usado pra buscar a prática mais relevante.",
+      },
+    },
+    required: ["situacao"],
+  },
+};
+
+/**
+ * Sinal unidirecional (mesmo padrão de TOOL_SINALIZAR_RISCO) que fecha o
+ * ciclo de TOOL_SUGERIR_PRATICA: só existe pra distinguir "a prática foi
+ * oferecida ao modelo" de "a pessoa foi de fato informada sobre ela" —
+ * sem isso, gravar `pratica_sugerida` no momento em que o tool_result é
+ * entregue registraria sugestões que o modelo decidiu não mencionar.
+ * Só disponível na segunda chamada (a continuação depois do tool_result
+ * de sugerir_pratica) — sugerir_pratica não entra de novo nos tools
+ * dessa chamada, o que trava o cap de 1 round-trip estruturalmente.
+ */
+export const TOOL_CONFIRMAR_PRATICA_MENCIONADA: Anthropic.Tool = {
+  name: "confirmar_pratica_mencionada",
+  description:
+    "Chame esta ferramenta, sem anunciar isso no texto da resposta, só depois de mencionar de verdade uma das práticas retornadas por sugerir_pratica na sua resposta atual — nunca antes de decidir, nunca se você decidiu não mencionar nenhuma. Passe o id exato da prática que você citou.",
+  input_schema: {
+    type: "object",
+    properties: {
+      biblioteca_id: {
+        type: "string",
+        description: "O id (campo `id` retornado por sugerir_pratica) da prática que você acabou de mencionar na resposta.",
+      },
+    },
+    required: ["biblioteca_id"],
+  },
+};

@@ -9,3 +9,10 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 # bundle do browser.
 IA_SERVICE_URL=
 IA_SERVICE_API_KEY=
+
+# Better Auth (migração Supabase→Cloudflare, lib/auth.ts) — MESMO valor do
+# apps/presenca/.dev.vars (os dois apps compartilham o mesmo D1/mesma
+# sessão). Ver apps/presenca/.dev.vars.example pra instruções completas.
+BETTER_AUTH_SECRET=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=

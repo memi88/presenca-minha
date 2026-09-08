@@ -70,13 +70,29 @@
   background: var(--bg);
 }
 
-.rotulo {
-  display: block;
-  font: 600 11px/1 var(--font-bitter), sans-serif;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-faint);
+/* Cabeçalho de cada campo (rótulo + hint de obrigatório/opcional) — deixou
+   de ser um eyebrow uppercase pra bater com o mockup (docs/redesign/
+   stitch_presen_a_home_experience_data), que usa caixa normal aqui. */
+.campoCabecalho {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
   margin-bottom: 6px;
+}
+
+.rotulo {
+  font: 500 13px/1 var(--font-bitter), sans-serif;
+  color: var(--text);
+}
+
+.rotuloObrigatorio {
+  font: italic 400 12px/1 var(--font-fraunces), Georgia, serif;
+  color: var(--accent);
+}
+
+.rotuloOpcional {
+  font: italic 400 12px/1 var(--font-fraunces), Georgia, serif;
+  color: var(--text-faint);
 }
 
 .input {

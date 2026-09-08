@@ -1,4 +1,4 @@
-type PerfilAcesso = { acesso_liberado: boolean | null };
+type PerfilAcesso = { acessoLiberado: boolean | null };
 
 /**
  * Ainda não existe cobrança de verdade (docs/presenca-extensao-app-mobile.md
@@ -6,6 +6,6 @@ type PerfilAcesso = { acesso_liberado: boolean | null };
  * Centralizado aqui pra quando virar checagem de assinatura real, só este
  * arquivo precisa mudar.
  */
-export function temAcessoLiberado(perfil: PerfilAcesso | null): boolean {
-  return perfil?.acesso_liberado ?? true;
+export function temAcessoLiberado(perfil: PerfilAcesso | null | undefined): boolean {
+  return perfil?.acessoLiberado ?? true;
 }
