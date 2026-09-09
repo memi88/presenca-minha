@@ -134,6 +134,9 @@ export default async function AdminBiblioteca({
             </p>
           )}
           <div className={styles.acoes}>
+            <a className={styles.editar} href={`/admin/biblioteca/${item.id}/editar`}>
+              Editar
+            </a>
             {status === "pendente" ? (
               <>
                 <form action={aprovar.bind(null, item.id)}>

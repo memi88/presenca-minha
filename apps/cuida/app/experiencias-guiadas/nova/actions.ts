@@ -3,12 +3,12 @@
 import { redirect } from "next/navigation";
 
 import { eq } from "drizzle-orm";
-import { admins, experienciasEtapas, experienciasGuiadas } from "@presenca/db/schema";
+import { experienciasEtapas, experienciasGuiadas, profissionais } from "@presenca/db/schema";
 
 import { getDb } from "@/lib/db";
 import { getSessao } from "@/lib/sessao";
 
-export type CriarExperienciaState = { erro?: string };
+export type PropostaState = { erro?: string; sucesso?: boolean };
 
 const TIPOS_VALIDOS = ["autoguiada", "guiada_metodo", "acompanhada"] as const;
 
@@ -19,27 +19,15 @@ type EtapaEntrada = {
   opcoes: Array<{ valor: string; rotulo: string; descricao?: string; orientacao?: string }>;
 };
 
-export async function criarExperiencia(
-  _prev: CriarExperienciaState,
-  formData: FormData,
-): Promise<CriarExperienciaState> {
-  const sessao = await getSessao();
-  if (!sessao) redirect("/login");
-
-  const db = await getDb();
-  const admin = await db.query.admins.findFirst({ where: eq(admins.userId, sessao.user.id) });
-  if (!admin) redirect("/home");
-
+export async function propor(_prev: PropostaState, formData: FormData): Promise<PropostaState> {
   const titulo = String(formData.get("titulo") ?? "").trim();
   const tipo = String(formData.get("tipo") ?? "");
-  const especialistaId = String(formData.get("especialistaId") ?? "").trim();
   const descricao = String(formData.get("descricao") ?? "").trim();
   const estimativaFormato = String(formData.get("estimativaFormato") ?? "").trim();
   const etapasRaw = String(formData.get("etapas") ?? "[]");
 
   if (!titulo) return { erro: "Diz o título." };
   if (!TIPOS_VALIDOS.includes(tipo as (typeof TIPOS_VALIDOS)[number])) return { erro: "Escolha o tipo." };
-  if (!especialistaId) return { erro: "Escolha o especialista responsável — autoria sempre visível." };
   if (!descricao) return { erro: "Escreve a descrição." };
 
   let etapas: EtapaEntrada[];
@@ -56,14 +44,30 @@ export async function criarExperiencia(
     }
   }
 
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
+
+  const db = await getDb();
+  const profissional = await db.query.profissionais.findFirst({
+    where: eq(profissionais.userId, sessao.user.id),
+    columns: { id: true },
+  });
+  if (!profissional) redirect("/");
+
+  // `publicado: false` / `statusModeracao: "pendente"` — mesmo padrão de
+  // apps/cuida/app/biblioteca/nova/actions.ts::propor: sem setar explícito
+  // aqui, a proposta entraria com os defaults da coluna (publicado=true,
+  // aprovado), publicando sem moderação.
   const [experiencia] = await db
     .insert(experienciasGuiadas)
     .values({
       titulo,
       tipo,
-      especialistaId,
+      especialistaId: profissional.id,
       descricao,
       estimativaFormato: estimativaFormato || null,
+      publicado: false,
+      statusModeracao: "pendente",
     })
     .returning({ id: experienciasGuiadas.id });
 
@@ -80,5 +84,5 @@ export async function criarExperiencia(
     })),
   );
 
-  redirect("/admin/experiencias-guiadas");
+  return { sucesso: true };
 }

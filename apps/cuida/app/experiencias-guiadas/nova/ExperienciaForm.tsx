@@ -2,8 +2,8 @@
 
 import { useActionState, useState } from "react";
 
-import { criarExperiencia } from "./actions";
-import styles from "./NovaExperienciaForm.module.css";
+import { propor } from "./actions";
+import styles from "./ExperienciaForm.module.css";
 
 type TipoExperiencia = "autoguiada" | "guiada_metodo" | "acompanhada";
 type TipoResposta = "texto" | "escolha";
@@ -25,8 +25,8 @@ const ROTULO_TIPO: Record<TipoExperiencia, string> = {
   acompanhada: "acompanhada",
 };
 
-export function NovaExperienciaForm({ profissionais }: { profissionais: { id: string; nome: string }[] }) {
-  const [state, action, pending] = useActionState(criarExperiencia, {});
+export function ExperienciaForm() {
+  const [state, action, pending] = useActionState(propor, {});
   const [tipo, setTipo] = useState<TipoExperiencia>("autoguiada");
   const [etapas, setEtapas] = useState<Etapa[]>([{ ...ETAPA_VAZIA }]);
 
@@ -53,16 +53,20 @@ export function NovaExperienciaForm({ profissionais }: { profissionais: { id: st
     atualizarEtapa(indiceEtapa, { opcoes: opcoesAtuais.filter((_, i) => i !== indiceOpcao) });
   }
 
+  if (state.sucesso) {
+    return <p className={styles.grupoLabel}>Proposta enviada — avisamos quando for aprovada.</p>;
+  }
+
   return (
     <form action={action} className={styles.form}>
       {state.erro && <p className={styles.erro}>{state.erro}</p>}
       <input type="hidden" name="etapas" value={JSON.stringify(etapas)} />
       <input type="hidden" name="tipo" value={tipo} />
 
-      <label className={styles.label}>Título</label>
+      <label className={styles.grupoLabel}>Título</label>
       <input className={styles.field} type="text" name="titulo" required />
 
-      <label className={styles.label}>Tipo</label>
+      <label className={styles.grupoLabel}>Tipo</label>
       <div className={styles.alternador} role="radiogroup" aria-label="Tipo de experiência">
         {(Object.keys(ROTULO_TIPO) as TipoExperiencia[]).map((valor) => (
           <button
@@ -78,22 +82,10 @@ export function NovaExperienciaForm({ profissionais }: { profissionais: { id: st
         ))}
       </div>
 
-      <label className={styles.label}>Especialista responsável</label>
-      <select className={styles.field} name="especialistaId" required defaultValue="">
-        <option value="" disabled>
-          Escolha...
-        </option>
-        {profissionais.map((p) => (
-          <option key={p.id} value={p.id}>
-            {p.nome}
-          </option>
-        ))}
-      </select>
-
-      <label className={styles.label}>Descrição</label>
+      <label className={styles.grupoLabel}>Descrição</label>
       <textarea className={styles.field} name="descricao" rows={3} required />
 
-      <label className={styles.label}>Formato (texto livre — nunca minutos)</label>
+      <label className={styles.grupoLabel}>Formato (texto livre — nunca minutos)</label>
       <input
         className={styles.field}
         type="text"
@@ -149,7 +141,7 @@ export function NovaExperienciaForm({ profissionais }: { profissionais: { id: st
                 checked={etapa.compartilhadaComEspecialista}
                 onChange={(e) => atualizarEtapa(indice, { compartilhadaComEspecialista: e.target.checked })}
               />
-              O especialista lê a resposta desta etapa
+              Você lê a resposta desta etapa
             </label>
           )}
 
@@ -204,7 +196,7 @@ export function NovaExperienciaForm({ profissionais }: { profissionais: { id: st
       </button>
 
       <button className={styles.cta} type="submit" disabled={pending}>
-        {pending ? "salvando…" : "Criar experiência"}
+        {pending ? "enviando…" : "Enviar para aprovação"}
       </button>
     </form>
   );

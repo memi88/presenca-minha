@@ -1,0 +1,2109 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "9fde9fee-1750-46d9-8f09-fdaa1a8d5942",
+  "prevId": "54b95f5e-0129-4426-a5f2-db2856c3ade0",
+  "tables": {
+    "accounts": {
+      "name": "accounts",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "account_id": {
+          "name": "account_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "provider_id": {
+          "name": "provider_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "issuer": {
+          "name": "issuer",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "access_token": {
+          "name": "access_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "refresh_token": {
+          "name": "refresh_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "id_token": {
+          "name": "id_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "access_token_expires_at": {
+          "name": "access_token_expires_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "refresh_token_expires_at": {
+          "name": "refresh_token_expires_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "scope": {
+          "name": "scope",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "accounts_userId_idx": {
+          "name": "accounts_userId_idx",
+          "columns": [
+            "user_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "accounts_user_id_users_id_fk": {
+          "name": "accounts_user_id_users_id_fk",
+          "tableFrom": "accounts",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "sessions": {
+      "name": "sessions",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ip_address": {
+          "name": "ip_address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "user_agent": {
+          "name": "user_agent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "sessions_token_unique": {
+          "name": "sessions_token_unique",
+          "columns": [
+            "token"
+          ],
+          "isUnique": true
+        },
+        "sessions_userId_idx": {
+          "name": "sessions_userId_idx",
+          "columns": [
+            "user_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "sessions_user_id_users_id_fk": {
+          "name": "sessions_user_id_users_id_fk",
+          "tableFrom": "sessions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "users": {
+      "name": "users",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "email_verified": {
+          "name": "email_verified",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        },
+        "is_anonymous": {
+          "name": "is_anonymous",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": false
+        }
+      },
+      "indexes": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "columns": [
+            "email"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "verifications": {
+      "name": "verifications",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "identifier": {
+          "name": "identifier",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        }
+      },
+      "indexes": {
+        "verifications_identifier_idx": {
+          "name": "verifications_identifier_idx",
+          "columns": [
+            "identifier"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "admins": {
+      "name": "admins",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "admins_user_id_users_id_fk": {
+          "name": "admins_user_id_users_id_fk",
+          "tableFrom": "admins",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "alertas_risco": {
+      "name": "alertas_risco",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "paciente_id": {
+          "name": "paciente_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "profissional_id": {
+          "name": "profissional_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        }
+      },
+      "indexes": {
+        "alertas_risco_profissional_id_idx": {
+          "name": "alertas_risco_profissional_id_idx",
+          "columns": [
+            "profissional_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "alertas_risco_paciente_id_profiles_id_fk": {
+          "name": "alertas_risco_paciente_id_profiles_id_fk",
+          "tableFrom": "alertas_risco",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "paciente_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "alertas_risco_profissional_id_profissionais_id_fk": {
+          "name": "alertas_risco_profissional_id_profissionais_id_fk",
+          "tableFrom": "alertas_risco",
+          "tableTo": "profissionais",
+          "columnsFrom": [
+            "profissional_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "biblioteca": {
+      "name": "biblioteca",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "titulo": {
+          "name": "titulo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "conteudo": {
+          "name": "conteudo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "tags_momento_vida": {
+          "name": "tags_momento_vida",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "tags_hd": {
+          "name": "tags_hd",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "autor": {
+          "name": "autor",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'Guilherme'"
+        },
+        "publicado": {
+          "name": "publicado",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "embedding": {
+          "name": "embedding",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "status_moderacao": {
+          "name": "status_moderacao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'aprovado'"
+        },
+        "escopo": {
+          "name": "escopo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'publico'"
+        },
+        "profissional_autor_id": {
+          "name": "profissional_autor_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "motivo_recusa": {
+          "name": "motivo_recusa",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "categoria": {
+          "name": "categoria",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "origin": {
+          "name": "origin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "capa_chave": {
+          "name": "capa_chave",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "duracao": {
+          "name": "duracao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "intencao": {
+          "name": "intencao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "midia_chave": {
+          "name": "midia_chave",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "midia_tipo": {
+          "name": "midia_tipo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "biblioteca_slug_unique": {
+          "name": "biblioteca_slug_unique",
+          "columns": [
+            "slug"
+          ],
+          "isUnique": true
+        },
+        "biblioteca_profissional_autor_id_idx": {
+          "name": "biblioteca_profissional_autor_id_idx",
+          "columns": [
+            "profissional_autor_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "biblioteca_profissional_autor_id_profissionais_id_fk": {
+          "name": "biblioteca_profissional_autor_id_profissionais_id_fk",
+          "tableFrom": "biblioteca",
+          "tableTo": "profissionais",
+          "columnsFrom": [
+            "profissional_autor_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "biblioteca_status_moderacao_check": {
+          "name": "biblioteca_status_moderacao_check",
+          "value": "\"biblioteca\".\"status_moderacao\" in ('pendente', 'aprovado', 'recusado')"
+        },
+        "biblioteca_escopo_check": {
+          "name": "biblioteca_escopo_check",
+          "value": "\"biblioteca\".\"escopo\" in ('publico', 'privado_profissional')"
+        },
+        "biblioteca_origin_check": {
+          "name": "biblioteca_origin_check",
+          "value": "\"biblioteca\".\"origin\" is null or \"biblioteca\".\"origin\" in ('TRADITIONAL_MAYA', 'LAW_OF_TIME', 'HUMAN_DESIGN', 'KABBALAH', 'PRESENTE', 'PRESENCA')"
+        }
+      }
+    },
+    "caderno_entradas": {
+      "name": "caderno_entradas",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "paciente_id": {
+          "name": "paciente_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "autor_tipo": {
+          "name": "autor_tipo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "autor_profissional_id": {
+          "name": "autor_profissional_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'reflexao'"
+        },
+        "conteudo": {
+          "name": "conteudo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "biblioteca_ref_id": {
+          "name": "biblioteca_ref_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "revisitar": {
+          "name": "revisitar",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "embedding": {
+          "name": "embedding",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        },
+        "conexao_conteudo": {
+          "name": "conexao_conteudo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "compartilhar": {
+          "name": "compartilhar",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "fechamento_resposta_rapida": {
+          "name": "fechamento_resposta_rapida",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "caderno_entradas_paciente_id_idx": {
+          "name": "caderno_entradas_paciente_id_idx",
+          "columns": [
+            "paciente_id"
+          ],
+          "isUnique": false
+        },
+        "caderno_entradas_autor_profissional_id_idx": {
+          "name": "caderno_entradas_autor_profissional_id_idx",
+          "columns": [
+            "autor_profissional_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "caderno_entradas_paciente_id_profiles_id_fk": {
+          "name": "caderno_entradas_paciente_id_profiles_id_fk",
+          "tableFrom": "caderno_entradas",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "paciente_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "caderno_entradas_autor_profissional_id_profissionais_id_fk": {
+          "name": "caderno_entradas_autor_profissional_id_profissionais_id_fk",
+          "tableFrom": "caderno_entradas",
+          "tableTo": "profissionais",
+          "columnsFrom": [
+            "autor_profissional_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "caderno_entradas_biblioteca_ref_id_biblioteca_id_fk": {
+          "name": "caderno_entradas_biblioteca_ref_id_biblioteca_id_fk",
+          "tableFrom": "caderno_entradas",
+          "tableTo": "biblioteca",
+          "columnsFrom": [
+            "biblioteca_ref_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "conversa_rate_limit": {
+      "name": "conversa_rate_limit",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "janela_inicio": {
+          "name": "janela_inicio",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        },
+        "contagem": {
+          "name": "contagem",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "conversa_rate_limit_user_id_users_id_fk": {
+          "name": "conversa_rate_limit_user_id_users_id_fk",
+          "tableFrom": "conversa_rate_limit",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "embedding_rate_limit": {
+      "name": "embedding_rate_limit",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "janela_inicio": {
+          "name": "janela_inicio",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        },
+        "contagem": {
+          "name": "contagem",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "embedding_rate_limit_user_id_users_id_fk": {
+          "name": "embedding_rate_limit_user_id_users_id_fk",
+          "tableFrom": "embedding_rate_limit",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "experiencias_consentimentos": {
+      "name": "experiencias_consentimentos",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "instancia_id": {
+          "name": "instancia_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "consentido": {
+          "name": "consentido",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "consentido_em": {
+          "name": "consentido_em",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "revogado_em": {
+          "name": "revogado_em",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "experiencias_consentimentos_instancia_id_unique": {
+          "name": "experiencias_consentimentos_instancia_id_unique",
+          "columns": [
+            "instancia_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "experiencias_consentimentos_instancia_id_experiencias_instancias_id_fk": {
+          "name": "experiencias_consentimentos_instancia_id_experiencias_instancias_id_fk",
+          "tableFrom": "experiencias_consentimentos",
+          "tableTo": "experiencias_instancias",
+          "columnsFrom": [
+            "instancia_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "experiencias_devolutivas": {
+      "name": "experiencias_devolutivas",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "instancia_id": {
+          "name": "instancia_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "especialista_id": {
+          "name": "especialista_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "conteudo": {
+          "name": "conteudo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        }
+      },
+      "indexes": {
+        "experiencias_devolutivas_instancia_id_idx": {
+          "name": "experiencias_devolutivas_instancia_id_idx",
+          "columns": [
+            "instancia_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "experiencias_devolutivas_instancia_id_experiencias_instancias_id_fk": {
+          "name": "experiencias_devolutivas_instancia_id_experiencias_instancias_id_fk",
+          "tableFrom": "experiencias_devolutivas",
+          "tableTo": "experiencias_instancias",
+          "columnsFrom": [
+            "instancia_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "experiencias_devolutivas_especialista_id_profissionais_id_fk": {
+          "name": "experiencias_devolutivas_especialista_id_profissionais_id_fk",
+          "tableFrom": "experiencias_devolutivas",
+          "tableTo": "profissionais",
+          "columnsFrom": [
+            "especialista_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "experiencias_etapas": {
+      "name": "experiencias_etapas",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "experiencia_id": {
+          "name": "experiencia_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ordem": {
+          "name": "ordem",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "conteudo": {
+          "name": "conteudo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "tipo_resposta": {
+          "name": "tipo_resposta",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'texto'"
+        },
+        "compartilhada_com_especialista": {
+          "name": "compartilhada_com_especialista",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "opcoes": {
+          "name": "opcoes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "ramificacoes": {
+          "name": "ramificacoes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        }
+      },
+      "indexes": {
+        "experiencias_etapas_experiencia_id_idx": {
+          "name": "experiencias_etapas_experiencia_id_idx",
+          "columns": [
+            "experiencia_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "experiencias_etapas_experiencia_id_experiencias_guiadas_id_fk": {
+          "name": "experiencias_etapas_experiencia_id_experiencias_guiadas_id_fk",
+          "tableFrom": "experiencias_etapas",
+          "tableTo": "experiencias_guiadas",
+          "columnsFrom": [
+            "experiencia_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "experiencias_etapas_tipo_resposta_check": {
+          "name": "experiencias_etapas_tipo_resposta_check",
+          "value": "\"experiencias_etapas\".\"tipo_resposta\" in ('texto', 'escolha')"
+        }
+      }
+    },
+    "experiencias_guiadas": {
+      "name": "experiencias_guiadas",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "titulo": {
+          "name": "titulo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "especialista_id": {
+          "name": "especialista_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "descricao": {
+          "name": "descricao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "estimativa_formato": {
+          "name": "estimativa_formato",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "publicado": {
+          "name": "publicado",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        }
+      },
+      "indexes": {
+        "experiencias_guiadas_especialista_id_idx": {
+          "name": "experiencias_guiadas_especialista_id_idx",
+          "columns": [
+            "especialista_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "experiencias_guiadas_especialista_id_profissionais_id_fk": {
+          "name": "experiencias_guiadas_especialista_id_profissionais_id_fk",
+          "tableFrom": "experiencias_guiadas",
+          "tableTo": "profissionais",
+          "columnsFrom": [
+            "especialista_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "experiencias_guiadas_tipo_check": {
+          "name": "experiencias_guiadas_tipo_check",
+          "value": "\"experiencias_guiadas\".\"tipo\" in ('autoguiada', 'guiada_metodo', 'acompanhada')"
+        }
+      }
+    },
+    "experiencias_instancias": {
+      "name": "experiencias_instancias",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "paciente_id": {
+          "name": "paciente_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "experiencia_id": {
+          "name": "experiencia_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "etapa_atual_id": {
+          "name": "etapa_atual_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "estado": {
+          "name": "estado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'em_andamento'"
+        },
+        "iniciado_em": {
+          "name": "iniciado_em",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        },
+        "concluido_em": {
+          "name": "concluido_em",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "experiencias_instancias_paciente_id_idx": {
+          "name": "experiencias_instancias_paciente_id_idx",
+          "columns": [
+            "paciente_id"
+          ],
+          "isUnique": false
+        },
+        "experiencias_instancias_experiencia_id_idx": {
+          "name": "experiencias_instancias_experiencia_id_idx",
+          "columns": [
+            "experiencia_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "experiencias_instancias_paciente_id_profiles_id_fk": {
+          "name": "experiencias_instancias_paciente_id_profiles_id_fk",
+          "tableFrom": "experiencias_instancias",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "paciente_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "experiencias_instancias_experiencia_id_experiencias_guiadas_id_fk": {
+          "name": "experiencias_instancias_experiencia_id_experiencias_guiadas_id_fk",
+          "tableFrom": "experiencias_instancias",
+          "tableTo": "experiencias_guiadas",
+          "columnsFrom": [
+            "experiencia_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "experiencias_instancias_etapa_atual_id_experiencias_etapas_id_fk": {
+          "name": "experiencias_instancias_etapa_atual_id_experiencias_etapas_id_fk",
+          "tableFrom": "experiencias_instancias",
+          "tableTo": "experiencias_etapas",
+          "columnsFrom": [
+            "etapa_atual_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "experiencias_instancias_estado_check": {
+          "name": "experiencias_instancias_estado_check",
+          "value": "\"experiencias_instancias\".\"estado\" in ('em_andamento', 'aguardando_especialista', 'concluida')"
+        }
+      }
+    },
+    "experiencias_respostas": {
+      "name": "experiencias_respostas",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "instancia_id": {
+          "name": "instancia_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "etapa_id": {
+          "name": "etapa_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "conteudo": {
+          "name": "conteudo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "respondido_em": {
+          "name": "respondido_em",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        }
+      },
+      "indexes": {
+        "experiencias_respostas_instancia_id_idx": {
+          "name": "experiencias_respostas_instancia_id_idx",
+          "columns": [
+            "instancia_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "experiencias_respostas_instancia_id_experiencias_instancias_id_fk": {
+          "name": "experiencias_respostas_instancia_id_experiencias_instancias_id_fk",
+          "tableFrom": "experiencias_respostas",
+          "tableTo": "experiencias_instancias",
+          "columnsFrom": [
+            "instancia_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "experiencias_respostas_etapa_id_experiencias_etapas_id_fk": {
+          "name": "experiencias_respostas_etapa_id_experiencias_etapas_id_fk",
+          "tableFrom": "experiencias_respostas",
+          "tableTo": "experiencias_etapas",
+          "columnsFrom": [
+            "etapa_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "lente_reacoes": {
+      "name": "lente_reacoes",
+      "columns": {
+        "paciente_id": {
+          "name": "paciente_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "data": {
+          "name": "data",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "reacao": {
+          "name": "reacao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "lente_reacoes_paciente_id_profiles_id_fk": {
+          "name": "lente_reacoes_paciente_id_profiles_id_fk",
+          "tableFrom": "lente_reacoes",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "paciente_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "lente_reacoes_paciente_id_data_pk": {
+          "columns": [
+            "paciente_id",
+            "data"
+          ],
+          "name": "lente_reacoes_paciente_id_data_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "lente_reacoes_reacao_check": {
+          "name": "lente_reacoes_reacao_check",
+          "value": "\"lente_reacoes\".\"reacao\" in ('gostei', 'nao_gostei')"
+        }
+      }
+    },
+    "pacientes_pre_cadastro": {
+      "name": "pacientes_pre_cadastro",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "profissional_id": {
+          "name": "profissional_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nome": {
+          "name": "nome",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "caracteristicas": {
+          "name": "caracteristicas",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "anotacoes": {
+          "name": "anotacoes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "token_convite": {
+          "name": "token_convite",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'pendente'"
+        },
+        "paciente_id": {
+          "name": "paciente_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        },
+        "confirmado_em": {
+          "name": "confirmado_em",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "pacientes_pre_cadastro_token_convite_unique": {
+          "name": "pacientes_pre_cadastro_token_convite_unique",
+          "columns": [
+            "token_convite"
+          ],
+          "isUnique": true
+        },
+        "pacientes_pre_cadastro_profissional_id_idx": {
+          "name": "pacientes_pre_cadastro_profissional_id_idx",
+          "columns": [
+            "profissional_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "pacientes_pre_cadastro_profissional_id_profissionais_id_fk": {
+          "name": "pacientes_pre_cadastro_profissional_id_profissionais_id_fk",
+          "tableFrom": "pacientes_pre_cadastro",
+          "tableTo": "profissionais",
+          "columnsFrom": [
+            "profissional_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "pacientes_pre_cadastro_paciente_id_profiles_id_fk": {
+          "name": "pacientes_pre_cadastro_paciente_id_profiles_id_fk",
+          "tableFrom": "pacientes_pre_cadastro",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "paciente_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "pacientes_pre_cadastro_status_check": {
+          "name": "pacientes_pre_cadastro_status_check",
+          "value": "\"pacientes_pre_cadastro\".\"status\" in ('pendente', 'confirmado')"
+        }
+      }
+    },
+    "profiles": {
+      "name": "profiles",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nome": {
+          "name": "nome",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "data_nascimento": {
+          "name": "data_nascimento",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "hora_nascimento": {
+          "name": "hora_nascimento",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "local_nascimento": {
+          "name": "local_nascimento",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "configuracao_hd": {
+          "name": "configuracao_hd",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "profissional_id": {
+          "name": "profissional_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        },
+        "lembrete_conversao_em": {
+          "name": "lembrete_conversao_em",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "presenca_hoje": {
+          "name": "presenca_hoje",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "presenca_hoje_em": {
+          "name": "presenca_hoje_em",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "ultima_visita_em": {
+          "name": "ultima_visita_em",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "streak_dias_consecutivos": {
+          "name": "streak_dias_consecutivos",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "streak_atualizado_em": {
+          "name": "streak_atualizado_em",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "lembrete_nascimento_em": {
+          "name": "lembrete_nascimento_em",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "nascimento_latitude": {
+          "name": "nascimento_latitude",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "nascimento_longitude": {
+          "name": "nascimento_longitude",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "nascimento_pulado_no_cadastro_em": {
+          "name": "nascimento_pulado_no_cadastro_em",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "acesso_liberado": {
+          "name": "acesso_liberado",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        }
+      },
+      "indexes": {
+        "profiles_user_id_unique": {
+          "name": "profiles_user_id_unique",
+          "columns": [
+            "user_id"
+          ],
+          "isUnique": true
+        },
+        "profiles_profissional_id_idx": {
+          "name": "profiles_profissional_id_idx",
+          "columns": [
+            "profissional_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "profiles_user_id_users_id_fk": {
+          "name": "profiles_user_id_users_id_fk",
+          "tableFrom": "profiles",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "profiles_profissional_id_profissionais_id_fk": {
+          "name": "profiles_profissional_id_profissionais_id_fk",
+          "tableFrom": "profiles",
+          "tableTo": "profissionais",
+          "columnsFrom": [
+            "profissional_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "profissionais": {
+      "name": "profissionais",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nome": {
+          "name": "nome",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        },
+        "codigo_convite": {
+          "name": "codigo_convite",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "forma_de_trabalho": {
+          "name": "forma_de_trabalho",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "usa_linguagens_simbolicas": {
+          "name": "usa_linguagens_simbolicas",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "lembrete_perfil_em": {
+          "name": "lembrete_perfil_em",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "foto_chave": {
+          "name": "foto_chave",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "profissionais_codigo_convite_unique": {
+          "name": "profissionais_codigo_convite_unique",
+          "columns": [
+            "codigo_convite"
+          ],
+          "isUnique": true
+        },
+        "profissionais_user_id_idx": {
+          "name": "profissionais_user_id_idx",
+          "columns": [
+            "user_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "profissionais_user_id_users_id_fk": {
+          "name": "profissionais_user_id_users_id_fk",
+          "tableFrom": "profissionais",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "profissionais_tipo_check": {
+          "name": "profissionais_tipo_check",
+          "value": "\"profissionais\".\"tipo\" in ('TCC', 'Psicanálise', 'Gestalt-terapia', 'Terapia Sistêmica', 'ACT', 'Humanista', 'Holística/Integrativa', 'Outra')"
+        }
+      }
+    },
+    "vinculos": {
+      "name": "vinculos",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "profissional_id": {
+          "name": "profissional_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "paciente_id": {
+          "name": "paciente_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "ativo": {
+          "name": "ativo",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        },
+        "compartilhar_praticas": {
+          "name": "compartilhar_praticas",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "compartilhar_livro_vivo": {
+          "name": "compartilhar_livro_vivo",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        }
+      },
+      "indexes": {
+        "vinculos_profissional_paciente_idx": {
+          "name": "vinculos_profissional_paciente_idx",
+          "columns": [
+            "profissional_id",
+            "paciente_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "vinculos_profissional_id_profissionais_id_fk": {
+          "name": "vinculos_profissional_id_profissionais_id_fk",
+          "tableFrom": "vinculos",
+          "tableTo": "profissionais",
+          "columnsFrom": [
+            "profissional_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "vinculos_paciente_id_profiles_id_fk": {
+          "name": "vinculos_paciente_id_profiles_id_fk",
+          "tableFrom": "vinculos",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "paciente_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}

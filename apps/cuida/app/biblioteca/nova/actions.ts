@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 
 import { eq } from "drizzle-orm";
 import { biblioteca, profissionais } from "@presenca/db/schema";
-import { ArquivoInvalidoError, salvarImagem } from "@presenca/db/media";
+import { ArquivoInvalidoError, salvarImagem, salvarMidia } from "@presenca/db/media";
 
 import { getDb } from "@/lib/db";
 import { getMedia } from "@/lib/media";
@@ -23,6 +23,8 @@ export async function propor(_prev: PropostaState, formData: FormData): Promise<
   const conteudo = String(formData.get("conteudo") ?? "").trim();
   const escopo = String(formData.get("escopo") ?? "");
   const categoria = String(formData.get("categoria") ?? "");
+  const duracao = String(formData.get("duracao") ?? "").trim();
+  const intencao = String(formData.get("intencao") ?? "").trim();
 
   if (!TIPOS_VALIDOS.includes(tipo as (typeof TIPOS_VALIDOS)[number])) {
     return { erro: "Escolha o tipo de conteúdo." };
@@ -42,6 +44,11 @@ export async function propor(_prev: PropostaState, formData: FormData): Promise<
     const tiposAceitos = ["image/jpeg", "image/png", "image/webp"];
     if (!tiposAceitos.includes(arquivo.type)) return { erro: "Capa: formato não aceito (JPEG, PNG ou WEBP)." };
     if (arquivo.size > 5 * 1024 * 1024) return { erro: "Capa: arquivo maior que 5MB." };
+  }
+
+  const arquivoMidia = formData.get("midia");
+  if (arquivoMidia instanceof File && arquivoMidia.size > 0 && arquivoMidia.size > 50 * 1024 * 1024) {
+    return { erro: "Conteúdo (áudio/vídeo): arquivo maior que 50MB." };
   }
 
   const sessao = await getSessao();
@@ -71,6 +78,8 @@ export async function propor(_prev: PropostaState, formData: FormData): Promise<
       conteudo,
       escopo,
       categoria: tipo === "pratica" ? categoria : null,
+      duracao: tipo === "pratica" && duracao ? duracao : null,
+      intencao: tipo === "pratica" && intencao ? intencao : null,
       profissionalAutorId: profissional.id,
       autor: null,
       publicado: false,
@@ -78,8 +87,9 @@ export async function propor(_prev: PropostaState, formData: FormData): Promise<
     })
     .returning({ id: biblioteca.id });
 
-  // Capa é opcional — se a imagem falhar aqui, a proposta em si já está
-  // gravada (não vale perder o conteúdo inteiro por causa da capa).
+  // Capa e mídia são opcionais — se o upload falhar aqui, a proposta em
+  // si já está gravada (não vale perder o conteúdo inteiro por causa de
+  // um anexo).
   if (linha && arquivo instanceof File && arquivo.size > 0) {
     try {
       const media = await getMedia();
@@ -88,6 +98,18 @@ export async function propor(_prev: PropostaState, formData: FormData): Promise<
     } catch (erro) {
       if (!(erro instanceof ArquivoInvalidoError)) {
         console.error("propor: falha ao gravar capa no R2", erro);
+      }
+    }
+  }
+
+  if (linha && tipo === "pratica" && arquivoMidia instanceof File && arquivoMidia.size > 0) {
+    try {
+      const media = await getMedia();
+      const { chave, tipo: midiaTipo } = await salvarMidia(media, `biblioteca/${linha.id}/midia`, arquivoMidia);
+      await db.update(biblioteca).set({ midiaChave: chave, midiaTipo }).where(eq(biblioteca.id, linha.id));
+    } catch (erro) {
+      if (!(erro instanceof ArquivoInvalidoError)) {
+        console.error("propor: falha ao gravar mídia no R2", erro);
       }
     }
   }

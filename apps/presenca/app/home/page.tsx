@@ -7,7 +7,7 @@ import { biblioteca, cadernoEntradas, experienciasInstancias, profiles, profissi
 
 import { getDb } from "@/lib/db";
 import { getSessao } from "@/lib/sessao";
-import { precisaCheckin } from "@/lib/checkin";
+import { presencaHojeValida } from "@/lib/checkin";
 import { ordenarPorMomento, tagDoMomento } from "@/lib/menuHome";
 import { PLACEHOLDER_LIVRO_VIVO, PLACEHOLDER_PRATICA, PLACEHOLDER_TERAPEUTA, imagemUrl } from "@/lib/placeholders";
 import { atualizarStreak } from "@/lib/streak";
@@ -16,7 +16,6 @@ import { BottomNav } from "../BottomNav";
 import { CirculoRespirando } from "../CirculoRespirando";
 import { IconeLivroVivo } from "../IconeLivroVivo";
 import { IconePraticas } from "../IconePraticas";
-import { MonogramaP } from "../MonogramaP";
 import { rotaDePratica } from "../praticas/PainelPratica";
 import { adiarNascimento, registrarPresenca } from "./actions";
 import { FechamentoTrigger } from "./FechamentoTrigger";
@@ -128,14 +127,15 @@ export default async function Home() {
 
   if (!profile?.nome) redirect("/chegada");
 
-  // O humor só continua "fresco" por 12h (lib/checkin.ts) — depois disso
-  // ainda aparece como o mood atual no gatilho da Home, só para de reduzir
-  // a tela (ver `reduzido` abaixo).
-  const moodFresco = !precisaCheckin(profile.presencaHojeEm ? profile.presencaHojeEm.toISOString() : null);
+  // Humor reseta na virada do dia civil (lib/checkin.ts) — uma resposta
+  // de ontem não conta mais como "resposta de hoje" nem pra exibir nem
+  // pra curadoria (ver tagDoMomento abaixo).
+  const presencaHoje = presencaHojeValida(profile.presencaHoje, profile.presencaHojeEm);
 
-  // "Confuso" só reduz a tela (esconde Terapia) enquanto o humor está
-  // fresco — não faz sentido esconder por causa de uma resposta de dias atrás.
-  const reduzido = moodFresco && profile.presencaHoje === "confuso";
+  // "Confuso" só reduz a tela (esconde Terapia) enquanto o humor é a
+  // resposta de hoje — não faz sentido esconder por causa de uma resposta
+  // de dias atrás.
+  const reduzido = presencaHoje === "confuso";
 
   // Sinal interno pra decidir quando convidar a personalizar a experiência
   // (nascimento, PRD §5) — nunca exibido como contador (lib/streak.ts).
@@ -240,7 +240,7 @@ export default async function Home() {
       ? montarCardTerapeuta(ultimaEntrada)
       : null;
 
-  const tag = tagDoMomento(profile.presencaHoje);
+  const tag = tagDoMomento(presencaHoje);
   const praticaDestaque = ordenarPorMomento(praticas, tag)[0] ?? null;
   const livroVivoDestaques = ordenarPorMomento(paginasLivroVivo, tag);
 
@@ -272,8 +272,9 @@ export default async function Home() {
       <div className={styles.atmosfera} aria-hidden="true" />
       <div className={styles.topBarFundo}>
         <div className={styles.topBar}>
-          <a className={styles.monogramaLink} href="/home" aria-label="Página inicial">
-            <MonogramaP className={styles.monograma} />
+          <a className={styles.wordmark} href="/home">
+            <CirculoRespirando className={styles.wordmarkDot} />
+            Presença
           </a>
           <div className={styles.topBarDireita}>
             <nav className={styles.navDesktop}>
@@ -295,10 +296,6 @@ export default async function Home() {
             </a>
           </div>
         </div>
-        <a className={styles.wordmarkCentro} href="/home">
-          <CirculoRespirando className={styles.wordmarkDot} />
-          Presença
-        </a>
       </div>
 
       {mostrarConviteNascimento && (
@@ -319,13 +316,13 @@ export default async function Home() {
           <p className={styles.saudacaoGrande}>
             {saudacao()}, {profile.nome}.
           </p>
-          <MoodTrigger moodAtual={profile.presencaHoje} registrarPresenca={registrarPresenca} />
+          <MoodTrigger moodAtual={presencaHoje} registrarPresenca={registrarPresenca} />
         </div>
 
         {mostrarFechamento && <FechamentoTrigger />}
 
         <Suspense fallback={null}>
-          <LenteDoDiaCard presencaHoje={profile.presencaHoje} />
+          <LenteDoDiaCard presencaHoje={presencaHoje} />
         </Suspense>
 
         {experienciaEmAndamento && (

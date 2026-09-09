@@ -212,6 +212,15 @@ export const biblioteca = sqliteTable(
     // Mesmo padrão de profissionais.fotoChave — chave no R2, não URL pronta.
     // Null = usa o placeholder SVG padrão (mesmo comportamento de antes do upload existir).
     capaChave: text("capa_chave"),
+    duracao: text("duracao"), // texto livre, ex: "5 min" — só prática usa
+    intencao: text("intencao"), // frase curta, ex: "Acalmar antes de dormir" — só prática usa
+    // Chave R2 do áudio/vídeo da prática (mesmo bucket/padrão da capa) —
+    // null = prática só-texto (comportamento de sempre). midiaTipo resolve
+    // qual player renderizar sem precisar sniff de extensão — 'audio' |
+    // 'video' | null, validado só em código (lib/media.ts), sem CHECK no
+    // banco (mesmo padrão de `tipo` acima — enum de fato, sem constraint).
+    midiaChave: text("midia_chave"),
+    midiaTipo: text("midia_tipo"),
   },
   (table) => [
     index("biblioteca_profissional_autor_id_idx").on(table.profissionalAutorId),
@@ -433,10 +442,16 @@ export const experienciasGuiadas = sqliteTable(
     // Texto livre, ex: "4 etapas ao longo de alguns dias" — NUNCA número de
     // minutos (regra do PRD: não prometer velocidade que a experiência não tem).
     estimativaFormato: text("estimativa_formato"),
-    // Sem coluna de moderação (diferente de biblioteca.statusModeracao) —
-    // autoria é admin-direta (app/admin/experiencias-guiadas), não proposta
-    // de terceiro que precisa aprovação.
     publicado: integer("publicado", { mode: "boolean" }).notNull().default(true),
+    // Passa a seguir o mesmo modelo de biblioteca: profissional propõe
+    // (app/experiencias-guiadas/nova no Cuida, especialistaId sempre = quem
+    // está logado, sem escolha), admin aprova/recusa/edita
+    // (app/admin/experiencias-guiadas). Sem CHECK constraint — mesmo motivo
+    // de biblioteca.tipo/midiaTipo: CHECK novo numa tabela existente força
+    // table-recreate no D1 via drizzle-kit, já causou falha de migração
+    // nesta sessão; validado só em código.
+    statusModeracao: text("status_moderacao").notNull().default("aprovado"),
+    motivoRecusa: text("motivo_recusa"),
     createdAt: integer("created_at", { mode: "timestamp_ms" })
       .notNull()
       .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`),
@@ -448,8 +463,11 @@ export const experienciasGuiadas = sqliteTable(
 );
 
 // Autorização: leitura liberada pra qualquer autenticado quando
-// `publicado=true` (Descoberta); escrita só pela tela de admin (checagem
-// contra a tabela `admins`, mesmo padrão de app/admin/biblioteca).
+// `publicado=true` (Descoberta) — na prática redundante com
+// `statusModeracao='aprovado'`, mas documentado pelos dois; escrita de
+// proposta é do profissional dono (especialistaId = sessão), aprovação/
+// recusa/edição só pela tela de admin (checagem contra a tabela `admins`,
+// mesmo padrão de app/admin/biblioteca).
 
 export const experienciasEtapas = sqliteTable(
   "experiencias_etapas",

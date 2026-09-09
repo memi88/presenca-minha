@@ -48,6 +48,17 @@ export function AmbienteShell({ children, acessoLiberado }: Props) {
     setBloqueado(Capacitor.isNativePlatform() && !acessoLiberado);
   }, [acessoLiberado]);
 
+  // `--bg` só é redefinido dentro do escopo `[data-ambiente="escuro"]`
+  // (globals.css) — variável CSS cascateia pai→filho, então setar o
+  // atributo só em `.coluna` (abaixo) nunca alcança `body`/`.fundo`
+  // (ancestrais). Isso deixava o body sempre claro no overscroll/bounce
+  // do iOS, mesmo em rotas escuras (achado testando no celular real).
+  // Espelhar o atributo no body de verdade resolve `var(--bg)` certo
+  // também pra esse fallback.
+  useEffect(() => {
+    document.body.dataset.ambiente = ambiente;
+  }, [ambiente]);
+
   return (
     <div className={styles.fundo}>
       <div data-ambiente={ambiente} key={pathname} className={styles.coluna}>

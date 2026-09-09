@@ -10,10 +10,12 @@ body {
 }
 
 /* Fallback pro overscroll/rubber-band do iOS (mostra o que tem atrás de
-   tudo, além de qualquer wrapper) — sempre claro aqui porque `--ambiente`
-   só existe dentro do AmbienteShell (ver AmbienteShell.module.css), não
-   em body; páginas de dentro do app escuras (Livro Vivo/Diário) já
-   pintam o próprio wrapper por cima disso. */
+   tudo, além de qualquer wrapper). `data-ambiente` é espelhado no próprio
+   body via AmbienteShell.tsx (efeito client-side) — sem isso, `var(--bg)`
+   aqui só resolvia o valor claro do `:root` (a redefinição escura vive em
+   `[data-ambiente="escuro"]`, aplicada num descendente, e variável CSS só
+   cascateia pai→filho), deixando esse fallback sempre claro mesmo em
+   rotas escuras (achado testando no celular real). */
 body {
   background: var(--bg);
 }

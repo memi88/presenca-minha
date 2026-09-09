@@ -1,3 +1,25 @@
+.scene {
+  min-height: 100dvh;
+  background: var(--bg);
+  padding: clamp(24px, 4vw, 48px);
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  font: 600 12px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.headline {
+  font: italic 300 clamp(26px, 2vw, 32px) / 1.2 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
 .form {
   display: flex;
   flex-direction: column;
@@ -165,4 +187,12 @@
 .cta:disabled {
   opacity: 0.6;
   cursor: default;
+}
+
+.voltar {
+  display: inline-block;
+  font: 500 13px/1 var(--font-bitter), sans-serif;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-bottom: 20px;
 }

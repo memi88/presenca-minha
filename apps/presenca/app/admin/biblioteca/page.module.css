@@ -163,6 +163,17 @@
   cursor: pointer;
 }
 
+.editar {
+  display: inline-block;
+  background: none;
+  color: var(--accent);
+  font: 600 13px/1 var(--font-bitter), sans-serif;
+  padding: 9px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  text-decoration: none;
+}
+
 .recusar {
   background: none;
   color: var(--error);

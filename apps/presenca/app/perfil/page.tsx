@@ -111,6 +111,9 @@ export default async function Perfil() {
             <a className={styles.link} href="/admin/biblioteca">
               Painel de aprovação da biblioteca →
             </a>
+            <a className={`${styles.link} ${styles.linkBloco}`} href="/admin/experiencias-guiadas">
+              Painel de experiências guiadas →
+            </a>
           </div>
         )}
 

@@ -16,6 +16,10 @@ export type ItemPratica = {
   conteudo: string;
   categoria?: string | null;
   capaChave?: string | null;
+  duracao?: string | null;
+  intencao?: string | null;
+  midiaChave?: string | null;
+  midiaTipo?: string | null;
   profissionalAutorId?: string | null;
   profissionalAutor?: { nome: string; tipo: string | null; formaDeTrabalho: string | null } | null;
 };
@@ -116,13 +120,20 @@ function TelaSelecao({
                 style={{ backgroundImage: `url(${imagemUrl(pratica.capaChave, PLACEHOLDER_PRATICA)})` }}
               >
                 <div className={styles.cardFotoOverlay}>
-                  {rotuloCategoria(pratica.categoria) && (
+                  {(rotuloCategoria(pratica.categoria) || pratica.duracao) && (
                     <span className={styles.cardFotoCategoria}>
-                      <IconeCategoria
-                        categoria={pratica.categoria as CategoriaPratica}
-                        className={styles.cardFotoCategoriaIcone}
-                      />
-                      {rotuloCategoria(pratica.categoria)}
+                      {rotuloCategoria(pratica.categoria) && (
+                        <>
+                          <IconeCategoria
+                            categoria={pratica.categoria as CategoriaPratica}
+                            className={styles.cardFotoCategoriaIcone}
+                          />
+                          {rotuloCategoria(pratica.categoria)}
+                        </>
+                      )}
+                      {pratica.duracao && (
+                        <span className={styles.cardFotoDuracao}>{pratica.duracao}</span>
+                      )}
                     </span>
                   )}
                   <span className={styles.cardFotoTitulo}>{pratica.titulo}</span>
@@ -198,10 +209,22 @@ function TelaDetalhe({
         aria-hidden="true"
       />
       <div className={styles.detalheConteudo}>
-        {rotuloCategoria(praticaAtiva.categoria) && (
-          <p className={styles.detalheCategoria}>{rotuloCategoria(praticaAtiva.categoria)}</p>
+        {(rotuloCategoria(praticaAtiva.categoria) || praticaAtiva.duracao) && (
+          <p className={styles.detalheCategoria}>
+            {[rotuloCategoria(praticaAtiva.categoria), praticaAtiva.duracao].filter(Boolean).join(" · ")}
+          </p>
         )}
         <h1 className={styles.tituloLeitura}>{praticaAtiva.titulo}</h1>
+        {praticaAtiva.intencao && <p className={styles.intencao}>{praticaAtiva.intencao}</p>}
+        {praticaAtiva.midiaChave && (
+          <div className={styles.midiaWrapper}>
+            {praticaAtiva.midiaTipo === "video" ? (
+              <video className={styles.midia} controls src={`/imagens/${praticaAtiva.midiaChave}`} />
+            ) : (
+              <audio className={styles.midia} controls src={`/imagens/${praticaAtiva.midiaChave}`} />
+            )}
+          </div>
+        )}
         <div className={styles.corpo}>
           {paragrafos.map((paragrafo, i) => (
             <p key={i} className={styles.paragrafo}>

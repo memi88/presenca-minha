@@ -33,7 +33,7 @@ export default async function LeituraLivroVivo({
   if (!profile?.nome) redirect("/chegada");
 
   const paginaAtiva = await db.query.biblioteca.findFirst({
-    where: and(eq(biblioteca.id, id), eq(biblioteca.tipo, "pagina_livro_vivo")),
+    where: and(eq(biblioteca.id, id), eq(biblioteca.tipo, "pagina_livro_vivo"), eq(biblioteca.publicado, true)),
     columns: { id: true, titulo: true, conteudo: true, profissionalAutorId: true },
     with: { profissionalAutor: { columns: { nome: true, tipo: true, formaDeTrabalho: true } } },
   });

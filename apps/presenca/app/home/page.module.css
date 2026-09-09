@@ -36,17 +36,13 @@
   background: linear-gradient(180deg, rgba(247, 240, 228, 0.55), var(--bg) 95%);
 }
 
-/* Barra sólida de fundo do header — igual ao mockup (docs/redesign/
-   home_presen_a_cones_svgs_inline_refinados), que usa uma cor de
-   superfície própria pro topo, não a foto/fundo transparente de antes.
-   Full-bleed (a faixa colorida vai de ponta a ponta), o conteúdo (.topBar)
-   é que fica numa coluna central. */
+/* Sem fundo próprio (pedido explícito, real device — a barra sólida do
+   mockup original destoava, competia com a .atmosfera por trás) — só
+   posiciona o conteúdo (.topBar) acima da .atmosfera (z-index). */
 .topBarFundo {
   position: relative;
   z-index: 1;
   width: 100%;
-  background: var(--bg-elevated);
-  border-bottom: 1px solid var(--border);
 }
 
 .topBar {
@@ -73,32 +69,11 @@
   gap: 28px;
 }
 
-/* Monograma "p." — âncora pra /home, sempre visível (mobile e desktop). */
-.monogramaLink {
-  display: flex;
-  color: var(--text);
-  text-decoration: none;
-}
-
-.monograma {
-  width: 20px;
-  height: 24px;
-}
-
-/* Wordmark centralizada por posição absoluta (não flex/grid): garante
-   centro de verdade em relação à barra inteira (.topBarFundo),
-   independente da largura do que tem nos dois lados (monograma vs.
-   nav+avatar) — um grid `1fr auto 1fr` parecia certo mas não centralizava
-   de fato, porque cada coluna `1fr` cresce pro mínimo do próprio conteúdo
-   antes de dividir o espaço livre, e os dois lados têm larguras bem
-   diferentes. Sempre visível (mobile incluso), igual ao mockup: "Presença"
-   em negrito âmbar, sem tracking de logotipo (isso era o tratamento
-   antigo, só de desktop). */
-.wordmarkCentro {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+/* Wordmark (dot + "Presença") — âncora pra /home, alinhada à esquerda do
+   .topBar (pedido explícito, real device — substitui o monograma "p."
+   que ficava aqui antes; sem posicionamento absoluto porque agora é só
+   mais um item do flex, não precisa centralizar contra o lado direito). */
+.wordmark {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -162,7 +137,7 @@
     box-sizing: border-box;
   }
 
-  .wordmarkCentro {
+  .wordmark {
     font-size: 17px;
   }
 

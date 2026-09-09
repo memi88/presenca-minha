@@ -92,6 +92,10 @@
   font: 400 clamp(18px, 1.2vw, 20px) / 1.7 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: 18px;
+  /* Preserva quebra de linha simples e espaços múltiplos digitados no
+     cadastro — sem isso, só a divisão em parágrafos (linha em branco)
+     sobrevivia, e Enter simples dentro de um parágrafo desaparecia. */
+  white-space: pre-wrap;
 }
 
 .rodape {

@@ -44,6 +44,13 @@
   text-decoration: none;
 }
 
+/* Segundo link dentro da mesma .secao (hoje só a seção "admin", que tem
+   2 painéis) — sem isso os dois ficam colados na mesma linha. */
+.linkBloco {
+  display: block;
+  margin-top: 6px;
+}
+
 .sair {
   margin-top: 30px;
   background: none;

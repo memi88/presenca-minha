@@ -76,6 +76,9 @@ export default async function Pacientes() {
           <a className={styles.perfil} href="/biblioteca/nova">
             propor conteúdo
           </a>
+          <a className={styles.perfil} href="/experiencias-guiadas/nova">
+            propor experiência
+          </a>
           <a className={styles.perfil} href="/perfil">
             meu perfil
           </a>

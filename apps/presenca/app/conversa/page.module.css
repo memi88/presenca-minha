@@ -7,12 +7,15 @@
    da Home, mas desfocada e sob um véu mais claro — mais intimista que a
    Home, menos "cartão" que o Diário. */
 .scene {
-  position: relative;
-  /* height (não min-height): precisa ser um teto fixo, não só um piso —
-     senão o container cresce junto com a conversa e quem rola é a página
-     inteira, não a .lista por dentro (que aí nunca desenvolve overflow
-     de verdade, e o scrollTo automático mira num elemento que não rola). */
-  height: 100dvh;
+  /* position:fixed + inset:0 (não height:100dvh): no Safari mobile real,
+     100dvh no primeiro paint às vezes calcula pela viewport grande (barra
+     de endereço já recolhida), maior que a área de fato visível — o fim
+     do conteúdo (o .form) fica fora da tela até o usuário rolar uma vez
+     e o navegador recalcular (achado testando no celular, não aparecia
+     no simulador). Fixed+inset segue a viewport visual de verdade,
+     sem depender desse recálculo. */
+  position: fixed;
+  inset: 0;
   overflow: hidden;
   /* Sem padding-top: o PageHeader já traz seu próprio espaçamento
      (clamp(20px,3vw,28px)) — duplicar aqui criava inconsistência de
@@ -20,6 +23,15 @@
   padding: 0 24px 24px;
   display: flex;
   flex-direction: column;
+}
+
+/* .form (input) não reservava espaço pro BottomNav (fixo, só mobile,
+   pintado por cima) — ficava parcialmente atrás da barra. Mesmo valor
+   de folga já usado em AmbienteShell.module.css pro mesmo propósito. */
+@media (max-width: 959px) {
+  .scene {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
 }
 
 .scene::before {

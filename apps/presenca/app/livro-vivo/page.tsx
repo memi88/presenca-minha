@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
 
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { biblioteca, profiles } from "@presenca/db/schema";
 
 import { getDb } from "@/lib/db";
 import { getSessao } from "@/lib/sessao";
+import { presencaHojeValida } from "@/lib/checkin";
 import { ordenarPorMomento, tagDoMomento } from "@/lib/menuHome";
 import { MOMENTOS_VIDA, momentoValido } from "@/lib/momentosVida";
 
@@ -27,10 +28,10 @@ export default async function LivroVivo({
   const [profile, paginas] = await Promise.all([
     db.query.profiles.findFirst({
       where: eq(profiles.userId, sessao.user.id),
-      columns: { nome: true, presencaHoje: true, profissionalId: true },
+      columns: { nome: true, presencaHoje: true, presencaHojeEm: true, profissionalId: true },
     }),
     db.query.biblioteca.findMany({
-      where: eq(biblioteca.tipo, "pagina_livro_vivo"),
+      where: and(eq(biblioteca.tipo, "pagina_livro_vivo"), eq(biblioteca.publicado, true)),
       orderBy: desc(biblioteca.createdAt),
       columns: { id: true, titulo: true, conteudo: true, tagsMomentoVida: true, capaChave: true },
     }),
@@ -49,7 +50,7 @@ export default async function LivroVivo({
   // visível depois. Com uma tag pra combinar, isso só faz diferença
   // quando a biblioteca tiver itens curados com `tagsMomentoVida`
   // preenchido (scripts/cadastrar-biblioteca.mjs).
-  const tag = tagDoMomento(profile.presencaHoje);
+  const tag = tagDoMomento(presencaHojeValida(profile.presencaHoje, profile.presencaHojeEm));
   const paginasOrdenadas = ordenarPorMomento(paginasFiltradas, tag);
 
   if (!paginasOrdenadas.length) {

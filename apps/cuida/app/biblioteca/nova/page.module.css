@@ -5,6 +5,15 @@
   margin: 0 auto;
 }
 
+/* Com a pré-visualização ao lado, o card precisa de mais espaço
+   horizontal em telas grandes — só nesta rota (mesmo espírito do ajuste
+   de largura já feito em apps/cuida/app/pacientes). */
+@media (min-width: 900px) {
+  .scene {
+    max-width: 920px;
+  }
+}
+
 .voltar {
   display: inline-block;
   font-size: 13px;
@@ -144,4 +153,99 @@
 .resultadoTexto {
   font-size: 14px;
   color: var(--text);
+}
+
+.formELayout {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+@media (min-width: 900px) {
+  .formELayout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .formELayout > .form {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.preview {
+  flex: 1;
+  min-width: 0;
+}
+
+.previewRotulo {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.previewCard {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.previewCapa {
+  width: 100%;
+  height: 140px;
+  border-radius: 8px;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 14px;
+}
+
+.previewMeta {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cta-bg);
+  margin-bottom: 6px;
+}
+
+.previewTitulo {
+  font: italic 500 20px/1.3 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.previewIntencao {
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+
+.previewMidia {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+
+.previewCorpo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.previewParagrafo {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
+.previewVazio {
+  font-size: 13px;
+  color: var(--text-faint);
+  font-style: italic;
 }

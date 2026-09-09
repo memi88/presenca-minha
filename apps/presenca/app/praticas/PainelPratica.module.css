@@ -74,6 +74,21 @@
   margin-bottom: 14px;
 }
 
+.intencao {
+  font: italic 400 clamp(16px, 1.1vw, 18px) / 1.5 var(--font-fraunces), Georgia, serif;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+
+.midiaWrapper {
+  margin-bottom: 24px;
+}
+
+.midia {
+  width: 100%;
+  border-radius: 12px;
+}
+
 @media (min-width: 960px) {
   .detalheScene {
     display: flex;
@@ -111,6 +126,10 @@
   font: 400 clamp(18px, 1.2vw, 20px) / 1.7 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: 18px;
+  /* Preserva quebra de linha simples e espaços múltiplos digitados no
+     cadastro — sem isso, só a divisão em parágrafos (linha em branco)
+     sobrevivia, e Enter simples dentro de um parágrafo desaparecia. */
+  white-space: pre-wrap;
 }
 
 .rodape {
@@ -248,6 +267,10 @@
 
 .cardFotoCategoriaIcone {
   flex: none;
+}
+
+.cardFotoDuracao {
+  opacity: 0.75;
 }
 
 .cardFotoTitulo {
