@@ -2,6 +2,17 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   transpilePackages: ["@presenca/supabase", "@presenca/db"],
+  // Default do Next é 1MB — bem abaixo do teto de 50MB que
+  // packages/db/src/media.ts já valida pra upload de áudio/vídeo (ver
+  // admin/biblioteca/[id]/editar e admin/experiencias-guiadas), causando
+  // "Body exceeded 1 MB limit" (erro 500) em qualquer arquivo de mídia
+  // real. 60mb dá margem pro overhead do multipart acima do teto de
+  // 50MB de conteúdo.
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "60mb",
+    },
+  },
   async headers() {
     return [
       {
