@@ -7,6 +7,12 @@
 html,
 body {
   height: 100%;
+  /* PageHeader.linhaSimples usa width:100vw + margin negativo pra
+     vazar por cima do padding lateral de cada .scene (full-bleed) —
+     sem isso, 100vw pode gerar uma faixa de scroll horizontal mínima
+     (diferença entre 100vw e 100% quando há scrollbar com espaço
+     reservado). */
+  overflow-x: hidden;
 }
 
 /* Fallback pro overscroll/rubber-band do iOS (mostra o que tem atrás de

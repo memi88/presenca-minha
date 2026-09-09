@@ -34,7 +34,19 @@
      visualmente, some por trás dos cards). 10 dá folga sobre qualquer
      z-index de conteúdo de página (nenhum passa de 2 hoje). */
   z-index: 10;
-  width: 100%;
+  /* 100vw + margin negativo (full-bleed), não width:100% — .linhaSimples
+     é filho de cada `.scene`, e várias `.scene` têm padding lateral
+     próprio (ex: Conversa, Livro Vivo). width:100% herdava só a largura
+     ÚTIL dentro desse padding, então o fundo opaco do header (below)
+     não chegava às bordas reais da tela — sobrava uma faixa visível de
+     cada lado mostrando o fundo por trás (achado no celular real, some
+     só quando o header tem fundo próprio — antes disso era transparente
+     e o problema não aparecia). Isso vaza por cima de QUALQUER padding
+     do pai, cobrindo a viewport inteira; precisa de overflow-x:hidden
+     em html/body (globals.css) pra não sobrar scroll horizontal. */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
   background: var(--bg);
   padding: calc(clamp(20px, 3vw, 28px) + env(safe-area-inset-top)) clamp(24px, 4vw, 40px)
     clamp(20px, 3vw, 28px);
