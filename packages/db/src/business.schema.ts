@@ -66,6 +66,11 @@ export const profissionais = sqliteTable(
       .unique()
       .$defaultFn(() => crypto.randomUUID().replace(/-/g, "").slice(0, 8).toUpperCase()),
     formaDeTrabalho: text("forma_de_trabalho"),
+    // Texto livre, opcional — o próprio profissional escreve sobre si em
+    // /perfil (Cuida). Diferente de `tipo` (abordagem terapêutica,
+    // estruturada) — isso é a apresentação em texto corrido, exibida na
+    // Página do Autor (apps/presenca/app/autor/[id]) quando preenchida.
+    descricao: text("descricao"),
     usaLinguagensSimbolicas: integer("usa_linguagens_simbolicas", { mode: "boolean" }).notNull().default(true),
     lembretePerfilEm: integer("lembrete_perfil_em", { mode: "timestamp_ms" }),
     // Chave do objeto no bucket R2 `presenca-media` (não a URL pronta —

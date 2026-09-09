@@ -6,6 +6,7 @@ import { profissionais } from "@presenca/db/schema";
 import { getDb } from "@/lib/db";
 import { getSessao } from "@/lib/sessao";
 
+import { DescricaoForm } from "./DescricaoForm";
 import { FotoPerfilForm } from "./FotoPerfilForm";
 import { PerfilForm } from "./PerfilForm";
 import styles from "./page.module.css";
@@ -16,7 +17,7 @@ export default async function Perfil() {
 
   const profissional = await (await getDb()).query.profissionais.findFirst({
     where: eq(profissionais.userId, sessao.user.id),
-    columns: { nome: true, fotoChave: true },
+    columns: { nome: true, fotoChave: true, descricao: true },
   });
   if (!profissional) redirect("/");
 
@@ -31,6 +32,7 @@ export default async function Perfil() {
         abordagem e forma de trabalho →
       </a>
       <FotoPerfilForm fotoUrl={profissional.fotoChave ? `/imagens/${profissional.fotoChave}` : null} />
+      <DescricaoForm descricaoInicial={profissional.descricao} />
       <PerfilForm />
     </main>
   );

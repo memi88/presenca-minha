@@ -38,7 +38,7 @@ export default async function Autor({ params }: { params: Promise<{ id: string }
   const [profissional, obras] = await Promise.all([
     db.query.profissionais.findFirst({
       where: eq(profissionais.id, id),
-      columns: { id: true, nome: true, tipo: true, formaDeTrabalho: true, fotoChave: true },
+      columns: { id: true, nome: true, tipo: true, formaDeTrabalho: true, fotoChave: true, descricao: true },
     }),
     db.query.biblioteca.findMany({
       where: and(eq(biblioteca.profissionalAutorId, id), eq(biblioteca.publicado, true), eq(biblioteca.escopo, "publico")),
@@ -49,8 +49,13 @@ export default async function Autor({ params }: { params: Promise<{ id: string }
 
   if (!profissional) notFound();
 
+  // Texto livre (profissional.descricao) tem prioridade sobre o resumo
+  // derivado de tipo/formaDeTrabalho — esse fallback existia antes do
+  // campo de descrição existir de verdade (profissional escreve em
+  // /perfil no Cuida).
   const descricao =
-    profissional.tipo === "Outra" ? (profissional.formaDeTrabalho ?? profissional.tipo) : profissional.tipo;
+    profissional.descricao ??
+    (profissional.tipo === "Outra" ? (profissional.formaDeTrabalho ?? profissional.tipo) : profissional.tipo);
 
   return (
     <main className={styles.scene}>

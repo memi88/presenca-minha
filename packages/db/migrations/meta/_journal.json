@@ -43,6 +43,13 @@
       "when": 1788971557924,
       "tag": "0005_wild_white_tiger",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1788982528810,
+      "tag": "0006_dear_puppet_master",
+      "breakpoints": true
     }
   ]
 }

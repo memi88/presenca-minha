@@ -90,3 +90,30 @@ export async function atualizarFoto(_prev: AtualizarFotoState, formData: FormDat
   revalidatePath("/perfil");
   return {};
 }
+
+export type AtualizarDescricaoState = { erro?: string; sucesso?: boolean };
+
+export async function atualizarDescricao(
+  _prev: AtualizarDescricaoState,
+  formData: FormData,
+): Promise<AtualizarDescricaoState> {
+  const descricao = String(formData.get("descricao") ?? "").trim();
+
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
+
+  const db = await getDb();
+  const profissional = await db.query.profissionais.findFirst({
+    where: eq(profissionais.userId, sessao.user.id),
+    columns: { id: true },
+  });
+  if (!profissional) redirect("/");
+
+  await db
+    .update(profissionais)
+    .set({ descricao: descricao || null })
+    .where(eq(profissionais.id, profissional.id));
+
+  revalidatePath("/perfil");
+  return { sucesso: true };
+}
