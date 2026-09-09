@@ -9,6 +9,17 @@ body {
   height: 100%;
 }
 
+/* Fallback pro overscroll/rubber-band do iOS (mostra o que tem atrás de
+   tudo, além de qualquer wrapper). `data-ambiente` é espelhado no próprio
+   body via AmbienteShell.tsx (efeito client-side) — sem isso, `var(--bg)`
+   aqui só resolvia o valor claro do `:root` (a redefinição escura vive em
+   `[data-ambiente="escuro"]`, aplicada num descendente, e variável CSS só
+   cascateia pai→filho), deixando esse fallback sempre claro mesmo em
+   rotas escuras (achado testando no celular real). */
+body {
+  background: var(--bg);
+}
+
 /* Tokens de tema — ambiente claro (default) e escuro (PRD seção 6). Claro =
    hex já repetidos em várias telas antes da Fase 5 (nenhuma cor nova, só
    nomeada); escuro = hex reais do mockup (docs/Presenca Jornada em

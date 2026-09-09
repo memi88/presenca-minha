@@ -1,0 +1,251 @@
+.scene {
+  min-height: 100dvh;
+  padding: 32px 24px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Com a pré-visualização ao lado, o card precisa de mais espaço
+   horizontal em telas grandes — só nesta rota (mesmo espírito do ajuste
+   de largura já feito em apps/cuida/app/pacientes). */
+@media (min-width: 900px) {
+  .scene {
+    max-width: 920px;
+  }
+}
+
+.voltar {
+  display: inline-block;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-bottom: 24px;
+}
+
+.voltar:hover {
+  color: var(--text);
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 28px;
+  box-shadow: 0 1px 2px rgba(42, 37, 33, 0.04);
+}
+
+.eyebrow {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cta-bg);
+  margin-bottom: 10px;
+}
+
+.headline {
+  font: italic 500 24px/1.25 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.subtext {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field {
+  width: 100%;
+  background: var(--field-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 16px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--text);
+  resize: vertical;
+}
+
+.field::placeholder {
+  color: var(--text-faint);
+}
+
+.field:focus-visible {
+  outline: 2px solid var(--cta-bg);
+  outline-offset: 1px;
+  border-color: var(--cta-bg);
+}
+
+.cta {
+  margin-top: 6px;
+  background: var(--cta-bg);
+  color: var(--cta-text);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 13px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.15s ease;
+}
+
+.cta:hover:not(:disabled) {
+  background: var(--cta-bg-hover);
+}
+
+.cta:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.erro {
+  font-size: 13px;
+  color: var(--error);
+}
+
+.grupoLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: -6px;
+}
+
+.alternador {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.opcao {
+  flex: 1 1 auto;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--field-bg);
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+}
+
+.opcaoAtiva {
+  border-color: var(--cta-bg);
+  background: var(--cta-soft);
+  color: var(--cta-bg);
+}
+
+.resultado {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.resultadoTexto {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.formELayout {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+@media (min-width: 900px) {
+  .formELayout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .formELayout > .form {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.preview {
+  flex: 1;
+  min-width: 0;
+}
+
+.previewRotulo {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.previewCard {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.previewCapa {
+  width: 100%;
+  height: 140px;
+  border-radius: 8px;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 14px;
+}
+
+.previewMeta {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cta-bg);
+  margin-bottom: 6px;
+}
+
+.previewTitulo {
+  font: italic 500 20px/1.3 var(--font-spectral), serif;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.previewIntencao {
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+
+.previewMidia {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+
+.previewCorpo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.previewParagrafo {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
+.previewVazio {
+  font-size: 13px;
+  color: var(--text-faint);
+  font-style: italic;
+}

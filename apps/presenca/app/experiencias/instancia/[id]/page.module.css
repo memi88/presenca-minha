@@ -1,0 +1,169 @@
+.scene {
+  min-height: 100dvh;
+  background: var(--bg);
+}
+
+.content {
+  width: 100%;
+  max-width: clamp(420px, 30vw, 640px);
+  margin: 0 auto;
+  padding: 0 clamp(24px, 3vw, 40px) 64px;
+}
+
+.eyebrow {
+  font: 600 12px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.headline {
+  font: 300 clamp(26px, 2vw, 32px) / 1.28 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.subtext {
+  font: 400 15px/1.5 var(--font-fraunces), Georgia, serif;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.etapaConteudo {
+  font: 400 17px/1.6 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
+.etapaForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field {
+  width: 100%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  font: 400 15px/1.5 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.erro {
+  font: 500 13px/1.4 var(--font-bitter), sans-serif;
+  color: var(--error);
+}
+
+.opcoesLista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.opcaoEscolha {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  cursor: pointer;
+}
+
+.opcaoEscolhaAtiva {
+  border-color: var(--accent-strong);
+  background: color-mix(in srgb, var(--accent-strong) 12%, var(--bg-elevated));
+}
+
+.opcaoRotulo {
+  font: 500 15px/1.3 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+}
+
+.opcaoDescricao {
+  font: 400 13px/1.3 var(--font-fraunces), Georgia, serif;
+  color: var(--text-muted);
+}
+
+.orientacao {
+  background: var(--bg-elevated);
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font: italic 400 14px/1.5 var(--font-fraunces), Georgia, serif;
+  color: var(--text-muted);
+}
+
+.cta {
+  width: 100%;
+  margin-top: 4px;
+  background: var(--accent-strong);
+  color: var(--cta-text);
+  font: 600 15px/1 var(--font-bitter), sans-serif;
+  padding: 15px;
+  border-radius: 30px;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+}
+
+.cta:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.consentimentoCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.consentimentoTitulo {
+  font: 500 17px/1.3 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+}
+
+.consentimentoTexto {
+  font: 400 14px/1.55 var(--font-fraunces), Georgia, serif;
+  color: var(--text-muted);
+}
+
+.devolutivaCard {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.devolutivaRotulo {
+  font: 600 12px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  margin-bottom: 10px;
+}
+
+.devolutivaTexto {
+  font: 400 15px/1.6 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
+.voltarLink {
+  display: inline-block;
+  font: 500 13px/1 var(--font-bitter), sans-serif;
+  color: var(--accent);
+  text-decoration: none;
+}

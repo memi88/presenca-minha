@@ -10,6 +10,24 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
+  // Ver comentário equivalente em apps/presenca/wrangler.jsonc — mesmo
+  // banco D1, migrations_dir aponta pro mesmo lugar canônico.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "presenca-db",
+      "database_id": "542a3db7-5eb6-47a8-8050-c8bd04a13e2e",
+      "migrations_dir": "../../packages/db/migrations"
+    }
+  ],
+  // Bucket único pros dois Workers (foto de perfil do terapeuta, capa de
+  // conteúdo da biblioteca) — mesmo padrão do D1 compartilhado acima.
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "presenca-media"
+    }
+  ],
   "observability": {
     "enabled": true
   }

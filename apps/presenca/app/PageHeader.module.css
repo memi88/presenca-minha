@@ -1,36 +1,85 @@
-/* Barra simples — monograma "p." (linka /home) + "voltar", sempre visível
-   no mobile. No desktop, some só quando a tela tem nav completo pra
-   mostrar no lugar dela (.linhaSimplesComNav); sem nav (.linhaSimplesSemNav),
-   continua visível também no desktop. Duas classes distintas de propósito
-   — evita empate de especificidade entre a regra de desktop de uma e da
-   outra (já mordi essa isca duas vezes nesta sessão). */
+/* Barra simples — seta de voltar (esquerda) + título centralizado —
+   docs/redesign/biblioteca_de_pr_ticas_imersiva_e_padronizada. Sempre
+   visível no mobile. No desktop, some só quando a tela tem nav completo
+   pra mostrar no lugar dela (.linhaSimplesComNav); sem nav
+   (.linhaSimplesSemNav), continua visível também no desktop. Duas classes
+   distintas de propósito — evita empate de especificidade entre a regra
+   de desktop de uma e da outra (já mordi essa isca duas vezes nesta
+   sessão).
+
+   O header inteiro fica `position: sticky` no topo (pedido explícito —
+   antes só a seta era fixa, flutuando isolada por cima do conteúdo
+   mesmo com o resto do header já tendo rolado pra fora da tela; em
+   telas com o conteúdo colado à esquerda no topo, como Práticas, ela
+   sobrepunha visualmente o primeiro elemento). Agora `.voltarLink` é
+   `position: absolute` DENTRO de `.linhaSimples` — ancorada ao header,
+   não à viewport — então sobe/desce junto com ele, e o header sticky
+   garante que ela (e o título) continuem sempre visíveis ao rolar, sem
+   flutuar por cima de nada abaixo. Precisa de `background` opaco por
+   ser sticky (senão o conteúdo que rola por baixo apareceria através
+   dele). Mesmo tamanho/cor/posição dos botões flutuantes de detalhe
+   (`.voltarFlutuante` em PainelPratica/PainelLeitura/lente.module.css,
+   que continuam fixed — telas de detalhe com foto hero, sem faixa de
+   header própria). Ficando fora do fluxo, o título centraliza de
+   verdade via `left:50%` (mesma técnica de `.wordmarkCentro` em
+   app/home/page.module.css), sem precisar de um espaçador do lado
+   direito só pra balancear. */
 .linhaSimples {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  position: sticky;
+  top: 0;
+  /* 10 (não 1): o conteúdo de cada página abaixo (ex: .selecaoCentro em
+     Práticas) também usa z-index:1 pro próprio propósito — em empate de
+     z-index, quem vem depois no DOM pinta por cima, então com z-index:1
+     aqui o header sticky ficava atrás do conteúdo ao rolar (achado
+     visualmente, some por trás dos cards). 10 dá folga sobre qualquer
+     z-index de conteúdo de página (nenhum passa de 2 hoje). */
+  z-index: 10;
   width: 100%;
-  padding: clamp(20px, 3vw, 28px) clamp(24px, 4vw, 40px);
+  background: var(--bg);
+  padding: calc(clamp(20px, 3vw, 28px) + env(safe-area-inset-top)) clamp(24px, 4vw, 40px)
+    clamp(20px, 3vw, 28px);
   box-sizing: border-box;
-}
-
-.monogramaLink {
-  display: flex;
-  color: var(--text);
-  text-decoration: none;
-}
-
-.monograma {
-  width: 22px;
-  height: 28px;
+  /* .tituloBarra e .voltarLink são absolute — nenhum dos dois contribui
+     pra altura desta caixa, então sem isso ela encolhe pro tamanho do
+     padding sozinho (~40px) e fica MENOR que o círculo da seta
+     (40px de diâmetro + margem). Qualquer conteúdo de página que comece
+     colado embaixo do header (ex: Diário, que não tem margin-top no
+     próprio título) acaba desenhando por cima do círculo. min-height
+     garante essa folga pra toda tela que usa PageHeader, sem cada uma
+     precisar compensar com padding-top próprio. */
+  min-height: calc(clamp(16px, 3vh, 28px) + 40px + env(safe-area-inset-top) + 16px);
 }
 
 .voltarLink {
-  font: 400 13px/1 var(--font-spectral), serif;
-  color: var(--text-link-muted);
+  position: absolute;
+  top: 50%;
+  left: clamp(16px, 3vw, 28px);
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(20, 16, 10, 0.18);
+  color: #2a2118;
   text-decoration: none;
+}
+
+.tituloBarra {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  max-width: calc(100% - 128px);
+  text-align: center;
+  font: 700 20px/1.2 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (min-width: 960px) {
@@ -70,7 +119,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font: 300 15px/1 var(--font-spectral), serif;
+    font: 500 13px/1 var(--font-bitter), sans-serif;
     letter-spacing: 0.32em;
     color: var(--text-subtle);
     text-decoration: none;
@@ -97,8 +146,9 @@
 
   .navItem,
   .navItemDesabilitado {
-    font-size: 16px;
-    font-family: var(--font-spectral), serif;
+    font-size: 14px;
+    font-family: var(--font-bitter), sans-serif;
+    font-weight: 500;
     color: var(--text-subtle);
     text-decoration: none;
     padding: 6px 14px;
@@ -130,7 +180,7 @@
     background: var(--bg-elevated);
     border: 1px solid var(--border);
     color: var(--accent);
-    font: 600 13px/1 var(--font-spectral), serif;
+    font: 600 13px/1 var(--font-bitter), sans-serif;
     text-decoration: none;
   }
 }

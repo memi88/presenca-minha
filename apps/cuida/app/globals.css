@@ -9,17 +9,24 @@ body {
   height: 100%;
 }
 
-/* Tokens do Cuida — mesma família quente-neutra do Presença (não a estética
-   "lago/âmbar", que é do lado paciente), com o teal como cor própria de CTA:
-   sinaliza "portal diferente" sem virar cinza de SaaS corporativo (voz-de-marca §4/5). */
+/* Tokens do Cuida — refinados a partir de docs/cuida-onboarding-mockup.html
+   (mesma família quente-neutra de sempre, só com mais nuance: papel com
+   leve textura, teal com estado de hover, campos brancos que respiram
+   contra o card). Ainda a mesma intenção documentada aqui desde a Fase 11:
+   sinaliza "portal diferente" do Presença sem virar cinza de SaaS
+   corporativo (voz-de-marca §4/5). */
 :root {
-  --bg: #f7f4ee;
-  --card-bg: #fff;
-  --border: #e0d9c9;
-  --text: #2a2118;
-  --text-muted: #7a6f5c;
-  --accent: #b6873f;
-  --cta-bg: #2f5d50;
+  --bg: #f2ede3;
+  --card-bg: #fbf8f2;
+  --field-bg: #fff;
+  --border: #dcd2be;
+  --text: #2a2521;
+  --text-muted: #6b6255;
+  --text-faint: #b5aa96;
+  --accent: #c98a3e;
+  --cta-bg: #1e6b64;
+  --cta-bg-hover: #17534e;
+  --cta-soft: #e4eeec;
   --cta-text: #fff;
   --error: #b3432f;
   --atencao-bg: #fdf1dc;
@@ -28,7 +35,7 @@ body {
 }
 
 body {
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: var(--font-worksans), "Work Sans", sans-serif;
   color: var(--text);
   background: var(--bg);
 }

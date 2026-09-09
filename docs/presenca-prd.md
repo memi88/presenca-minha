@@ -32,11 +32,11 @@ Estes princípios vêm do Livro Zero e da voz de marca — toda decisão de arqu
 - **Entre Cinzas e Fôlego** — Instagram, fora do escopo deste PRD (ver documento de voz).
 
 ### 3.2 Stack técnico
-**PWA (Progressive Web App), não app nativo.** As telas geradas no Claude Design usam moldura de iPhone só como referência visual de proporção — isso não implica app nativo iOS. Confirmado: Next.js + Supabase, rodando no navegador com manifest + service worker, instalável na tela inicial sem passar por App Store/Play Store. Isso é consistente com o resto do stack de Guilherme (Facilita, brain da Julie) e evita o ciclo de aprovação e as duas codebases nativas que um app iOS/Android exigiria.
+Next.js, rodando como Cloudflare Worker (via OpenNext) em ambos os apps (Presença e Cuida). Web-first desde o V1: instalável na tela inicial via manifest, sem passar por App Store/Play Store — evita o ciclo de aprovação e as duas codebases nativas que um app iOS/Android exigiria. **Atualização (agosto/2026):** o app foi também empacotado como app nativo via Capacitor (`docs/presenca-extensao-app-mobile.md`) — a entrada nesse wrapper é `/bem-vindo`, não a home de marketing. O `service worker` que existia só pra habilitar o prompt de instalação do navegador foi removido de vez (nunca teve funcionalidade offline real por trás) — instalar como PWA continua possível via manifest, só sem esse aviso nativo do Chrome.
 
-Duas peças que seguem em aberto, sem travar o início do código (podem ficar como stub/placeholder até decidir):
-- **Modelo de embeddings** — **decidido:** `multilingual-e5-small` (384 dimensões), auto-hospedado, rodando no **mesmo microsserviço Python** que fará o cálculo de Human Design (via `sentence-transformers`, endpoint `/embed` adicional). Não usa o embedding nativo das Supabase Edge Functions (`gte-small`) — esse é só em inglês, incompatível com um produto inteiro em português. Schema (seção 4) já ajustado para `vector(384)`.
-- **LLM de entrega** (personalização de saudação, tom, etc.) — ainda não escolhido especificamente.
+- **Banco:** Supabase (Postgres + RLS + `pgvector`) hoje; **migração pra Cloudflare D1 + Better Auth em andamento**, ver nota na seção 4.
+- **Modelo de embeddings:** `multilingual-e5-small` (384 dimensões), auto-hospedado no microsserviço Python `services/ia` (junto com o cálculo de Human Design), endpoint `/embed`. Não usa embedding nativo do Supabase (`gte-small`, só inglês).
+- **LLM de conversa:** Claude Sonnet 5 (Anthropic), via `lib/anthropic.ts`/`lib/systemPromptConversa.ts` — streaming, com tools estruturadas pra sinalizar risco/encerramento e sugerir prática (busca semântica real, não invenção de conteúdo).
 
 ### 3.3 Os dois cenários
 | | Sem profissional conectado | Com profissional conectado |
@@ -155,22 +155,26 @@ create policy "profissional insere apenas em pacientes vinculados"
 
 **Nota de segurança explícita:** `service_role` nunca entra em código de frontend nem é acessível por agente de IA durante o desenvolvimento. Toda escrita na `biblioteca` (conteúdo curado) passa por um painel interno autenticado como admin, não pela API pública.
 
+> **Nota (setembro/2026): este bloco é o schema original do V1, não o schema atual.** O modelo de dados cresceu bastante desde então — `admins`, `pacientes_pre_cadastro` (self-signup de terapeuta + pré-cadastro de paciente, Fase 11), `lente_reacoes`, rate limits de embedding/conversa, `biblioteca.categoria`/`origin`/`status_moderacao`/`profissional_autor_id` (biblioteca colaborativa moderada), `vinculos.compartilhar_praticas`/`compartilhar_livro_vivo`, `profissionais.codigo_convite`, entre outras colunas. `supabase/migrations/*.sql` é a fonte da verdade pro schema real hoje, não este bloco (mantido aqui só como referência histórica do desenho original). **Além disso, uma migração de banco de Supabase pra Cloudflare (D1 + Better Auth) está em andamento** — quando concluída, a fonte da verdade passa a ser `packages/db/src/business.schema.ts` (Drizzle), e RLS deixa de existir (as mesmas regras viram checagem explícita em Server Action). Ver memória de projeto `project_migracao_supabase_cloudflare` e o plano em `playful-dreaming-noodle.md`.
+
 ---
 
 ## 5. Onboarding (revelação contextual)
 
 ### Identidade também é revelada contextualmente
-Cadastro de verdade (e-mail/senha) não acontece na entrada. Usa **login anônimo do Supabase** (`signInAnonymously()`) de forma silenciosa, assim que a pessoa entra — isso já cria um usuário real em `auth.users`, então o apelido e todas as entradas seguintes (Caderno, conversa) são persistidas de verdade desde o primeiro toque, com RLS funcionando normalmente. A pessoa não vê nem sabe que isso aconteceu.
+O único dado obrigatório na entrada é o apelido. E-mail/senha aparecem já na mesma tela (`/chegada`), logo abaixo do apelido, mas como campos **opcionais** com uma mensagem explícita de que dá pra preencher depois — não é mais um convite só posterior, mas também nunca é um formulário-portão: quem não quiser parar pra pensar em e-mail/senha, não para.
 
-A conversão pra conta permanente (e-mail/senha, ou OAuth) acontece depois, como convite contextual — mesma lógica da data de nascimento:
+Por baixo dos panos continua sendo **login anônimo do Supabase** (`signInAnonymously()`) que sustenta tudo isso: acontece de forma silenciosa no momento em que o formulário de apelido é enviado (`app/chegada/actions.ts:cadastrar`), sessão nova ou não — isso já cria um usuário real em `auth.users`, então o apelido e todas as entradas seguintes (Caderno, conversa) são persistidas de verdade desde o primeiro toque, com RLS funcionando normalmente. Se a pessoa preencheu e-mail/senha nesse mesmo formulário, o código chama `updateUser({ email, password })` logo em seguida, em cima dessa sessão recém-criada — nunca `signUp()` direto: `signUp()` deixaria a pessoa sem sessão nenhuma até confirmar o e-mail (se "Confirm email" estiver ligado no projeto), travando exatamente o momento em que ela mais precisa continuar sem fricção. `updateUser()` em cima de uma sessão já ativa não tem esse problema — a conta vira permanente sem nenhum intervalo sem acesso.
+
+Pra quem pula e-mail/senha na entrada, a conversão pra conta permanente (e-mail/senha, ou OAuth) continua disponível depois, como convite contextual — mesma lógica da data de nascimento:
 - **Obrigatória** no momento de conectar um profissional (perder esse vínculo por não ter convertido seria grave demais pra deixar opcional).
 - **Convite gentil e recorrente** pro resto — não uma vez só e nunca mais, porque usuário anônimo perde acesso **permanentemente** se sair/limpar dados/trocar de aparelho antes de converter. Isso é risco real de perda de dado emocionalmente significativo, não só inconveniência.
-- Conversão preserva o mesmo UUID — nada do que a pessoa já escreveu se perde ao criar e-mail/senha depois.
+- Conversão preserva o mesmo UUID — nada do que a pessoa já escreveu se perde ao criar e-mail/senha depois (mesmo mecanismo de `updateUser()` descrito acima, só que rodando mais tarde, a partir de `/conta`).
 
-Recomendação de segurança do próprio Supabase: habilitar CAPTCHA (ou Cloudflare Turnstile) no login anônimo pra evitar abuso — sem isso, o endpoint pode ser usado pra inflar o banco artificialmente.
+Recomendação de segurança do próprio Supabase: habilitar CAPTCHA (ou Cloudflare Turnstile) no login anônimo pra evitar abuso — sem isso, o endpoint pode ser usado pra inflar o banco artificialmente. O widget roda no mesmo formulário de apelido/e-mail/senha, já que é ali que `signInAnonymously()` de fato acontece agora.
 
 ### Fluxo
-1. **Entrada** (ambiente claro) — Landing + saudação, sem pedir decisão. Login anônimo acontece aqui, silenciosamente.
+1. **Entrada** (ambiente claro) — Landing + saudação, sem pedir decisão além do apelido. E-mail/senha aparecem opcionais na mesma tela, com escape explícito ("pode preencher depois"). Login anônimo acontece no envio desse formulário, silenciosamente.
 2. **Conversa inicial** (ambiente claro ou transição suave para escuro) — primeira interação real, sem pedir dado de nascimento.
 3. **Fechamento leve** — pequeno encerramento, sem cobrança.
 4. **Convite contextual posterior** — dentro da própria conversa, se o tema pedir (nunca ao entrar numa tela específica — isso reintroduziria formulário-portão). Quando o assunto tocar em algo que se beneficiaria de calibragem, surge o convite: *"posso te acompanhar de um jeito mais calibrado se você quiser me contar sobre sua chegada ao mundo — sem pressa, quando quiser."* Campo de hora tem escape explícito: *"não sabe a hora? sem problema — alguns insights ficam menos precisos, mas você ainda é bem-vindo aqui."*
@@ -182,9 +186,9 @@ Recomendação de segurança do próprio Supabase: habilitar CAPTCHA (ou Cloudfl
 
 Não é dark mode de preferência de usuário — é mudança de estado emocional da interface, com transição em fade entre rotas.
 
-- **Claro:** Home, Dashboard, Reconhecimento, Perfil, Evolução, Conversas, Terapia, Configurações.
-- **Escuro:** Livro Vivo, diário, meditação.
-- **Gatilho na v1:** fixo por tela (mapeamento direto, sem lógica condicional). Evoluir para "por tipo de ação" é refinamento de versão futura.
+- **Claro:** Home, Perfil, Conta, Conversa, Práticas, Terapia, Recursos, Página do Autor, Lente do dia.
+- **Escuro:** Livro Vivo, Diário.
+- **Gatilho:** fixo por tela (mapeamento direto via `AmbienteShell.tsx`, prefixo de rota), sem lógica condicional por ação. Práticas saiu do ambiente escuro no redesign "Contemplative Warmth" (setembro/2026) — só o "Fôlego" (respiração guiada, `FolegoInline.tsx`) mantém tela cheia sempre escura como exceção proposital, independente do resto de Práticas ter virado ambiente claro.
 
 Implementação: tokens de tema via CSS variables, troca de classe no layout raiz + transição de opacidade (~400–600ms) na troca de rota. Sem dependência de bibliotecas pesadas de animação — CSS transitions resolvem.
 
@@ -210,7 +214,7 @@ Sinais determinísticos → Filtro por tags + proximidade semântica → LLM per
 **Saídas concretas desse pipeline, usando os mesmos sinais:**
 - **Saudação da Home** — varia por dia da semana, fase da lua, tempo desde a última visita, pergunta em aberto do profissional, e últimas entradas do Caderno. Decide o *tipo* de abertura (pergunta neutra / convite a celebrar / silêncio acolhedor / retomada de algo em aberto), nunca repete a mesma fórmula todo dia. **Limite crítico:** personaliza o tom da pergunta, nunca rotula a pessoa de volta (nunca "percebemos que você anda ansioso" — isso é diagnóstico, proibido pelo pilar 3).
 - **Cena visual da Home/Conversa** — mesma linguagem estética (lago, luz âmbar), mas a imagem específica varia pelos mesmos sinais determinísticos (hora do dia, fase da lua, estação), evitando repetição da mesma imagem estática a cada acesso. 4-6 variações cobrem isso sem precisar de geração de imagem sob demanda.
-- **Convite para Meditação/prática** — mesma lógica: o convite de entrada varia por sinal, nunca fórmula fixa.
+- **Convite para Práticas** — mesma lógica: o convite de entrada varia por sinal, nunca fórmula fixa.
 - **Livro Vivo** — o conteúdo das páginas é fixo/curado (não personaliza a escrita), a *ordem/seleção* de qual página sobe primeiro varia por tag e por proximidade semântica com o momento atual.
 - **Diário** — variação deliberadamente rara e opcional. É o único cômodo "página em branco"; sugestões de abertura recorrentes quebrariam a própria identidade de silêncio do espaço.
 - **A IA como companheira, percebendo conexões:** quando uma nova entrada do Caderno se aproxima semanticamente de uma pergunta em aberto do profissional ou de uma entrada marcada `revisitar`, o sistema pode trazer isso à tona com uma notificação gentil — variando a frase conforme a origem: *"isso parece conversar com a pergunta que você recebeu — quer registrar?"* ou *"essa conversa está te lembrando de uma página que você escreveu — quer olhar de novo?"*. Nunca como tarefa, sempre como companhia. Enquanto o limiar de similaridade ainda não estiver bem calibrado (início do piloto), uma lista simples das entradas marcadas pra revisitar já entrega valor sozinha, sem depender do matching automático.
@@ -232,20 +236,29 @@ Sinais determinísticos → Filtro por tags + proximidade semântica → LLM per
 ## 9. Fora de escopo (V1)
 
 - Profissionais além de terapeuta (nutricionista, fono) — arquitetura já permite (`tipo` na tabela `profissionais`), mas não é prioridade para o piloto com os 3 terapeutas.
-- Contribuição de usuários ao Livro Vivo público — não existe; Livro Vivo é sempre autoral/curado.
 - Ambiente claro/escuro por tipo de ação (em vez de por tela fixa) — refinamento futuro.
-- Tela de conexão com profissional para quem começou sem nenhum vinculado (V2 — provável via biblioteca pública com autoria).
-- Painel admin sofisticado para a Biblioteca — cadastro de conteúdo pode ser direto no banco no V1.
+- Upload de imagem real pra `biblioteca`/`profissionais` — bloqueado pela migração de banco em andamento (ver nota na seção 4); usa placeholders SVG próprios até lá.
+- Provedor de e-mail transacional (link mágico, recuperação de senha) e credenciais OAuth do Google configuradas em produção — pendentes da migração de banco (ver seção 4).
+- Geração de conteúdo de prática guiada em áudio/vídeo ("mídia imersiva") — não existe nenhum arquivo desse tipo no sistema nem coluna pra isso em `biblioteca`.
+
+**Itens que estavam aqui e já foram implementados (Fase 11, agosto/2026):**
+- ~~Contribuição de usuários ao Livro Vivo público~~ — implementado como **biblioteca colaborativa moderada**: profissionais propõem conteúdo (`/biblioteca/nova` no Cuida), entra `pendente`/despublicado por padrão, um admin aprova/recusa em `/admin/biblioteca`.
+- ~~Tela de conexão com profissional para quem começou sem nenhum vinculado~~ — implementado via **Página do Autor** (`/autor/[id]`, alcançável de qualquer conteúdo público na biblioteca) + CTA "conectar com" quando ainda não há profissional vinculado.
+- ~~Painel admin sofisticado para a Biblioteca~~ — implementado (`/admin/biblioteca`: fila de moderação com filtro por status/tipo, paginação, aprovar/recusar/tirar do ar).
 
 ---
 
 ## 10. Definição de pronto para o piloto (3 terapeutas)
 
-- [ ] Cadastro + login funcionando.
-- [ ] Onboarding com revelação contextual (sem formulário de nascimento na entrada).
-- [ ] `pgvector` habilitado e embedding calculado por item (biblioteca ao cadastrar, Caderno ao escrever).
-- [ ] Caderno funcionando (criar, ler entradas; marcar `revisitar`; autoria visual diferenciada).
-- [ ] Vínculo profissional-paciente funcionando (Cuida básico: profissional vê os próprios pacientes vinculados e consegue escrever uma pergunta/prática/página no caderno de um paciente).
-- [ ] Livro Vivo com um conjunto inicial de páginas/práticas cadastradas, já com embedding gerado (curadoria manual, sem precisar de admin panel sofisticado no início — pode ser inserido direto no banco).
-- [ ] Ambientes claro/escuro implementados nas telas centrais.
-- [ ] RLS testado em todas as tabelas antes do primeiro paciente real.
+> Atualizado setembro/2026 — a maior parte já está implementada e em uso
+> pelas 2 contas de teste; o piloto de verdade (pacientes reais) ainda
+> não começou.
+
+- [x] Cadastro + login funcionando.
+- [x] Onboarding com revelação contextual (sem formulário de nascimento na entrada).
+- [x] `pgvector` habilitado e embedding calculado por item (biblioteca ao cadastrar, Caderno ao escrever).
+- [x] Caderno funcionando (criar, ler entradas; marcar `revisitar`; autoria visual diferenciada).
+- [x] Vínculo profissional-paciente funcionando (Cuida: self-signup de terapeuta, código de convite genérico ou pré-cadastro com link pessoal, profissional vê os próprios pacientes vinculados e escreve pergunta/prática/página/reflexão no caderno de um paciente).
+- [ ] Livro Vivo com um conjunto inicial de páginas/práticas **reais** cadastradas, já com embedding gerado — mecanismo pronto (`scripts/cadastrar-biblioteca.mjs`, painel de moderação), mas não confirmado se já há conteúdo curado suficiente pra sustentar um piloto de verdade.
+- [x] Ambientes claro/escuro implementados nas telas centrais.
+- [ ] RLS testado em todas as tabelas **antes do primeiro paciente real** — RLS existe desde o V1 e foi exercitada organicamente pelas 2 contas de teste, mas não houve uma auditoria formal dedicada; retomar antes de dar acesso a um paciente real. **Ficará sem objeto se a migração de banco pra Cloudflare (seção 4) for concluída antes do piloto** — D1 não tem RLS, a mesma garantia passa a ser checagem explícita em Server Action, auditada módulo a módulo (ver `project_migracao_supabase_cloudflare`).

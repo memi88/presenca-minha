@@ -1,11 +1,13 @@
+import { BottomNav } from "./BottomNav";
 import { CirculoRespirando } from "./CirculoRespirando";
-import { MonogramaP } from "./MonogramaP";
 import styles from "./PageHeader.module.css";
+import { VoltarLink } from "./VoltarLink";
 
 type Secao = "conversa" | "livro" | "escrever" | "pratica" | null;
 
 type Props = {
-  voltar: { href: string; label: string };
+  titulo: string;
+  voltar: { href: string };
   nome?: string;
   atual?: Secao;
 };
@@ -14,34 +16,30 @@ type Props = {
 // tem sua própria versão com saudação no mobile, e o site de marketing,
 // que tem a wordmark completa).
 //
-// Sempre visível (mobile, e no desktop quando não há `nome`): barra
-// simples — monograma "p." à esquerda (linka /home), "voltar" à direita.
-// Quando `nome` existe, no desktop (≥960px) essa barra some e entra o
-// wordmark completo + nav + avatar (inalterado desde que isso existia
-// como HeaderDesktop).
-//
-// As duas variantes da barra simples usam classes distintas (não uma
-// condição dentro da mesma classe) de propósito — evita empate de
-// especificidade entre a regra de desktop de uma e a da outra.
-export function PageHeader({ voltar, nome, atual }: Props) {
+// Barra simples, sempre visível no mobile (docs/redesign/
+// biblioteca_de_pr_ticas_imersiva_e_padronizada — seta + título
+// centralizado, ver PageHeader.module.css): substitui o antigo par
+// monograma "p." (esquerda) + link de texto "voltar" (direita), que
+// existia em cada tela com um rótulo diferente e inconsistente
+// ("← voltar", "← Voltar", "‹ Perfil"...). Quando `nome` existe, no
+// desktop (≥960px) essa barra some e entra o wordmark completo + nav +
+// avatar (inalterado desde que isso existia como HeaderDesktop) — esse
+// continua sem título, mesmo comportamento de antes.
+export function PageHeader({ titulo, voltar, nome, atual }: Props) {
   const temNav = !!nome;
 
   return (
     <>
       <div className={`${styles.linhaSimples} ${temNav ? styles.linhaSimplesComNav : styles.linhaSimplesSemNav}`}>
-        <a className={styles.monogramaLink} href="/home" aria-label="Página inicial">
-          <MonogramaP className={styles.monograma} />
-        </a>
-        <a className={styles.voltarLink} href={voltar.href}>
-          {voltar.label}
-        </a>
+        <VoltarLink href={voltar.href} />
+        <h1 className={styles.tituloBarra}>{titulo}</h1>
       </div>
 
       {temNav && (
         <div className={styles.topBar}>
           <a className={styles.wordmarkDesktop} href="/home">
             <CirculoRespirando className={styles.wordmarkDot} />
-            presença
+            Presença
           </a>
           <div className={styles.topBarDireita}>
             <nav className={styles.navDesktop}>
@@ -76,6 +74,8 @@ export function PageHeader({ voltar, nome, atual }: Props) {
           </div>
         </div>
       )}
+
+      {temNav && <BottomNav atual={atual ?? null} />}
     </>
   );
 }

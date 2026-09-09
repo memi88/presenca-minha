@@ -17,7 +17,14 @@
 //   { "tipo": "pagina_livro_vivo", "titulo": "...", "conteudo": "...",
 //     "slug": "opcional-identificador-estavel",
 //     "tags_momento_vida": ["confuso"], "tags_hd": [], "ambiente": "escuro",
-//     "autor": "Guilherme", "publicado": true }
+//     "autor": "Guilherme", "publicado": true,
+//     "origin": "PRESENCA" }
+//
+// origin (P5 Fase A) — obrigatório pra tipo:"pratica" entrar no pool de
+// sugestão do agente (buscar_pratica_relevante exige origin is not null);
+// opcional/null pra qualquer outro tipo. Valores válidos (CHECK da
+// migration 20260904134111): TRADITIONAL_MAYA, LAW_OF_TIME, HUMAN_DESIGN,
+// KABBALAH, PRESENTE, PRESENCA.
 
 import { readFileSync } from "node:fs";
 
@@ -60,7 +67,7 @@ const linhas = [];
 for (const item of itens) {
   const vetor = url && chave ? await embed(item.conteudo) : null;
   linhas.push(
-    `insert into biblioteca (tipo, titulo, conteudo, slug, tags_momento_vida, tags_hd, ambiente, autor, publicado, embedding) values (` +
+    `insert into biblioteca (tipo, titulo, conteudo, slug, tags_momento_vida, tags_hd, ambiente, autor, publicado, embedding, origin) values (` +
       [
         sqlString(item.tipo),
         sqlString(item.titulo),
@@ -72,6 +79,7 @@ for (const item of itens) {
         sqlString(item.autor ?? "Guilherme"),
         item.publicado === false ? "false" : "true",
         vetor ? `'[${vetor.join(",")}]'::vector(384)` : "null",
+        sqlString(item.origin),
       ].join(", ") +
       `);`,
   );

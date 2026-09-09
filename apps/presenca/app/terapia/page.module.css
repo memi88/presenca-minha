@@ -12,21 +12,14 @@
   padding: 0 clamp(24px, 3vw, 40px);
 }
 
-.eyebrow {
-  font: 300 clamp(16px, 1vw, 18px) / 1 var(--font-spectral), serif;
-  letter-spacing: 0.32em;
-  color: var(--accent);
-  margin-bottom: 18px;
-}
-
 .headline {
-  font: italic 400 clamp(30px, 2.2vw, 38px) / 1.28 var(--font-spectral), serif;
+  font: 300 clamp(30px, 2.2vw, 38px) / 1.28 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: 8px;
 }
 
 .subtext {
-  font: 400 clamp(16px, 1vw, 18px) / 1.4 var(--font-spectral), serif;
+  font: 400 clamp(16px, 1vw, 18px) / 1.4 var(--font-fraunces), Georgia, serif;
   color: var(--text-muted);
   margin-bottom: 28px;
 }
@@ -37,11 +30,12 @@
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: clamp(17px, 1.1vw, 20px) clamp(18px, 1.1vw, 20px);
-  font: 400 clamp(17px, 1vw, 18px) / 1 var(--font-spectral), serif;
+  font: 600 clamp(16px, 1vw, 17px) / 1 var(--font-bitter), sans-serif;
   color: var(--text);
   box-shadow: 0 2px 6px rgba(90, 60, 20, 0.05);
   margin-bottom: 12px;
   text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .field::placeholder {
@@ -54,7 +48,7 @@
   margin-top: 8px;
   background: var(--accent-strong);
   color: var(--cta-text);
-  font: 500 clamp(17px, 1vw, 18px) / 1 var(--font-spectral), serif;
+  font: 600 clamp(16px, 1vw, 17px) / 1 var(--font-bitter), sans-serif;
   padding: clamp(17px, 1.1vw, 20px);
   border-radius: 30px;
   text-align: center;
@@ -69,7 +63,7 @@
 }
 
 .erro {
-  font: 400 13px/1.4 var(--font-spectral), serif;
+  font: 500 13px/1.4 var(--font-bitter), sans-serif;
   color: var(--error);
   margin: -4px 0 12px;
 }
@@ -88,7 +82,7 @@
 }
 
 .consentimentoTexto {
-  font: 400 13px/1.4 var(--font-spectral), serif;
+  font: 400 13px/1.4 var(--font-fraunces), Georgia, serif;
   color: var(--text-muted);
 }
 
@@ -96,4 +90,230 @@
   .quebra {
     display: none;
   }
+}
+
+/* Terapia (sem conexão, com código) — mockup
+   terapia_sem_conex_o_texto_corrigido: os 2 itens são reais (confirmado
+   antes de escrever a copy) — "escrever no Diário" é o que
+   EntradaForm.tsx do Cuida já faz, "avisar quando precisar de apoio" é o
+   botão `avisarProfissional` em app/recursos/page.tsx. Ícones
+   reaproveitados (IconeDiario/IconeConversa, os mesmos do BottomNav) em
+   vez de criar 2 ícones novos só pra isso — a "nota estruturada no
+   Diário" e o "canal de apoio" já têm ícone estabelecido. */
+.dinamicaCard {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.dinamicaTitulo {
+  font: 500 19px/1.3 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.dinamicaItem {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.dinamicaItem:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.dinamicaIcone {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  color: var(--accent);
+  margin-top: 2px;
+}
+
+.dinamicaItemTitulo {
+  font: 600 14px/1.3 var(--font-bitter), sans-serif;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.dinamicaItemTexto {
+  font: 400 14px/1.5 var(--font-fraunces), Georgia, serif;
+  color: var(--text-muted);
+}
+
+/* Terapia (conectado) — mockup terapia_conectado_controles_padronizados.
+   .content já centraliza verticalmente (.scene flex + margin:auto) pros
+   outros 2 estados (mais curtos, só headline+form); aqui com mais
+   conteúdo o margin:auto simplesmente para de ter efeito (sem espaço
+   sobrando), sem precisar de regra própria. */
+.perfilTerapeuta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.avatarTerapeuta {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  border: 2px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.nomeTerapeuta {
+  font: 500 22px/1.3 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.conectadoDesde {
+  font: italic 400 14px/1 var(--font-fraunces), Georgia, serif;
+  color: var(--text-muted);
+}
+
+.compartilhamentoSecao {
+  margin-bottom: 24px;
+}
+
+.compartilhamentoRotulo {
+  font: 600 11px/1 var(--font-bitter), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-subtle);
+  margin-bottom: 4px;
+}
+
+.toggleLinha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+}
+
+.toggleLinha:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.toggleRotulo {
+  font: 400 15px/1.4 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+}
+
+.toggle {
+  flex: none;
+  position: relative;
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--border);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.toggleBolinha {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 150ms ease;
+}
+
+.toggleLigado {
+  background: var(--text);
+}
+
+.toggleLigado .toggleBolinha {
+  transform: translateX(18px);
+  background: var(--bg);
+}
+
+.avisoPrivacidade {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 32px;
+}
+
+.avisoPrivacidadeIcone {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  color: var(--text-subtle);
+}
+
+.avisoPrivacidade p {
+  font: 400 13.5px/1.6 var(--font-fraunces), Georgia, serif;
+  color: var(--text-muted);
+}
+
+.desconectar {
+  display: block;
+  margin: 0 auto;
+  background: none;
+  border: none;
+  font: 500 14px/1 var(--font-bitter), sans-serif;
+  color: var(--error);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.desconectarConfirmacao {
+  text-align: center;
+}
+
+.desconectarPergunta {
+  font: 400 14px/1.5 var(--font-fraunces), Georgia, serif;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+
+.desconectarAcoes {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.desconectarConfirmar {
+  background: var(--error);
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 20px;
+  font: 600 13px/1 var(--font-bitter), sans-serif;
+  cursor: pointer;
+}
+
+.desconectarConfirmar:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.desconectarCancelar {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 10px 20px;
+  font: 500 13px/1 var(--font-bitter), sans-serif;
+  color: var(--text-muted);
+  cursor: pointer;
 }

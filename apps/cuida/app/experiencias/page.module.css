@@ -1,0 +1,73 @@
+.scene {
+  min-height: 100dvh;
+  padding: 24px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+@media (min-width: 900px) {
+  .scene {
+    max-width: 640px;
+    padding: 40px;
+  }
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 12px;
+}
+
+.greeting {
+  font: italic 500 18px/1.2 var(--font-spectral), serif;
+  color: var(--text);
+}
+
+.voltar {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.vazio {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.item {
+  display: block;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 8px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.itemTopo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.itemContexto {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.pendente {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--atencao-text);
+  background: var(--atencao-bg);
+  border: 1px solid var(--atencao-border);
+  border-radius: 6px;
+  padding: 3px 8px;
+}

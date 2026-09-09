@@ -12,25 +12,27 @@
   padding: 40px clamp(24px, 3vw, 40px);
 }
 
-/* Recursos tem paleta própria (terracota), não os tokens âmbar genéricos do
-   resto do app — dá ao "cuidado imediato" um registro sutilmente diferente
-   sem virar alarme (voz-de-marca pilar 4). Fonte: docs/Presenca Experiencia
-   Standalone.html, tela "12 RECURSOS". */
+/* Paleta terracota própria (#b8552f etc.) removida (04/09/2026) — era de
+   um documento anterior a este redesign (docs/Presenca Experiencia
+   Standalone.html, tela "12 RECURSOS"), órfã da decisão visual atual.
+   Confirmado contra o mockup real desta fase (recursos_apoio_e_cuidado):
+   usa a mesma paleta âmbar/parchment do resto do app, sem tom próprio. */
 .eyebrow {
-  font: 300 clamp(14px, 0.9vw, 16px) / 1 var(--font-spectral), serif;
-  letter-spacing: 0.28em;
-  color: #b8552f;
+  font: 600 12px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
   margin-bottom: 16px;
 }
 
 .headline {
-  font: italic 400 clamp(28px, 2.1vw, 36px) / 1.3 var(--font-spectral), serif;
+  font: 300 clamp(28px, 2.1vw, 36px) / 1.3 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: 10px;
 }
 
 .subtext {
-  font: 400 clamp(16px, 1vw, 17px) / 1.45 var(--font-spectral), serif;
+  font: 400 clamp(16px, 1vw, 17px) / 1.45 var(--font-fraunces), Georgia, serif;
   color: var(--text-muted);
   margin-bottom: 28px;
 }
@@ -47,8 +49,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  background: #fff6f0;
-  border: 1.5px solid #dfa889;
+  background: #fcebdc;
+  border: 1px solid var(--border);
   border-radius: 18px;
   padding: 18px 19px;
   text-decoration: none;
@@ -61,21 +63,30 @@
 }
 
 .recursoNome {
-  font: 500 20px/1 var(--font-spectral), serif;
-  color: #3a241a;
+  font: 500 20px/1 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
 }
 
 .recursoDescricao {
-  font: italic 300 13px/1.2 var(--font-spectral), serif;
-  color: #8a6a55;
+  font: italic 300 13px/1.2 var(--font-fraunces), Georgia, serif;
+  color: var(--text-muted);
 }
 
 .recursoIcone {
   flex: none;
   width: 46px;
   height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
-  background: #c9542c;
+  background: var(--text);
+  color: var(--bg-elevated);
+}
+
+.recursoIcone svg {
+  width: 20px;
+  height: 20px;
 }
 
 .cta {
@@ -84,7 +95,7 @@
   box-sizing: border-box;
   background: var(--accent-strong);
   color: var(--cta-text);
-  font: 500 clamp(17px, 1vw, 18px) / 1 var(--font-spectral), serif;
+  font: 600 clamp(16px, 1vw, 17px) / 1 var(--font-bitter), sans-serif;
   padding: clamp(17px, 1.1vw, 20px);
   border-radius: 30px;
   text-align: center;
@@ -94,7 +105,7 @@
 }
 
 .rede {
-  font: italic 400 13.5px/1.5 var(--font-spectral), serif;
+  font: italic 400 13.5px/1.5 var(--font-fraunces), Georgia, serif;
   color: var(--text-subtle);
   margin-bottom: 22px;
 }
@@ -112,24 +123,24 @@
   color: var(--accent);
   border-radius: 30px;
   padding: 14px;
-  font: 500 15px/1 var(--font-spectral), serif;
+  font: 600 14px/1 var(--font-bitter), sans-serif;
   cursor: pointer;
   margin-bottom: 10px;
 }
 
 .avisoConfirmado {
-  font: italic 400 14px/1.4 var(--font-spectral), serif;
+  font: italic 400 14px/1.4 var(--font-fraunces), Georgia, serif;
   color: var(--text-muted);
   margin-bottom: 10px;
 }
 
 .avisoMicrocopy {
-  font: 400 12px/1.5 var(--font-spectral), serif;
+  font: 400 12px/1.5 var(--font-fraunces), Georgia, serif;
   color: var(--text-faint);
 }
 
 .footer {
-  font: italic 300 12px/1 var(--font-spectral), serif;
+  font: italic 300 12px/1 var(--font-fraunces), Georgia, serif;
   color: var(--text-faint);
   margin-bottom: 26px;
 }

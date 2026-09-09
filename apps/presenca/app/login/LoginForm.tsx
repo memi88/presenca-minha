@@ -22,21 +22,27 @@ export function LoginForm() {
         ) : (
           <form action={recAction}>
             {recState.erro && <p className={styles.erro}>{recState.erro}</p>}
-            <input
-              className={styles.field}
-              type="email"
-              name="email"
-              placeholder="seu e-mail"
-              autoComplete="email"
-              required
-            />
+            <div className={styles.campo}>
+              <label className={styles.rotulo} htmlFor="email-recuperacao">
+                E-mail
+              </label>
+              <input
+                className={styles.field}
+                id="email-recuperacao"
+                type="email"
+                name="email"
+                placeholder="seu@email.com"
+                autoComplete="email"
+                required
+              />
+            </div>
             <button className={styles.cta} type="submit" disabled={recPending}>
-              enviar link
+              Enviar link
             </button>
           </form>
         )}
         <button type="button" className={styles.esqueci} onClick={() => setMostrarRecuperacao(false)}>
-          voltar pro login
+          Voltar pro login
         </button>
       </div>
     );
@@ -50,21 +56,27 @@ export function LoginForm() {
         ) : (
           <form action={magicoAction}>
             {magicoState.erro && <p className={styles.erro}>{magicoState.erro}</p>}
-            <input
-              className={styles.field}
-              type="email"
-              name="email"
-              placeholder="seu e-mail"
-              autoComplete="email"
-              required
-            />
+            <div className={styles.campo}>
+              <label className={styles.rotulo} htmlFor="email-magico">
+                E-mail
+              </label>
+              <input
+                className={styles.field}
+                id="email-magico"
+                type="email"
+                name="email"
+                placeholder="seu@email.com"
+                autoComplete="email"
+                required
+              />
+            </div>
             <button className={styles.cta} type="submit" disabled={magicoPending}>
-              enviar link de acesso
+              Enviar link de acesso
             </button>
           </form>
         )}
         <button type="button" className={styles.esqueci} onClick={() => setMostrarLinkMagico(false)}>
-          voltar pro login
+          Voltar pro login
         </button>
       </div>
     );
@@ -73,30 +85,42 @@ export function LoginForm() {
   return (
     <form action={loginAction}>
       {loginState.erro && <p className={styles.erro}>{loginState.erro}</p>}
-      <input
-        className={styles.field}
-        type="email"
-        name="email"
-        placeholder="e-mail"
-        autoComplete="email"
-        required
-      />
-      <input
-        className={styles.field}
-        type="password"
-        name="senha"
-        placeholder="senha"
-        autoComplete="current-password"
-        required
-      />
-      <button type="button" className={styles.esqueci} onClick={() => setMostrarRecuperacao(true)}>
-        esqueci minha senha
-      </button>
-      <button type="button" className={styles.esqueci} onClick={() => setMostrarLinkMagico(true)}>
-        entrar sem senha
-      </button>
+      <div className={styles.campo}>
+        <label className={styles.rotulo} htmlFor="email-login">
+          E-mail
+        </label>
+        <input
+          className={styles.field}
+          id="email-login"
+          type="email"
+          name="email"
+          placeholder="seu@email.com"
+          autoComplete="email"
+          required
+        />
+      </div>
+      <div className={styles.campo}>
+        <label className={styles.rotulo} htmlFor="senha-login">
+          Senha
+        </label>
+        <input
+          className={styles.field}
+          id="senha-login"
+          type="password"
+          name="senha"
+          placeholder="••••••••"
+          autoComplete="current-password"
+          required
+        />
+      </div>
       <button className={styles.cta} type="submit" disabled={loginPending}>
-        entrar
+        Entrar
+      </button>
+      <button type="button" className={styles.ctaSecundario} onClick={() => setMostrarLinkMagico(true)}>
+        Entrar sem senha
+      </button>
+      <button type="button" className={styles.esqueci} onClick={() => setMostrarRecuperacao(true)}>
+        Esqueci minha senha
       </button>
     </form>
   );

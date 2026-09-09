@@ -2,8 +2,8 @@
 
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
-
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 import { type SalvarNascimentoState, lerDadosNascimentoDoForm, salvarESagendarNascimento } from "@/lib/nascimento";
 
 export async function salvarNascimento(
@@ -13,13 +13,11 @@ export async function salvarNascimento(
   const lido = lerDadosNascimentoDoForm(formData);
   if ("erro" in lido) return lido;
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  const resultado = await salvarESagendarNascimento(supabase, user.id, lido.dados);
+  const db = await getDb();
+  const resultado = await salvarESagendarNascimento(db, sessao.user.id, lido.dados);
   if (resultado.erro) return resultado;
 
   redirect("/perfil");

@@ -1,0 +1,178 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>A Impermanência da Pressa - Lente do Dia</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&amp;family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&amp;family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-container": "#422a00",
+                        "on-surface-variant": "#4e453a",
+                        "ink-warm": "#221a11",
+                        "secondary-fixed-dim": "#efbf6b",
+                        "secondary": "#7c580a",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#77592a",
+                        "on-primary": "#ffffff",
+                        "on-background": "#1f1b15",
+                        "on-secondary": "#ffffff",
+                        "outline": "#807569",
+                        "surface-container-low": "#fcf2e8",
+                        "background": "#fff8f3",
+                        "on-primary-container": "#b5905c",
+                        "tertiary-container": "#372d1a",
+                        "secondary-container": "#fecd77",
+                        "on-primary-fixed": "#291800",
+                        "primary": "#271700",
+                        "tertiary": "#211807",
+                        "surface-dim": "#e2d9cf",
+                        "tertiary-fixed-dim": "#d5c4a9",
+                        "secondary-fixed": "#ffdeaa",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#f0e7dd",
+                        "primary-fixed": "#ffddb1",
+                        "on-tertiary-fixed-variant": "#514530",
+                        "on-tertiary-container": "#a3947b",
+                        "surface-container-highest": "#eae1d7",
+                        "outline-variant": "#d2c4b6",
+                        "on-secondary-container": "#795506",
+                        "tertiary-fixed": "#f2e0c4",
+                        "inverse-primary": "#e8c087",
+                        "surface-container": "#f6ece2",
+                        "inverse-surface": "#343029",
+                        "on-secondary-fixed": "#271900",
+                        "surface-variant": "#eae1d7",
+                        "surface": "#fff8f4",
+                        "outline-warm": "#817567",
+                        "inverse-on-surface": "#f9efe5",
+                        "on-error": "#ffffff",
+                        "on-surface": "#1f1b15",
+                        "on-tertiary-fixed": "#231a09",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#fff8f3",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#5d4214",
+                        "primary-fixed-dim": "#e8c087",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "card-padding": "20px",
+                        "margin-mobile": "24px",
+                        "element-gap": "16px",
+                        "max-content-width": "1120px",
+                        "section-gap": "64px",
+                        "gutter-mobile": "16px"
+                    },
+                    fontFamily: {
+                        "label-md": ["Bitter"],
+                        "button": ["Bitter"],
+                        "display-lg-mobile": ["Fraunces"],
+                        "headline-lg": ["Fraunces"],
+                        "body-md": ["Fraunces"],
+                        "title-lg": ["Fraunces"],
+                        "display-lg": ["Fraunces"],
+                        "navigation": ["Bitter"],
+                        "body-lg": ["Fraunces"],
+                        "label-sm": ["Bitter"],
+                        "spectral": ["Spectral", "serif"]
+                    },
+                    fontSize: {
+                        "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "600" }],
+                        "button": ["15px", { lineHeight: "20px", fontWeight: "700" }],
+                        "display-lg-mobile": ["40px", { lineHeight: "48px", fontWeight: "300" }],
+                        "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "500" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "title-lg": ["22px", { lineHeight: "28px", fontWeight: "400" }],
+                        "display-lg": ["56px", { lineHeight: "64px", letterSpacing: "-0.02em", fontWeight: "300" }],
+                        "navigation": ["16px", { lineHeight: "24px", fontWeight: "500" }],
+                        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+                        "label-sm": ["12px", { lineHeight: "16px", fontWeight: "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Specific overrides for the requested light contemplative mode (#f7f0e4 bg, #2a2118 text) */
+        .light-reading-mode {
+            background-color: #f7f0e4;
+            color: #2a2118;
+        }
+        .organic-svg-filter {
+            filter: invert(11%) sepia(18%) saturate(1476%) hue-rotate(342deg) brightness(94%) contrast(92%); /* Approx #2a2118 */
+        }
+        .organic-svg-filter-active {
+            filter: invert(53%) sepia(35%) saturate(827%) hue-rotate(355deg) brightness(94%) contrast(87%); /* Approx #b6873f */
+        }
+        .fade-in {
+            animation: fadeIn 1.2s ease-in-out forwards;
+            opacity: 0;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="light-reading-mode min-h-screen font-spectral flex flex-col items-center selection:bg-surface-tint selection:text-white">
+<!-- Header / Navigation -->
+<header class="w-full max-w-[800px] px-margin-mobile py-8 md:py-12 fade-in" style="animation-delay: 0.1s;">
+<button aria-label="Voltar" class="group flex items-center justify-center p-2 -ml-2 rounded-full hover:bg-black/5 transition-colors focus:outline-none focus:ring-1 focus:ring-outline-variant">
+<img alt="" class="w-6 h-6 rotate-90 organic-svg-filter opacity-70 group-hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida/AEtjO1V-kmrA1nHYLANLwSyEe0p08H5n3mui8r1oK5A4h9GUZAK40lAgl92uDAOK9hcdW2tXJTCoTR-ghAyLnRhvFS-W43a2XV7J-oTJvIHXDyfQaeR8EYUUDzWPe6gbkor0vKOGtS2MWZYJTbxzEkZ5uQgI5Fz6pzDwuxnfq7AxajVx8jFKDzY7hbrKOz7Mh3nAq8tFXC0edO_7KwUaP-dY9ZAxM-ErAM43EiUguCUa_cgn8imb2srXRcpFggk">
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="w-full max-w-[680px] px-margin-mobile flex-grow flex flex-col justify-center pb-24">
+<article class="space-y-12 fade-in" style="animation-delay: 0.3s;">
+<header>
+<h1 class="text-4xl md:text-5xl font-spectral font-light leading-tight tracking-tight text-[#2a2118]/90">
+                    A Impermanência da Pressa
+                </h1>
+</header>
+<div class="prose prose-lg md:prose-xl max-w-none text-[#2a2118]/80 font-spectral font-normal leading-[1.8] md:leading-[2] tracking-wide">
+<p>
+                    Observar a urgência sem se tornar ela. Um convite para pausar entre estímulos. A pressa é muitas vezes um reflexo da nossa dificuldade em habitar o presente.
+                </p>
+<p>
+                    Quando tentamos acelerar o tempo, estamos, no fundo, fugindo de algo que dói ou incomoda no agora. O silêncio não é a ausência de som, mas a presença de si.
+                </p>
+</div>
+</article>
+<!-- Footer / Actions -->
+<footer class="mt-24 pt-12 border-t border-[#2a2118]/10 fade-in flex flex-col md:flex-row items-start md:items-center justify-between gap-8" style="animation-delay: 0.6s;">
+<!-- Reaction Icons -->
+<div class="flex items-center gap-8">
+<button aria-label="Gostei" class="group flex flex-col items-center gap-3 opacity-60 hover:opacity-100 transition-all duration-300 focus:outline-none">
+<div class="w-12 h-12 rounded-full flex items-center justify-center bg-black/0 group-hover:bg-black/5 transition-colors">
+<img alt="" class="w-8 h-8 organic-svg-filter" src="https://lh3.googleusercontent.com/aida/AEtjO1VOl8wjV14YlcbM2908uuiljwEXdeAYF64LZogeJ9XI1-tZGHkk-JePBAciTrUGzSFwzkj1mT9sd82pwcMIyuLnE_TECNwPl8RPxj7rAmfX8KQxq_pAePDbDpRFqkM7RsgdiVC2ux6aF41u_QfXG3_QvHhNWGGSnoFKqUYaYKX2BbQli91PBmqcNjY9i8X8cS2P-d2e6bWw9w87nnAsjxbYg1BRnGwdA7b4MaWSzcw8WdRs40ga4NgrYG4">
+</div>
+</button>
+<button aria-label="Não Gostei" class="group flex flex-col items-center gap-3 opacity-60 hover:opacity-100 transition-all duration-300 focus:outline-none">
+<div class="w-12 h-12 rounded-full flex items-center justify-center bg-black/0 group-hover:bg-black/5 transition-colors">
+<img alt="" class="w-8 h-8 organic-svg-filter group-focus:organic-svg-filter-active" src="https://lh3.googleusercontent.com/aida/AEtjO1XVsBDJ6ZvCLfyNmEBbQu49XHgLCju4xddOf6bUBxq_dR8DdZl2VN2ym3pb3VvYqdLFvC_Gcj3OFwQ1eeyZJyPxxrVT4gGunc6Pch9LUSnJm5niHz1lVQI4Ofgd8XAH_B5oQe2kbQNA-PLDbkv7PrO7V7p7KQ128AIgLx72OCSd6qPgDlOqLVyE3Ud3S9kco6wpa0FLqpD3hvC--Urn0q61vWXRFGOjgdZkJpvWf8raBX9omNhEzWMSdd79">
+</div>
+</button>
+</div>
+<!-- Navigation Link -->
+<a class="group flex items-center gap-4 text-[#2a2118]/70 hover:text-[#2a2118] transition-colors focus:outline-none font-label-md text-label-md" href="#">
+<span class="uppercase tracking-widest text-xs">Entenda</span>
+<img alt="" class="w-6 h-6 organic-svg-filter opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" src="https://lh3.googleusercontent.com/aida/AEtjO1UFWjhr6bZFqt9-4Y_Hbfatv-9TvsOaohhKKH0Gtl9_qRRUwSad0LJSYSBtsZ1RU9gsm7uKyswNTVVnMXGoQZdMYsxxqjrEkVo1J9m3g8LFCZ2DyHuh23Kl_39C77jOF2bCBT0rtWfKacwfz6u4bnGoXEhEfAnWs66em7uRtjM4C6fAaAFut7nJK-RZWV19j2A6jE9ua_YeOc46gDriSBjl672SjfMVeD3Lccno81Le2e-CyTKvH3aHTbg">
+</a>
+</footer>
+</main>
+</body></html>

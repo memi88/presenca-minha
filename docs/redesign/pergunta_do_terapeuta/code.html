@@ -1,0 +1,242 @@
+<!DOCTYPE html><html class="light" lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Conteúdo - Dr. Arisvaldo</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Google Fonts: Fraunces and Bitter -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&amp;display=swap" rel="stylesheet">
+<!-- Spectral Font for the question -->
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@1,400;1,500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS Config -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#eae1d7",
+                        "surface-container-high": "#f0e7dd",
+                        "tertiary-fixed": "#f2e0c4",
+                        "on-primary-fixed": "#291800",
+                        "on-surface-variant": "#4e453a",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#b5905c",
+                        "primary": "#271700",
+                        "secondary-fixed-dim": "#efbf6b",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#231a09",
+                        "on-surface": "#1f1b15",
+                        "primary-fixed": "#ffddb1",
+                        "on-secondary-fixed": "#271900",
+                        "ink-warm": "#221a11",
+                        "on-tertiary-container": "#a3947b",
+                        "tertiary-fixed-dim": "#d5c4a9",
+                        "background": "#fff8f3",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#f6ece2",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "surface": "#fff8f4",
+                        "outline": "#807569",
+                        "on-background": "#1f1b15",
+                        "inverse-primary": "#e8c087",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#fff8f3",
+                        "on-primary-fixed-variant": "#5d4214",
+                        "outline-variant": "#d2c4b6",
+                        "primary-container": "#422a00",
+                        "surface-variant": "#eae1d7",
+                        "inverse-on-surface": "#f9efe5",
+                        "surface-container-low": "#fcf2e8",
+                        "tertiary": "#211807",
+                        "outline-warm": "#817567",
+                        "secondary": "#7c580a",
+                        "primary-fixed-dim": "#e8c087",
+                        "on-tertiary-fixed-variant": "#514530",
+                        "secondary-container": "#fecd77",
+                        "secondary-fixed": "#ffdeaa",
+                        "inverse-surface": "#343029",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#795506",
+                        "tertiary-container": "#372d1a",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#77592a",
+                        "surface-dim": "#e2d9cf"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "24px",
+                        "element-gap": "16px",
+                        "section-gap": "64px",
+                        "card-padding": "20px",
+                        "max-content-width": "1120px",
+                        "gutter-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Fraunces"],
+                        "title-lg": ["Fraunces"],
+                        "display-lg": ["Fraunces"],
+                        "navigation": ["Bitter"],
+                        "headline-lg": ["Fraunces"],
+                        "button": ["Bitter"],
+                        "body-lg": ["Fraunces"],
+                        "label-md": ["Bitter"],
+                        "label-sm": ["Bitter"],
+                        "body-md": ["Fraunces"],
+                        "spectral": ["Spectral"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["40px", { "lineHeight": "48px", "fontWeight": "300" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "300" }],
+                        "navigation": ["16px", { "lineHeight": "24px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "500" }],
+                        "button": ["15px", { "lineHeight": "20px", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #f7f0e4;
+        }
+        
+        .journal-lines {
+            background-image: repeating-linear-gradient(transparent, transparent 31px, var(--tw-colors-outline-variant) 31px, var(--tw-colors-outline-variant) 32px);
+            background-position: 0 1.2rem;
+            line-height: 32px;
+            min-height: 160px;
+        }
+
+        .spectral-italic {
+            font-family: 'Spectral', serif;
+            font-style: italic;
+            font-weight: 400;
+            font-size: 28px;
+            line-height: 36px;
+        }
+        
+        @media (min-width: 768px) {
+            .spectral-italic {
+                font-size: 36px;
+                line-height: 48px;
+            }
+        }
+    </style>
+</head>
+<body class="text-on-surface antialiased min-h-screen flex flex-col font-body-md text-body-md">
+<!-- TopAppBar -->
+<header class="bg-surface-container-low sticky top-0 z-40 w-full flex justify-between items-center px-margin-mobile py-4 transition-colors">
+  <div class="flex items-center gap-4">
+    <button aria-label="Voltar" class="text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded-full p-2 flex items-center justify-center">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'wght' 300;">arrow_back</span>
+    </button>
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full overflow-hidden outline outline-1 outline-outline-variant">
+        <img alt="Profile picture of therapist Dr. Arisvaldo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDr9atlojlVR5Qix8p98Z1HXSwh3hNN1XhBDcICcIu9kUfGIfaKCWKIFpk86wHvU3TDe-BCA751l0QYYipwRnhi2L0Eiz9PI0FMGifhcKthflQWq6MFnBznXCDrduRBfv0VI8oEZkSwseSAKdFbDe__CL9tYz1EuevEiIHyvn8vpQkUBp6zGfpZHQfdIu__7jFP1alcSCvM18pxq0tL13bV1ZWF-iEGoQWukGbCA5byVYxys8oRAwBCBA">
+      </div>
+      <h1 class="font-navigation text-navigation text-primary">Dr. Arisvaldo</h1>
+    </div>
+  </div>
+  <button aria-label="Configurações" class="text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded-full p-2 flex items-center justify-center">
+    <span class="material-symbols-outlined" style="font-variation-settings: 'wght' 300;">settings</span>
+  </button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center justify-center px-margin-mobile pb-32 pt-8 md:pt-16 max-w-max-content-width mx-auto w-full">
+<article class="w-full max-w-2xl flex flex-col gap-section-gap animate-fade-in-up">
+<!-- The Question -->
+<section class="text-center">
+<h2 class="spectral-italic text-ink-warm max-w-lg mx-auto">
+                    "Como você sentiu sua respiração durante as atividades de hoje?"
+                </h2>
+</section>
+<!-- Journal Input Area -->
+<section class="w-full">
+<div class="bg-surface-container-low rounded-xl p-card-padding outline outline-1 outline-outline-variant transition-all focus-within:outline-outline-warm focus-within:bg-surface-container">
+<textarea aria-label="Sua resposta sobre a respiração" class="w-full bg-transparent border-none resize-none focus:ring-0 text-on-surface font-body-md text-body-md journal-lines p-0" placeholder="Reflita sobre sua respiração..."></textarea>
+</div>
+</section>
+<!-- Action Area -->
+<section class="flex justify-center mt-element-gap">
+<button class="bg-primary text-on-primary font-button text-button rounded-full px-8 py-3 hover:bg-primary-container transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-surface">
+                    Responder no Diário
+                </button>
+</section>
+</article>
+</main>
+<!-- BottomNavBar (Mobile Only based on layout logic) -->
+<nav class="md:hidden bg-surface-container text-secondary font-navigation text-navigation font-label-md text-label-md fixed bottom-0 w-full z-50 bg-surface-container flat no shadows fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter-mobile py-3 border-t-0 shadow-[0_-4px_16px_rgba(31,27,21,0.05)]">
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform" style="font-variation-settings: 'wght' 300;">home</span>
+<span>Home</span>
+</a>
+<!-- Active Tab: Diário (Intent mapping based on "Responder no Diário") -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 hover:text-primary transition-colors group scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'wght' 400, 'FILL' 1;">auto_stories</span>
+<span>Diário</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform" style="font-variation-settings: 'wght' 300;">chat_bubble</span>
+<span>Conversa</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform" style="font-variation-settings: 'wght' 300;">library_books</span>
+<span>Biblioteca</span>
+</a>
+</nav>
+<!-- Desktop Navigation (Hidden on mobile) -->
+<nav class="hidden md:flex fixed left-0 top-0 h-full w-64 bg-surface-container flex-col p-6 shadow-sm z-30">
+<div class="mt-20 flex flex-col gap-2">
+<a class="flex items-center gap-4 text-on-surface-variant p-3 rounded-lg hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 300;">home</span>
+<span class="font-navigation text-navigation">Home</span>
+</a>
+<a class="flex items-center gap-4 bg-secondary-container text-on-secondary-container p-3 rounded-lg hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 400, 'FILL' 1;">auto_stories</span>
+<span class="font-navigation text-navigation">Diário</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant p-3 rounded-lg hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 300;">chat_bubble</span>
+<span class="font-navigation text-navigation">Conversa</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant p-3 rounded-lg hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 300;">library_books</span>
+<span class="font-navigation text-navigation">Biblioteca</span>
+</a>
+</div>
+</nav>
+<style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+    </style>
+
+
+</body></html>

@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Nunca deployado (sem "main") — só usado pelo CLI do wrangler
+  // (`pnpm db:migrate:local`/`db:migrate:remote`) pra saber qual conta/
+  // banco D1 aplicar as migrations geradas pelo drizzle-kit. O binding
+  // real (usado pelos Workers de verdade) mora em
+  // apps/presenca/wrangler.jsonc e apps/cuida/wrangler.jsonc — mesmo
+  // database_id, é o mesmo banco D1 compartilhado pelos dois apps.
+  "name": "presenca-db-tooling",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "presenca-db",
+      "database_id": "542a3db7-5eb6-47a8-8050-c8bd04a13e2e",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

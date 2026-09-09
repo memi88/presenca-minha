@@ -2,7 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 
-import { createClient } from "@presenca/supabase/server";
+import { eq } from "drizzle-orm";
+import { profiles } from "@presenca/db/schema";
+
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 
 const DIAS_ATE_PROXIMO_CONVITE = 7;
 
@@ -10,19 +14,17 @@ const DIAS_ATE_PROXIMO_CONVITE = 7;
 // não silencia pra sempre, só adia. Nada de insistência a cada visita,
 // nada de nunca mais perguntar.
 export async function adiarConversao() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return;
+  const sessao = await getSessao();
+  if (!sessao) return;
 
   const proximoConvite = new Date();
   proximoConvite.setDate(proximoConvite.getDate() + DIAS_ATE_PROXIMO_CONVITE);
 
-  await supabase
-    .from("profiles")
-    .update({ lembrete_conversao_em: proximoConvite.toISOString() })
-    .eq("id", user.id);
+  const db = await getDb();
+  await db
+    .update(profiles)
+    .set({ lembreteConversaoEm: proximoConvite })
+    .where(eq(profiles.userId, sessao.user.id));
 
   revalidatePath("/home");
 }
@@ -30,19 +32,34 @@ export async function adiarConversao() {
 // Mesmo padrão do convite de conversão — "agora não" adia 7 dias, nunca
 // silencia de vez (PRD §5).
 export async function adiarNascimento() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return;
+  const sessao = await getSessao();
+  if (!sessao) return;
 
   const proximoConvite = new Date();
   proximoConvite.setDate(proximoConvite.getDate() + DIAS_ATE_PROXIMO_CONVITE);
 
-  await supabase
-    .from("profiles")
-    .update({ lembrete_nascimento_em: proximoConvite.toISOString() })
-    .eq("id", user.id);
+  const db = await getDb();
+  await db
+    .update(profiles)
+    .set({ lembreteNascimentoEm: proximoConvite })
+    .where(eq(profiles.userId, sessao.user.id));
+
+  revalidatePath("/home");
+}
+
+// Antes era a rota /hoje inteira — absorvida pelo bloco de saudação da
+// Home no redesign (docs/redesign/presenca-redesign-sistema-visual-status.md
+// §5): mesmo registro, só que sem sair da página.
+export async function registrarPresenca(momento: string) {
+  const sessao = await getSessao();
+  if (!sessao) return;
+
+  const agora = new Date();
+  const db = await getDb();
+  await db
+    .update(profiles)
+    .set({ presencaHoje: momento, presencaHojeEm: agora, ultimaVisitaEm: agora })
+    .where(eq(profiles.userId, sessao.user.id));
 
   revalidatePath("/home");
 }

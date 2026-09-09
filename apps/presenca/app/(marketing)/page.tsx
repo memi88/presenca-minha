@@ -1,23 +1,40 @@
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { eq } from "drizzle-orm";
+import { profiles } from "@presenca/db/schema";
 
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
+
+import { CirculoRespirando } from "../CirculoRespirando";
 import styles from "./page.module.css";
+import { Reveal } from "./Reveal";
+
+const MENSAGEM_WHATSAPP = encodeURIComponent(
+  "Olá! Tenho interesse em conhecer o Presença como terapeuta parceiro.",
+);
 
 export default async function MarketingHome() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const sessao = await getSessao();
 
-  if (user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("nome")
-      .eq("id", user.id)
-      .maybeSingle();
+  if (sessao) {
+    const profile = await (await getDb()).query.profiles.findFirst({
+      where: eq(profiles.userId, sessao.user.id),
+      columns: { nome: true },
+    });
 
     redirect(profile?.nome ? "/home" : "/chegada");
+  }
+
+  // App mobile (docs/presenca-extensao-app-mobile.md §4.1) — a home de
+  // marketing é só-web; dentro do app empacotado, quem não está logado
+  // cai direto em /bem-vindo. Marcador vem de `appendUserAgent` no
+  // capacitor.config.ts (server.url ali fica só na origem, sem path, por
+  // motivo de navegação — ver comentário lá).
+  const headersList = await headers();
+  if (headersList.get("user-agent")?.includes("PresencaApp")) {
+    redirect("/bem-vindo");
   }
 
   return (
@@ -31,10 +48,6 @@ export default async function MarketingHome() {
             <br />
             para se encontrar.
           </h1>
-          <p className={styles.heroTexto}>
-            Presença é um espaço digital de bem-estar emocional e autoconhecimento — um diário guiado pra
-            registrar sua jornada, podendo ser uma jornada acompanhada por quem já cuida de você.
-          </p>
           <div className={styles.heroCtas}>
             <a className={styles.ctaPreenchido} href="/para-voce">
               Para você
@@ -49,71 +62,106 @@ export default async function MarketingHome() {
 
       <section className={styles.pergunta}>
         <div className={styles.perguntaConteudo}>
-          <p className={styles.perguntaEyebrow}>Durante os últimos anos, uma pergunta nos acompanhou.</p>
-          <p className={styles.perguntaDestaque}>
-            O que acontece quando um ser humano começa, de verdade, a estar{" "}
-            <span className={styles.perguntaGrifo}>presente</span> na própria vida?
-          </p>
+          <Reveal>
+            <p className={styles.perguntaEyebrow}>Durante os últimos anos, uma pergunta nos acompanhou.</p>
+            <p className={styles.perguntaDestaque}>
+              O que acontece quando um ser humano começa, de verdade, a estar{" "}
+              <span className={styles.perguntaGrifo}>presente</span> na própria vida?
+            </p>
+            <span className={styles.perguntaTraco} />
+          </Reveal>
 
-          <span className={styles.perguntaTraco} />
+          <Reveal delayMs={80}>
+            <p className={styles.perguntaSubtitulo}>O Presença nasceu dessa busca.</p>
+            <p className={styles.perguntaTexto}>
+              Um espaço onde reflexões, registros, práticas e conversas acompanham o ritmo da vida.
+            </p>
+            <span className={styles.perguntaTraco} />
+          </Reveal>
 
-          <p className={styles.perguntaSubtitulo}>O Presença nasceu dessa busca.</p>
-          <p className={styles.perguntaTexto}>
-            Um espaço onde reflexões, registros, práticas e conversas acompanham o ritmo da vida.
-          </p>
+          <Reveal delayMs={80}>
+            <p className={styles.perguntaEyebrow}>Porque a vida acontece nos intervalos:</p>
+            <div className={styles.perguntaIntervalos}>
+              <span>entre uma sessão e outra</span>
+              <span className={styles.perguntaPonto} />
+              <span>entre um pensamento e outro</span>
+              <span className={styles.perguntaPonto} />
+              <span>entre uma decisão e outra</span>
+            </div>
+          </Reveal>
 
-          <span className={styles.perguntaTraco} />
-
-          <p className={styles.perguntaEyebrow}>Porque a vida acontece nos intervalos:</p>
-          <div className={styles.perguntaIntervalos}>
-            <span>entre uma sessão e outra</span>
-            <span className={styles.perguntaPonto} />
-            <span>entre um pensamento e outro</span>
-            <span className={styles.perguntaPonto} />
-            <span>entre uma decisão e outra</span>
-          </div>
-
-          <p className={styles.perguntaAviso}>
-            Não pretende substituir a terapia
-            <br />
-            nem dizer o que você deve fazer
-          </p>
-          <p className={styles.perguntaFinal}>
-            É um lugar para <span className={styles.perguntaSublinhado}>voltar a si mesmo</span>.
-          </p>
+          <Reveal delayMs={80}>
+            <p className={styles.perguntaAviso}>
+              Não pretende substituir a terapia
+              <br />
+              nem dizer o que você deve fazer
+            </p>
+            <p className={styles.perguntaFinal}>
+              É um lugar para <span className={styles.perguntaSublinhado}>voltar a si mesmo</span>.
+            </p>
+          </Reveal>
         </div>
       </section>
 
       <section className={styles.paraQuem}>
         <div className={styles.paraQuemGrid}>
-          <div className={styles.paraQuemCard}>
-            <img className={styles.paraQuemImagem} src="/images/site/para-voce.png" alt="" />
-            <div className={styles.paraQuemGradiente} />
+          <Reveal className={styles.paraQuemCard}>
+            <CirculoRespirando className={styles.paraQuemIcone} />
             <div className={styles.paraQuemConteudo}>
               <h3 className={styles.paraQuemTitulo}>Para você</h3>
               <p className={styles.paraQuemTexto}>
-                Pessoas que desejam desenvolver mais presença, registrar experiências, organizar
-                pensamentos e acompanhar seu próprio processo ao longo do tempo.
+                Pra quem quer registrar, refletir e acompanhar o próprio processo com o tempo.
               </p>
-              <a className={styles.paraQuemCta} href="/para-voce">
-                Conhecer
-              </a>
+              <div className={styles.paraQuemPrecoLinha}>
+                <span className={styles.paraQuemPrecoValor}>R$ 19</span>
+                <span className={styles.paraQuemPrecoUnidade}>/mês, no plano anual</span>
+              </div>
+              <p className={styles.paraQuemPrecoSub}>7 dias grátis pra testar, sem cartão</p>
+              <ul className={styles.paraQuemBeneficios}>
+                <li>Acesso completo desde o primeiro dia</li>
+                <li>Cancele quando quiser</li>
+              </ul>
+              <div className={styles.paraQuemAcoes}>
+                <a className={styles.paraQuemCta} href="/bem-vindo">
+                  Começar agora
+                </a>
+                <a className={styles.paraQuemCtaSecundaria} href="/para-voce#planos">
+                  Ver todos os planos →
+                </a>
+              </div>
             </div>
-          </div>
-          <div className={styles.paraQuemCard}>
-            <img className={styles.paraQuemImagem} src="/images/site/para-terapeutas.png" alt="" />
-            <div className={styles.paraQuemGradiente} />
+          </Reveal>
+          <Reveal className={styles.paraQuemCard} delayMs={120}>
+            <CirculoRespirando className={styles.paraQuemIcone} />
             <div className={styles.paraQuemConteudo}>
               <h3 className={styles.paraQuemTitulo}>Para terapeutas</h3>
               <p className={styles.paraQuemTexto}>
-                Profissionais que desejam ampliar o cuidado entre as sessões, oferecendo continuidade
-                ao processo terapêutico de seus pacientes.
+                Pra quem quer continuar cuidando do paciente entre as sessões.
               </p>
-              <a className={styles.paraQuemCta} href="/para-terapeutas">
-                Conhecer
-              </a>
+              <div className={styles.paraQuemPrecoLinha}>
+                <span className={styles.paraQuemPrecoValor}>R$ 89</span>
+                <span className={styles.paraQuemPrecoUnidade}>/mês</span>
+              </div>
+              <p className={styles.paraQuemPrecoSub}>Até 5 pacientes ativos</p>
+              <ul className={styles.paraQuemBeneficios}>
+                <li>Cobrança só por paciente ativo</li>
+                <li>Diário e biblioteca colaborativa</li>
+              </ul>
+              <div className={styles.paraQuemAcoes}>
+                <a
+                  className={styles.paraQuemCta}
+                  href={`https://wa.me/5551991393827?text=${MENSAGEM_WHATSAPP}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Falar no WhatsApp
+                </a>
+                <a className={styles.paraQuemCtaSecundaria} href="/para-terapeutas">
+                  Ver planos completos →
+                </a>
+              </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
     </>

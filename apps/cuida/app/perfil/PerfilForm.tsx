@@ -15,6 +15,14 @@ export function PerfilForm() {
       <input
         className={styles.field}
         type="password"
+        name="senhaAtual"
+        placeholder="senha atual"
+        autoComplete="current-password"
+        required
+      />
+      <input
+        className={styles.field}
+        type="password"
         name="senha"
         placeholder="nova senha (mín. 8 caracteres)"
         autoComplete="new-password"

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Presença - Terapia</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Fonts: Fraunces & Bitter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&amp;family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#f9efe5",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#f6ece2",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#e8c087",
+                        "on-tertiary-fixed": "#231a09",
+                        "background": "#fff8f3",
+                        "on-secondary-fixed": "#271900",
+                        "tertiary": "#211807",
+                        "error-container": "#ffdad6",
+                        "outline-warm": "#817567",
+                        "tertiary-container": "#372d1a",
+                        "surface-dim": "#e2d9cf",
+                        "secondary-fixed-dim": "#efbf6b",
+                        "on-primary-container": "#b5905c",
+                        "surface-container-highest": "#eae1d7",
+                        "surface-container-low": "#fcf2e8",
+                        "surface-container-high": "#f0e7dd",
+                        "ink-warm": "#221a11",
+                        "secondary": "#7c580a",
+                        "error": "#ba1a1a",
+                        "inverse-primary": "#e8c087",
+                        "on-surface": "#1f1b15",
+                        "secondary-container": "#fecd77",
+                        "on-surface-variant": "#4e453a",
+                        "outline-variant": "#d2c4b6",
+                        "inverse-surface": "#343029",
+                        "on-primary-fixed-variant": "#5d4214",
+                        "surface-variant": "#eae1d7",
+                        "surface-bright": "#fff8f3",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#514530",
+                        "secondary-fixed": "#ffdeaa",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "on-error-container": "#93000a",
+                        "primary": "#271700",
+                        "primary-fixed": "#ffddb1",
+                        "primary-container": "#422a00",
+                        "surface-tint": "#77592a",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#d5c4a9",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#a3947b",
+                        "tertiary-fixed": "#f2e0c4",
+                        "surface": "#fff8f4",
+                        "outline": "#807569",
+                        "on-secondary-container": "#795506",
+                        "on-background": "#1f1b15",
+                        "on-primary-fixed": "#291800"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter-mobile": "16px",
+                        "element-gap": "16px",
+                        "margin-mobile": "24px",
+                        "section-gap": "64px",
+                        "max-content-width": "1120px",
+                        "card-padding": "20px"
+                    },
+                    "fontFamily": {
+                        "navigation": ["Bitter"],
+                        "label-sm": ["Bitter"],
+                        "display-lg": ["Fraunces"],
+                        "headline-lg": ["Fraunces"],
+                        "body-lg": ["Fraunces"],
+                        "display-lg-mobile": ["Fraunces"],
+                        "body-md": ["Fraunces"],
+                        "title-lg": ["Fraunces"],
+                        "label-md": ["Bitter"],
+                        "button": ["Bitter"]
+                    },
+                    "fontSize": {
+                        "navigation": ["16px", { "lineHeight": "24px", "fontWeight": "500" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "300" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "48px", "fontWeight": "300" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "button": ["15px", { "lineHeight": "20px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Base styles for Contemplative Warmth theme */
+        body {
+            background-color: theme('colors.surface');
+            color: theme('colors.on-surface');
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Custom Checkbox Styling to match organic minimal aesthetic */
+        .organic-checkbox {
+            appearance: none;
+            background-color: transparent;
+            margin: 0;
+            font: inherit;
+            color: currentColor;
+            width: 1.5em;
+            height: 1.5em;
+            border: 1.5px solid theme('colors.outline-variant');
+            border-radius: 0.35em;
+            display: grid;
+            place-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .organic-checkbox::before {
+            content: "";
+            width: 0.8em;
+            height: 0.8em;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em theme('colors.on-primary');
+            background-color: theme('colors.on-primary');
+            transform-origin: center;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+
+        .organic-checkbox:checked {
+            background-color: theme('colors.primary');
+            border-color: theme('colors.primary');
+        }
+
+        .organic-checkbox:checked::before {
+            transform: scale(1);
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col relative pb-[90px]">
+<!-- TopAppBar JSON Translation -->
+<header class="fixed top-0 w-full z-50 bg-surface flex justify-between items-center px-gutter-mobile py-4 flat no shadows transition-colors">
+<button class="text-primary hover:text-secondary transition-colors opacity-100 hover:opacity-80 flex items-center justify-center p-2 -ml-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">Presença</h1>
+<div class="w-10 h-10 rounded-full border border-outline-variant bg-surface-container-lowest overflow-hidden flex items-center justify-center -mr-1">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAF2XsbjzH__oBuSWhMp0oYA5xNuAemjy_NqXTRHGmNIfXpvKTa-53x5RqUxhtlkgOsBPlmmPNCRdM_jvAYOwYjxRQHWR4P-J-BBRZgYSczqNxJH1r5ex_XjqUS3-_X6FKsIiOD-BBXzoksk5j_k4mHIjZELqPDCtSOdZij2eFlVKuwVnSX8w1QX2GT4O16hvU0-2aFCR-7XpvozqsRgFhuMuoD7dtd2rcklsygXeyWDNkvZMIqcVE_Sg"/>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 w-full max-w-[max-content-width] mx-auto px-gutter-mobile md:px-margin-mobile pt-28 pb-12 flex flex-col">
+<!-- Page Context -->
+<div class="mb-section-gap">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-4">Terapia</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
+                Conecte-se com seu profissional para continuar o cuidado entre as sessões.
+            </p>
+</div>
+<!-- Connection Form Area -->
+<section class="max-w-xl mx-auto w-full flex flex-col flex-1">
+<!-- Input Field -->
+<div class="mb-10 w-full">
+<label class="block font-label-md text-label-md text-on-surface mb-3 ml-2" for="invite-code">Código de Convite</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface font-body-md text-body-md rounded-full px-6 py-4 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-outline transition-all" id="invite-code" placeholder="Insira o código do seu terapeuta" type="text"/>
+</div>
+</div>
+<!-- Dedicated Consent Block -->
+<div class="bg-surface-container rounded-[1rem] border border-outline-variant p-6 md:p-8 flex flex-col gap-6 mb-12">
+<h3 class="font-title-lg text-title-lg text-primary border-b border-outline-variant pb-4">Dinâmica da Conexão</h3>
+<ul class="flex flex-col gap-5">
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary mt-0.5 text-[28px]">edit_note</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface mb-1">Acompanhamento Contínuo</span>
+<p class="font-body-md text-body-md text-on-surface-variant">Seu terapeuta poderá sugerir práticas guiadas e registrar notas estruturadas diretamente no seu Diário de jornada.</p>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary mt-0.5 text-[28px]">forum</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface mb-1">Suporte Assíncrono</span>
+<p class="font-body-md text-body-md text-on-surface-variant">Você terá um canal dedicado para solicitar apoio reflexivo durante momentos de maior complexidade emocional.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="mt-auto pt-8">
+<!-- Checkbox Interaction -->
+<label class="flex items-start gap-4 cursor-pointer mb-8 group">
+<input class="organic-checkbox shrink-0 mt-1" id="consent-check" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-on-surface transition-colors select-none">Ao conectar, seu profissional passa a poder escrever no seu Diário e você pode avisar ela caso precise de apoio — combinado agora, não pedido de novo depois.</span>
+</label>
+<!-- Primary Action -->
+<button class="w-full rounded-full bg-surface-variant text-on-surface-variant font-button text-button py-4 px-8 text-center transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed" disabled="" id="connect-btn">
+                    Conectar
+                </button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar JSON Translation -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-6 bg-surface-container-low border-t border-outline-variant rounded-t-xl md:hidden">
+<!-- Início -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors w-16">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm mt-1">Início</span>
+</button>
+<!-- Práticas -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors w-16">
+<span class="material-symbols-outlined">self_care</span>
+<span class="font-label-sm text-label-sm mt-1">Práticas</span>
+</button>
+<!-- Terapia (ACTIVE STATE) -->
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1.5 scale-95 duration-200 shadow-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<span class="font-label-sm text-label-sm mt-1 font-bold">Terapia</span>
+</button>
+<!-- Perfil -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors w-16">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm mt-1">Perfil</span>
+</button>
+</nav>
+<!-- Interactive Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkbox = document.getElementById('consent-check');
+            const connectBtn = document.getElementById('connect-btn');
+            const inviteInput = document.getElementById('invite-code');
+
+            function updateButtonState() {
+                const hasCode = inviteInput.value.trim().length > 0;
+                const isChecked = checkbox.checked;
+
+                if (hasCode && isChecked) {
+                    connectBtn.removeAttribute('disabled');
+                    connectBtn.classList.remove('bg-surface-variant', 'text-on-surface-variant');
+                    connectBtn.classList.add('bg-primary', 'text-on-primary', 'hover:bg-primary-container', 'shadow-sm');
+                } else {
+                    connectBtn.setAttribute('disabled', 'true');
+                    connectBtn.classList.add('bg-surface-variant', 'text-on-surface-variant');
+                    connectBtn.classList.remove('bg-primary', 'text-on-primary', 'hover:bg-primary-container', 'shadow-sm');
+                }
+            }
+
+            checkbox.addEventListener('change', updateButtonState);
+            inviteInput.addEventListener('input', updateButtonState);
+        });
+    </script>
+</body></html>

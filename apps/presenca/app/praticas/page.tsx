@@ -1,45 +1,57 @@
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { and, desc, eq } from "drizzle-orm";
+import { biblioteca, profiles } from "@presenca/db/schema";
+
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 
 import { PageHeader } from "../PageHeader";
 import { PainelPratica } from "./PainelPratica";
 import styles from "./PainelPratica.module.css";
 
-export default async function Praticas() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+export default async function Praticas({
+  searchParams,
+}: {
+  searchParams: Promise<{ categoria?: string }>;
+}) {
+  const { categoria } = await searchParams;
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
 
-  const [{ data: profile }, { data: praticas }] = await Promise.all([
-    supabase.from("profiles").select("nome").eq("id", user.id).maybeSingle(),
-    supabase
-      .from("biblioteca")
-      .select("id, titulo, slug, conteudo")
-      .eq("tipo", "pratica")
-      .eq("publicado", true)
-      .order("created_at", { ascending: false }),
-    // Sinal pro "continue de onde você parou" da Home (lib/menuHome.ts).
-    supabase.from("profiles").update({ ultimo_destino: "praticas" }).eq("id", user.id),
+  const db = await getDb();
+  const [profile, praticas] = await Promise.all([
+    db.query.profiles.findFirst({
+      where: eq(profiles.userId, sessao.user.id),
+      columns: { nome: true, profissionalId: true },
+    }),
+    db.query.biblioteca.findMany({
+      where: and(eq(biblioteca.tipo, "pratica"), eq(biblioteca.publicado, true)),
+      orderBy: desc(biblioteca.createdAt),
+      columns: {
+        id: true,
+        titulo: true,
+        slug: true,
+        conteudo: true,
+        categoria: true,
+        capaChave: true,
+        duracao: true,
+      },
+    }),
   ]);
   if (!profile?.nome) redirect("/chegada");
 
-  if (!praticas?.length) {
+  if (!praticas.length) {
     return (
       <main className={styles.scene}>
-        <PageHeader nome={profile.nome} atual="pratica" voltar={{ href: "/home", label: "← voltar" }} />
-        <div className={styles.duasColunas}>
-          <div className={styles.painelLista}>
-            <p className={styles.eyebrow}>Práticas</p>
-            <h1 className={styles.titulo}>
-              Pequenas práticas,{" "}
-              <br className={styles.quebra} />à vontade.
-            </h1>
-            <p className={styles.subtitulo}>escolha pelo tempo que você tem</p>
-            <p className={styles.vazio}>Nenhuma prática publicada ainda.</p>
-          </div>
+        <PageHeader titulo="Práticas" nome={profile.nome} atual="pratica" voltar={{ href: "/home" }} />
+        <div className={styles.selecaoCentro}>
+          <h2 className={styles.tituloSelecao}>
+            Pequenas práticas,{" "}
+            <br className={styles.quebra} />à vontade.
+          </h2>
+          <p className={styles.subtitulo}>Escolha pelo tempo que você tem</p>
+          <p className={styles.vazio}>Nenhuma prática publicada ainda.</p>
         </div>
       </main>
     );
@@ -48,6 +60,13 @@ export default async function Praticas() {
   // A rota de lista nunca pré-seleciona uma prática — só /praticas/[id]
   // (navegação explícita) mostra conteúdo de verdade no painel direito.
   return (
-    <PainelPratica variante="lista" nome={profile.nome} praticas={praticas} praticaAtiva={null} jaGuardada={false} />
+    <PainelPratica
+      nome={profile.nome}
+      praticas={praticas}
+      praticaAtiva={null}
+      jaGuardada={false}
+      mostrarCtaConectar={!profile.profissionalId}
+      categoriaAtiva={categoria ?? null}
+    />
   );
 }

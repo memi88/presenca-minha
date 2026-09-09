@@ -12,21 +12,33 @@
   padding: 0 clamp(24px, 3vw, 40px);
 }
 
+/* Card único embrulhando Google + form (mockup
+   criar_conta_continuidade_do_cuidado) — antes os campos ficavam soltos
+   direto no fundo da página, sem card, e o Google vinha depois do
+   e-mail/senha (agora primeiro, igual ao mockup). */
+.card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: clamp(24px, 3vw, 32px);
+}
+
 .eyebrow {
-  font: 300 clamp(16px, 1vw, 18px) / 1 var(--font-spectral), serif;
-  letter-spacing: 0.32em;
+  font: 600 12px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 18px;
 }
 
 .headline {
-  font: italic 400 clamp(30px, 2.2vw, 38px) / 1.28 var(--font-spectral), serif;
+  font: 300 clamp(30px, 2.2vw, 38px) / 1.28 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: 8px;
 }
 
 .subtext {
-  font: 400 clamp(16px, 1vw, 18px) / 1.4 var(--font-spectral), serif;
+  font: 400 clamp(16px, 1vw, 18px) / 1.4 var(--font-fraunces), Georgia, serif;
   color: var(--text-muted);
   margin-bottom: 28px;
 }
@@ -37,7 +49,7 @@
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: clamp(17px, 1.1vw, 20px) clamp(18px, 1.1vw, 20px);
-  font: 400 clamp(17px, 1vw, 18px) / 1 var(--font-spectral), serif;
+  font: 400 clamp(17px, 1vw, 18px) / 1 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   box-shadow: 0 2px 6px rgba(90, 60, 20, 0.05);
   margin-bottom: 12px;
@@ -52,7 +64,7 @@
   margin-top: 8px;
   background: var(--accent-strong);
   color: var(--cta-text);
-  font: 500 clamp(17px, 1vw, 18px) / 1 var(--font-spectral), serif;
+  font: 600 clamp(16px, 1vw, 17px) / 1 var(--font-bitter), sans-serif;
   padding: clamp(17px, 1.1vw, 20px);
   border-radius: 30px;
   text-align: center;
@@ -69,38 +81,50 @@
 .separador {
   text-align: center;
   margin: 20px 0;
-  font: italic 400 13px/1 var(--font-spectral), serif;
+  font: 500 12px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--text-faint);
 }
 
-.ctaSecundario {
+.ctaGoogle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   width: 100%;
-  background: none;
+  background: var(--bg-elevated);
   color: var(--text);
-  font: 500 clamp(17px, 1vw, 18px) / 1 var(--font-spectral), serif;
-  padding: clamp(16px, 1.1vw, 19px);
-  border-radius: 30px;
+  font: 600 clamp(15px, 1vw, 16px) / 1 var(--font-bitter), sans-serif;
+  padding: clamp(15px, 1.1vw, 18px);
+  border-radius: 14px;
   text-align: center;
   border: 1px solid var(--border);
   cursor: pointer;
 }
 
-.ctaSecundario:disabled {
+.ctaGoogle:disabled {
   opacity: 0.6;
   cursor: default;
+}
+
+.ctaGoogleIcone {
+  flex: none;
+  width: 20px;
+  height: 20px;
 }
 
 .agoraNao {
   display: block;
   text-align: center;
   margin-top: 22px;
-  font: italic 400 13px/1 var(--font-spectral), serif;
+  font: italic 400 13px/1 var(--font-fraunces), Georgia, serif;
   color: var(--text-subtle);
   text-decoration: none;
 }
 
 .erro {
-  font: 400 13px/1.4 var(--font-spectral), serif;
+  font: 500 13px/1.4 var(--font-bitter), sans-serif;
   color: var(--error);
   margin: -4px 0 12px;
 }

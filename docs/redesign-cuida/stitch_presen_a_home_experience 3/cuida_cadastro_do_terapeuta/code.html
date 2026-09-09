@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {"darkMode": "class", "theme": {"extend": {"colors": {"inverse-surface": "#2e3130", "surface-container-high": "#e7e8e6", "on-secondary-fixed-variant": "#624000", "on-surface-variant": "#404945", "tertiary-fixed": "#ffdad4", "outline": "#717975", "on-primary-fixed-variant": "#204f42", "surface-container-low": "#f3f4f1", "secondary": "#7e5711", "surface-variant": "#e2e3e0", "outline-variant": "#c0c8c4", "error-container": "#ffdad6", "inverse-on-surface": "#f0f1ee", "on-primary-fixed": "#002019", "surface-dim": "#d9dad8", "primary-fixed-dim": "#a0d1c0", "on-background": "#1a1c1b", "secondary-container": "#ffc879", "on-secondary": "#ffffff", "surface-bright": "#f9faf7", "on-secondary-container": "#79520c", "surface": "#f9faf7", "tertiary": "#5d322a", "on-primary-container": "#a3d4c3", "primary-fixed": "#bceddc", "inverse-primary": "#a0d1c0", "error": "#ba1a1a", "on-surface": "#1a1c1b", "surface-tint": "#396759", "primary": "#154539", "background": "#f9faf7", "on-secondary-fixed": "#291800", "tertiary-fixed-dim": "#f7b7ac", "on-tertiary-fixed": "#33110b", "on-error": "#ffffff", "secondary-fixed": "#ffddb1", "primary-container": "#2f5d50", "on-tertiary": "#ffffff", "secondary-fixed-dim": "#f3bd6f", "tertiary-container": "#784840", "on-error-container": "#93000a", "surface-container-lowest": "#ffffff", "on-tertiary-container": "#fbbaaf", "surface-container-highest": "#e2e3e0", "on-tertiary-fixed-variant": "#683a33", "on-primary": "#ffffff", "surface-container": "#edeeec"}, "borderRadius": {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"}, "spacing": {"gutter-md": "1.5rem", "gutter-lg": "2rem", "margin-page": "2rem", "column-span-12": "100%", "gutter-sm": "1rem"}, "fontFamily": {"headline-lg": ["Spectral"], "headline-xl": ["Spectral"], "label-md": ["system-ui"], "body-lg": ["system-ui"], "body-md": ["system-ui"], "headline-md": ["Spectral"]}, "fontSize": {"headline-lg": ["28px", {"lineHeight": "36px", "fontWeight": "500"}], "headline-xl": ["36px", {"lineHeight": "44px", "fontWeight": "500"}], "label-md": ["label-md", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}], "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}], "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}], "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "500"}]}}}}}</script><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/></head><body class="bg-surface font-body text-on-surface"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 max-w-7xl mx-auto px-gutter-lg flex items-center justify-between"><div class="flex items-center gap-12"><span class="font-headline-md text-primary font-bold tracking-tight">Cuida</span><nav class="hidden md:flex items-center gap-2" data-active-classes="bg-primary-container text-on-primary-container font-medium rounded-full px-4 py-2"><a class="px-4 py-2 text-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="visao-geral" href="#">Visão Geral</a><a class="px-4 py-2 text-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="pacientes" href="#">Pacientes</a><a class="px-4 py-2 text-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="agenda" href="#">Agenda</a><a class="px-4 py-2 text-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="biblioteca-de-envio" href="#">Biblioteca de Envio</a><a class="px-4 py-2 text-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="configuracoes-perfil" href="#">Configurações/Perfil</a></nav></div><div class="flex items-center gap-4"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-surface"><div class="flex flex-col w-full bg-[#f7f4ee] min-h-screen text-on-surface">
+<div class="max-w-7xl mx-auto px-gutter-lg py-12 w-full">
+<!-- Top Bar Title & Quick Status -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+<div><span class="text-label-md uppercase tracking-wider text-outline mb-2 block">CADASTRO PROFISSIONAL • CREDENCIAMENTO</span><h1 class="font-headline-xl text-primary">Criar Conta no Cuida</h1></div>
+</div>
+<!-- Two Column Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Professional Info & Biography (7 spans) -->
+<div class="lg:col-span-7 flex flex-col gap-8"><div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-primary flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">badge</span>
+Informações do Profissional
+</h2>
+<span class="text-label-md bg-surface-container px-3 py-1 rounded-full text-on-surface-variant">Credenciamento</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-label-md text-on-surface-variant">Nome Completo</label>
+<input class="bg-surface px-4 py-3 rounded-lg text-body-lg outline-none focus:ring-2 focus:ring-primary-container text-on-surface" placeholder="Digite seu nome completo" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-label-md text-on-surface-variant">Registro CRP</label>
+<input class="bg-surface px-4 py-3 rounded-lg text-body-lg outline-none focus:ring-2 focus:ring-primary-container text-on-surface font-mono" placeholder="00/00000" type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-label-md text-on-surface-variant">E-mail de Contato</label>
+<input class="bg-surface px-4 py-3 rounded-lg text-body-lg outline-none focus:ring-2 focus:ring-primary-container text-on-surface" placeholder="seu@email.com" type="email"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-label-md text-on-surface-variant">Senha de Acesso</label>
+<input class="bg-surface px-4 py-3 rounded-lg text-body-lg outline-none focus:ring-2 focus:ring-primary-container text-on-surface" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-label-md text-on-surface-variant">Abordagem Terapêutica Principal</label>
+<select class="bg-surface px-4 py-3 rounded-lg text-body-lg outline-none focus:ring-2 focus:ring-primary-container text-on-surface">
+<option>Terapia Cognitivo-Comportamental (TCC)</option>
+<option>Psicanálise</option>
+<option>Gestalt-terapia</option>
+<option>Terapia Sistêmica</option>
+<option>ACT</option>
+<option>Humanista</option>
+<option>Holística/Integrativa</option>
+<option>Outra</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-label-md text-on-surface-variant">Forma de Trabalho</label>
+<textarea class="bg-surface px-4 py-3 rounded-lg text-body-lg outline-none focus:ring-2 focus:ring-primary-container text-on-surface resize-none" placeholder="Descreva como você conduz seu processo terapêutico..." rows="4"></textarea>
+</div>
+</div></div>
+<!-- Right Column: Security Keys & App Integration (5 spans) -->
+<div class="lg:col-span-5 flex flex-col gap-8"><div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm flex flex-col gap-6">
+<h2 class="font-headline-md text-primary flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+Preferências e Configurações
+</h2>
+<div class="flex flex-col gap-4">
+<label class="flex items-center justify-between cursor-pointer p-3 bg-surface rounded-lg">
+<div class="flex flex-col">
+<span class="text-body-lg font-medium">Leituras simbólicas como referência silenciosa</span>
+<span class="text-sm text-on-surface-variant">Permite o uso de arquétipos e analogias sutis na jornada.</span>
+</div>
+<input checked="" class="w-5 h-5 accent-primary-container rounded cursor-pointer" type="checkbox"/>
+</label>
+<label class="flex items-center justify-between cursor-pointer p-3 bg-surface rounded-lg">
+<span class="text-body-lg">Alertas de check-in de pacientes</span>
+<input checked="" class="w-5 h-5 accent-primary-container rounded cursor-pointer" type="checkbox"/>
+</label>
+<label class="flex items-center justify-between cursor-pointer p-3 bg-surface rounded-lg">
+<span class="text-body-lg">Lembrete de sessão (15 min antes)</span>
+<input checked="" class="w-5 h-5 accent-primary-container rounded cursor-pointer" type="checkbox"/>
+</label>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm flex items-center justify-between">
+<button class="px-6 py-3 rounded-full text-body-md text-on-surface-variant hover:text-on-surface transition-colors" onclick="alert('Cadastro cancelado.')">
+Cancelar
+</button>
+<button class="bg-[#2f5d50] hover:bg-[#204f42] text-on-primary px-8 py-3.5 rounded-full font-medium text-body-lg shadow-sm transition-all transform active:scale-95 flex items-center gap-2" onclick="alert('Conta criada com sucesso!')">
+<span class="material-symbols-outlined text-[18px]">check</span>
+Criar conta
+</button>
+</div></div>
+</div>
+</div>
+</div></main><footer class="w-full bg-surface-container-low py-gutter-lg"><div class="max-w-7xl mx-auto px-gutter-lg text-center text-on-surface-variant text-body-md">© Cuida Profissional. Todos os direitos reservados.</div></footer></body></html>

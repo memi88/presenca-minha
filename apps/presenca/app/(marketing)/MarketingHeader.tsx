@@ -12,7 +12,7 @@ export function MarketingHeader() {
     <header className={styles.header}>
       <a className={styles.wordmark} href="/">
         <CirculoRespirando className={styles.dot} />
-        presença
+        Presença
       </a>
       <nav className={styles.nav}>
         <a

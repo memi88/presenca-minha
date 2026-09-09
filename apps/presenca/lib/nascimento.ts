@@ -1,8 +1,9 @@
 import "server-only";
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-
-import { createClient } from "@presenca/supabase/server";
+import { eq } from "drizzle-orm";
+import type { Db } from "@presenca/db/db";
+import { profiles } from "@presenca/db/schema";
 
 import { calcularConfiguracaoHD } from "./humanDesign";
 
@@ -41,33 +42,28 @@ export function lerDadosNascimentoDoForm(
 // dados de nascimento já estão salvos de qualquer forma; configuracao_hd só
 // é preenchida quando o cálculo terminar, sem bloquear quem chamou.
 export async function salvarESagendarNascimento(
-  supabase: Awaited<ReturnType<typeof createClient>>,
+  db: Db,
   userId: string,
   dados: DadosNascimentoForm,
 ): Promise<SalvarNascimentoState> {
-  const { error } = await supabase
-    .from("profiles")
-    .update({
-      data_nascimento: dados.data,
-      hora_nascimento: dados.hora,
-      local_nascimento: dados.local,
-      nascimento_latitude: dados.latitude,
-      nascimento_longitude: dados.longitude,
+  await db
+    .update(profiles)
+    .set({
+      dataNascimento: dados.data,
+      horaNascimento: dados.hora,
+      localNascimento: dados.local,
+      nascimentoLatitude: dados.latitude === null ? null : String(dados.latitude),
+      nascimentoLongitude: dados.longitude === null ? null : String(dados.longitude),
     })
-    .eq("id", userId);
-  if (error) return { erro: error.message };
+    .where(eq(profiles.userId, userId));
 
   const { ctx } = await getCloudflareContext({ async: true });
-  ctx.waitUntil(processarConfiguracaoHD(supabase, userId, dados));
+  ctx.waitUntil(processarConfiguracaoHD(db, userId, dados));
 
   return {};
 }
 
-async function processarConfiguracaoHD(
-  supabase: Awaited<ReturnType<typeof createClient>>,
-  userId: string,
-  dados: DadosNascimentoForm,
-) {
+async function processarConfiguracaoHD(db: Db, userId: string, dados: DadosNascimentoForm) {
   const configuracaoHD = await calcularConfiguracaoHD(
     dados.data,
     dados.hora,
@@ -77,5 +73,5 @@ async function processarConfiguracaoHD(
   );
   if (!configuracaoHD) return;
 
-  await supabase.from("profiles").update({ configuracao_hd: configuracaoHD }).eq("id", userId);
+  await db.update(profiles).set({ configuracaoHd: configuracaoHD }).where(eq(profiles.userId, userId));
 }

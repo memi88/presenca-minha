@@ -12,15 +12,9 @@
   padding: 40px clamp(24px, 3vw, 40px);
 }
 
-.eyebrow {
-  font: 300 clamp(16px, 1vw, 18px) / 1 var(--font-spectral), serif;
-  letter-spacing: 0.32em;
-  color: var(--accent);
-  margin-bottom: 16px;
-}
 
 .headline {
-  font: italic 400 clamp(30px, 2.2vw, 38px) / 1.28 var(--font-spectral), serif;
+  font: 300 clamp(30px, 2.2vw, 38px) / 1.28 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: 36px;
 }
@@ -31,7 +25,7 @@
 }
 
 .rotulo {
-  font: 300 12px/1 var(--font-spectral), serif;
+  font: 600 11px/1 var(--font-bitter), sans-serif;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-faint);
@@ -39,15 +33,22 @@
 }
 
 .valor {
-  font: 400 16px/1.4 var(--font-spectral), serif;
+  font: 400 16px/1.4 var(--font-fraunces), Georgia, serif;
   color: var(--text);
   margin-bottom: 6px;
 }
 
 .link {
-  font: 400 14px/1.4 var(--font-spectral), serif;
+  font: 500 14px/1.4 var(--font-bitter), sans-serif;
   color: var(--accent);
   text-decoration: none;
+}
+
+/* Segundo link dentro da mesma .secao (hoje só a seção "admin", que tem
+   2 painéis) — sem isso os dois ficam colados na mesma linha. */
+.linkBloco {
+  display: block;
+  margin-top: 6px;
 }
 
 .sair {
@@ -55,7 +56,7 @@
   background: none;
   border: none;
   padding: 0;
-  font: 400 13px/1 var(--font-spectral), serif;
+  font: 500 13px/1 var(--font-bitter), sans-serif;
   color: var(--text-link-muted);
   cursor: pointer;
 }
@@ -69,7 +70,7 @@
 }
 
 .avisoSairTexto {
-  font: 400 14px/1.5 var(--font-spectral), serif;
+  font: 400 14px/1.5 var(--font-fraunces), Georgia, serif;
   color: var(--error);
 }
 
@@ -78,7 +79,7 @@
   border: 1px solid var(--error);
   border-radius: 4px;
   padding: 8px 14px;
-  font: 400 13px/1 var(--font-spectral), serif;
+  font: 500 13px/1 var(--font-bitter), sans-serif;
   color: var(--error);
   cursor: pointer;
 }

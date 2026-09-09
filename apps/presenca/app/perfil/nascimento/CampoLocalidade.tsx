@@ -103,7 +103,7 @@ export function CampoLocalidade({ defaultLocal, defaultLatitude, defaultLongitud
         className={styles.input}
         type="text"
         name="local"
-        placeholder="cidade, estado"
+        placeholder="Cidade, estado (opcional)"
         autoComplete="off"
         value={texto}
         onChange={(e) => aoDigitar(e.target.value)}

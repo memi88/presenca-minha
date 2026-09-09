@@ -3,12 +3,21 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { and, eq } from "drizzle-orm";
+import { biblioteca, cadernoEntradas, profissionais, vinculos } from "@presenca/db/schema";
 
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
 import { calcularEmbedding } from "@/lib/embed";
 import { podeCalcularEmbedding } from "@/lib/rateLimit";
 
 export type EscreverEntradaState = { erro?: string; sucesso?: boolean };
+
+const TIPOS_COM_REFERENCIA = new Set(["pratica_indicada", "pagina_indicada"]);
+const TIPO_BIBLIOTECA_ESPERADO: Record<string, string> = {
+  pratica_indicada: "pratica",
+  pagina_indicada: "pagina_livro_vivo",
+};
 
 export async function escreverEntrada(
   pacienteId: string,
@@ -17,38 +26,69 @@ export async function escreverEntrada(
 ): Promise<EscreverEntradaState> {
   const tipo = String(formData.get("tipo") ?? "reflexao");
   const conteudo = String(formData.get("conteudo") ?? "").trim();
-  if (!conteudo) return { erro: "Escreva alguma coisa antes de enviar." };
+  const bibliotecaRefId = String(formData.get("biblioteca_ref_id") ?? "").trim() || null;
+  const precisaReferencia = TIPOS_COM_REFERENCIA.has(tipo);
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/");
+  if (precisaReferencia && !bibliotecaRefId) {
+    return { erro: "Escolha qual prática ou página você quer indicar." };
+  }
+  if (!precisaReferencia && !conteudo) return { erro: "Escreva alguma coisa antes de enviar." };
 
-  const { data: profissional } = await supabase
-    .from("profissionais")
-    .select("id")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const sessao = await getSessao();
+  if (!sessao) redirect("/");
+
+  const db = await getDb();
+  const profissional = await db.query.profissionais.findFirst({
+    where: eq(profissionais.userId, sessao.user.id),
+    columns: { id: true },
+  });
   if (!profissional) redirect("/");
+
+  // Substitui a policy de insert antiga ("paciente vinculado") — sem essa
+  // checagem explícita, um profissional autenticado poderia escrever no
+  // caderno de qualquer paciente só adivinhando o id.
+  const vinculo = await db.query.vinculos.findFirst({
+    where: and(
+      eq(vinculos.profissionalId, profissional.id),
+      eq(vinculos.pacienteId, pacienteId),
+      eq(vinculos.ativo, true),
+    ),
+    columns: { pacienteId: true },
+  });
+  if (!vinculo) {
+    return { erro: "Esse paciente não está mais vinculado a você." };
+  }
+
+  // Confere que a referência escolhida existe, está publicada e é do tipo
+  // certo (prática pra "prática indicada", página do Livro Vivo pra
+  // "página indicada") — o <select> do form já filtra isso, mas o form
+  // pode ser manipulado, então confere de novo aqui.
+  if (precisaReferencia && bibliotecaRefId) {
+    const item = await db.query.biblioteca.findFirst({
+      where: and(eq(biblioteca.id, bibliotecaRefId), eq(biblioteca.publicado, true)),
+      columns: { tipo: true },
+    });
+    if (!item || item.tipo !== TIPO_BIBLIOTECA_ESPERADO[tipo]) {
+      return { erro: "Essa indicação não é válida — escolha de novo." };
+    }
+  }
 
   // Mesmo padrão do Presença (apps/presenca/app/diario/actions.ts): não
   // trava a escrita se o serviço de embedding ainda não estiver no ar, nem
-  // se o limite de uso do usuário estourou.
-  const permitido = await podeCalcularEmbedding(supabase);
+  // se o limite de uso do usuário estourou. Sem conteúdo (indicação sem
+  // nota), não tem o que gerar embedding — fica nulo mesmo.
+  const permitido = conteudo && (await podeCalcularEmbedding(db, sessao.user.id));
   const embedding = permitido ? await calcularEmbedding(conteudo, "passage") : null;
 
-  const { error } = await supabase.from("caderno_entradas").insert({
-    paciente_id: pacienteId,
-    autor_tipo: "profissional",
-    autor_profissional_id: profissional.id,
+  await db.insert(cadernoEntradas).values({
+    pacienteId,
+    autorTipo: "profissional",
+    autorProfissionalId: profissional.id,
     tipo,
     conteudo,
+    bibliotecaRefId,
     embedding,
   });
-  // A policy de insert (paciente vinculado) é o que realmente trava isso —
-  // este erro só aparece se o vínculo não existir mais.
-  if (error) return { erro: error.message };
 
   revalidatePath(`/pacientes/${pacienteId}`);
   return { sucesso: true };

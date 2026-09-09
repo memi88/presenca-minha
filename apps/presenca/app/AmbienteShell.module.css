@@ -4,13 +4,31 @@
    tela". */
 .fundo {
   min-height: 100dvh;
+  background: var(--bg);
 }
 
+/* `data-ambiente` é setado aqui (AmbienteShell.tsx), então `var(--bg)`
+   resolve certo por rota (claro ou escuro) — sem isso, o padding-bottom
+   reservado pro BottomNav (abaixo) e o overscroll do iOS mostravam o
+   branco padrão do navegador (body/html sem background próprio) no fim
+   da rolagem, em telas de conteúdo mais longo que a viewport (achado
+   testando /lente-do-dia no mobile). */
 .coluna {
   width: 100%;
   min-height: 100dvh;
   position: relative;
+  background: var(--bg);
   animation: fadeIn 500ms ease;
+}
+
+/* Reserva espaço pra BottomNav.tsx (fixa, só mobile) não cobrir o fim do
+   conteúdo. Aplicado em toda tela — inclusive as poucas sem barra (legal,
+   onboarding), onde o excesso é só um respiro a mais no rodapé, mais
+   barato que replicar essa condição tela por tela. */
+@media (max-width: 959px) {
+  .coluna {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
 }
 
 @keyframes fadeIn {

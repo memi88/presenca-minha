@@ -1,0 +1,1 @@
+ALTER TABLE `profissionais` ADD `descricao` text;

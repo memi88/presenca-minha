@@ -1,0 +1,141 @@
+/* Ferramenta interna (só o admin acessa) — mesmos tokens/padrão visual de
+   app/admin/biblioteca/page.module.css, propósito utilitário. Painel
+   passou a ser só moderação/edição (a criação direta saiu — quem propõe
+   agora é o profissional pelo Cuida). */
+.scene {
+  min-height: 100dvh;
+  background: var(--bg);
+  padding: clamp(24px, 4vw, 48px);
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  font: 600 12px/1 var(--font-bitter), sans-serif;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.headline {
+  font: italic 300 clamp(26px, 2vw, 32px) / 1.2 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+  margin-bottom: 32px;
+}
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.filtroPill {
+  font: 500 12px/1 var(--font-bitter), sans-serif;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 7px 14px;
+  text-decoration: none;
+}
+
+.filtroPillAtivo {
+  color: var(--cta-text);
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+}
+
+.contagem {
+  font: 500 12px/1 var(--font-bitter), sans-serif;
+  color: var(--text-subtle);
+  margin-bottom: 16px;
+}
+
+.vazio {
+  font: italic 400 14px/1.5 var(--font-fraunces), Georgia, serif;
+  color: var(--text-subtle);
+}
+
+.item {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  background: var(--bg-elevated);
+}
+
+.itemTopo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.itemTitulo {
+  font: 500 16px/1.3 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+}
+
+.itemMeta {
+  font: 600 11px/1.4 var(--font-bitter), sans-serif;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.acoes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.recusarForm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.motivoInput {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font: 400 13px/1 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+  min-width: 220px;
+}
+
+.aprovar {
+  background: var(--accent-strong);
+  color: var(--cta-text);
+  font: 600 13px/1 var(--font-bitter), sans-serif;
+  padding: 9px 16px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.editar {
+  display: inline-block;
+  background: none;
+  color: var(--accent);
+  font: 600 13px/1 var(--font-bitter), sans-serif;
+  padding: 9px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  text-decoration: none;
+}
+
+.recusar {
+  background: none;
+  color: var(--error);
+  border: 1px solid var(--error);
+  font: 600 13px/1 var(--font-bitter), sans-serif;
+  padding: 9px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+}

@@ -1,38 +1,38 @@
 import { redirect } from "next/navigation";
 
-import { createClient } from "@presenca/supabase/server";
+import { eq } from "drizzle-orm";
+import { profiles } from "@presenca/db/schema";
 
+import { getDb } from "@/lib/db";
+import { getSessao } from "@/lib/sessao";
+
+import { CirculoRespirando } from "../CirculoRespirando";
 import { PageHeader } from "../PageHeader";
 import { LoginForm } from "./LoginForm";
 import styles from "./page.module.css";
 
 export default async function Login() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const sessao = await getSessao();
 
-  if (user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("nome")
-      .eq("id", user.id)
-      .maybeSingle();
+  if (sessao) {
+    const profile = await (await getDb()).query.profiles.findFirst({
+      where: eq(profiles.userId, sessao.user.id),
+      columns: { nome: true },
+    });
 
     redirect(profile?.nome ? "/home" : "/chegada");
   }
 
   return (
     <main className={styles.scene}>
-      <PageHeader voltar={{ href: "/", label: "‹" }} />
+      <PageHeader titulo="Entrar" voltar={{ href: "/bem-vindo" }} />
       <div className={styles.content}>
-        <p className={styles.eyebrow}>bem-vindo de volta</p>
-        <h1 className={styles.headline}>
-          Seu espaço{" "}
-          <br className={styles.quebra} />
-          está te esperando.
-        </h1>
+        <CirculoRespirando className={styles.icone} />
+        <p className={styles.subtext}>Retorne ao seu espaço de reflexão.</p>
         <LoginForm />
+        <p className={styles.rodape}>
+          <a href="/chegada">Criar um novo espaço</a>
+        </p>
       </div>
     </main>
   );

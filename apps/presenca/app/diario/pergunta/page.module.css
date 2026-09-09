@@ -1,0 +1,80 @@
+.scene {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  /* Sem padding-top: o PageHeader já traz seu próprio espaçamento
+     (clamp(20px,3vw,28px)) — duplicar aqui criava inconsistência de
+     espaço acima do header entre telas diferentes do app. */
+  padding: 0 24px 64px;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.pergunta {
+  font: italic 400 clamp(26px, 2.8vw, 36px) / 1.35 var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+  margin: 0 0 36px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 180px;
+  resize: vertical;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px 22px;
+  /* Papel pautado — mesmo espírito do mockup (journal-lines), linhas
+     acompanhando o line-height do texto. */
+  background-image: repeating-linear-gradient(
+    var(--bg-elevated),
+    var(--bg-elevated) 30px,
+    var(--border) 31px,
+    var(--bg-elevated) 32px
+  );
+  line-height: 32px;
+  font: 400 clamp(15px, 1vw, 16.5px) / 32px var(--font-fraunces), Georgia, serif;
+  color: var(--text);
+}
+
+.textarea::placeholder {
+  font-style: italic;
+  color: var(--text-subtle);
+}
+
+.cta {
+  align-self: center;
+  margin-top: 4px;
+  background: var(--accent-strong);
+  color: var(--cta-text);
+  font: 600 14px/1 var(--font-bitter), sans-serif;
+  padding: 13px 28px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+}
+
+.cta:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.erro {
+  font: 500 13px/1.4 var(--font-bitter), sans-serif;
+  color: var(--error);
+}

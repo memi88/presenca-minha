@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuida — Mockup de cadastro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F2EDE3;
+    --card: #FBF8F2;
+    --ink: #2A2521;
+    --muted: #6B6255;
+    --line: #DCD2BE;
+    --teal: #1E6B64;
+    --teal-hover: #17534E;
+    --teal-soft: #E4EEEC;
+    --amber: #C98A3E;
+    --focus: #1E6B64;
+  }
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    min-height:100vh;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(42,37,33,0.035) 1px, transparent 0);
+    background-size: 22px 22px;
+    font-family:'Work Sans', sans-serif;
+    color: var(--ink);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 32px 16px 64px;
+  }
+  .switcher{
+    display:flex;
+    gap:4px;
+    background: var(--card);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:4px;
+    margin-bottom:36px;
+  }
+  .switcher button{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.02em;
+    border:none;
+    background:transparent;
+    color: var(--muted);
+    padding:8px 16px;
+    border-radius:999px;
+    cursor:pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .switcher button.active{
+    background: var(--teal);
+    color:#fff;
+  }
+  .switcher button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+
+  .stage{ width:100%; max-width:460px; }
+
+  .stitch{
+    width:100%;
+    height:1px;
+    background-image: repeating-linear-gradient(to right, var(--line) 0 6px, transparent 6px 12px);
+    position:relative;
+    margin: 28px 0;
+  }
+  .stitch::before, .stitch::after{
+    content:'';
+    position:absolute;
+    top:-2.5px;
+    width:6px; height:6px;
+    border-radius:50%;
+    background: var(--teal);
+  }
+  .stitch::before{ left:0; }
+  .stitch::after{ right:0; }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color: var(--teal);
+    margin-bottom:10px;
+    display:block;
+  }
+
+  h1{
+    font-family:'Spectral', serif;
+    font-weight:500;
+    font-size:28px;
+    line-height:1.25;
+    margin:0 0 12px;
+    color: var(--ink);
+  }
+  p.lead{
+    font-size:15px;
+    line-height:1.6;
+    color: var(--muted);
+    margin:0 0 28px;
+  }
+
+  .card{
+    background: var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:36px 32px;
+  }
+
+  /* Screen 1 — Chegada */
+  .mark{
+    font-family:'Spectral', serif;
+    font-size:15px;
+    letter-spacing:0.06em;
+    color: var(--muted);
+    margin-bottom:44px;
+  }
+  .mark b{ color:var(--ink); font-weight:600; }
+
+  .btn{
+    width:100%;
+    background: var(--teal);
+    color:#fff;
+    border:none;
+    border-radius:9px;
+    padding:14px 20px;
+    font-family:'Work Sans', sans-serif;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition: background 0.15s ease;
+  }
+  .btn:hover{ background: var(--teal-hover); }
+  .btn:focus-visible{ outline:2px solid var(--focus); outline-offset:3px; }
+
+  .link-quiet{
+    display:block;
+    text-align:center;
+    margin-top:18px;
+    font-size:13px;
+    color: var(--muted);
+    text-decoration:none;
+  }
+  .link-quiet:hover{ color: var(--ink); }
+  .link-quiet:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:4px; }
+
+  /* Screen 2 — Cadastro */
+  .field{ margin-bottom:18px; }
+  .field label{
+    display:block;
+    font-size:12px;
+    color: var(--muted);
+    margin-bottom:6px;
+  }
+  .field input{
+    width:100%;
+    font-family:'Work Sans', sans-serif;
+    font-size:15px;
+    padding:12px 14px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    background:#fff;
+    color: var(--ink);
+  }
+  .field input:focus-visible{ outline:2px solid var(--focus); outline-offset:1px; border-color: var(--teal); }
+  .field input::placeholder{ color:#B5AA96; }
+
+  .note{
+    font-size:12px;
+    color: var(--muted);
+    margin-top:22px;
+    line-height:1.6;
+  }
+
+  /* Select + textarea (tela 4) */
+  .field select{
+    width:100%;
+    font-family:'Work Sans', sans-serif;
+    font-size:15px;
+    padding:12px 14px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    background:#fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6"><path d="M0 0l5 6 5-6z" fill="%236B6255"/></svg>') no-repeat right 14px center;
+    appearance:none;
+    color: var(--ink);
+  }
+  .field select:focus-visible{ outline:2px solid var(--focus); outline-offset:1px; border-color: var(--teal); }
+  .field textarea{
+    width:100%;
+    font-family:'Work Sans', sans-serif;
+    font-size:14px;
+    padding:12px 14px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    background:#fff;
+    color: var(--ink);
+    resize:vertical;
+    min-height:64px;
+    line-height:1.5;
+  }
+  .field textarea:focus-visible{ outline:2px solid var(--focus); outline-offset:1px; border-color: var(--teal); }
+  .field-conditional{
+    max-height:0;
+    overflow:hidden;
+    transition: max-height 0.2s ease;
+  }
+  .field-conditional.open{ max-height:160px; }
+
+  /* Toggle (usa_linguagens_simbolicas) */
+  .toggle-row{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+    padding:18px 0 4px;
+  }
+  .toggle-copy{ flex:1; }
+  .toggle-copy .t-title{
+    font-size:14px;
+    font-weight:600;
+    color: var(--ink);
+    margin-bottom:6px;
+  }
+  .toggle-copy .t-desc{
+    font-size:12.5px;
+    line-height:1.65;
+    color: var(--muted);
+  }
+  .switch{
+    position:relative;
+    width:42px;
+    height:24px;
+    flex-shrink:0;
+    margin-top:2px;
+  }
+  .switch input{ opacity:0; width:0; height:0; }
+  .switch .track{
+    position:absolute; inset:0;
+    background: var(--teal);
+    border-radius:999px;
+    cursor:pointer;
+    transition: background 0.15s ease;
+  }
+  .switch .track::after{
+    content:'';
+    position:absolute;
+    top:3px; left:21px;
+    width:18px; height:18px;
+    border-radius:50%;
+    background:#fff;
+    transition: left 0.15s ease;
+  }
+  .switch input:not(:checked) + .track{ background:#CFC5B3; }
+  .switch input:not(:checked) + .track::after{ left:3px; }
+  .switch input:focus-visible + .track{ outline:2px solid var(--focus); outline-offset:2px; }
+
+  /* Screen 3 — Home */
+  .topbar{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:6px;
+  }
+  .topbar .who{
+    font-family:'Spectral', serif;
+    font-size:17px;
+  }
+  .topbar .who .muted{ color: var(--muted); font-size:13px; display:block; margin-top:2px; font-family:'Work Sans', sans-serif;}
+
+  .invite-box{
+    background: var(--teal-soft);
+    border:1px solid #C9DEDA;
+    border-radius:12px;
+    padding:20px 22px;
+    margin: 20px 0 24px;
+  }
+  .invite-box .label{
+    font-size:12px;
+    color: var(--muted);
+    margin-bottom:8px;
+  }
+  .invite-code{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:22px;
+    letter-spacing:0.08em;
+    color: var(--teal-hover);
+    font-weight:500;
+  }
+  .invite-copy{
+    font-size:12px;
+    color: var(--teal);
+    text-decoration:underline;
+    cursor:pointer;
+    background:none;
+    border:none;
+    padding:0;
+    margin-top:10px;
+    font-family:'Work Sans', sans-serif;
+  }
+
+  .empty{
+    border:1px dashed var(--line);
+    border-radius:12px;
+    padding:28px 22px;
+    text-align:center;
+    color: var(--muted);
+    font-size:13.5px;
+    line-height:1.6;
+  }
+
+  .locked-action{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:#fff;
+    border:1px dashed #C9B999;
+    border-radius:12px;
+    padding:16px 18px;
+    margin-bottom:16px;
+  }
+  .locked-icon{
+    font-size:16px;
+    flex-shrink:0;
+    opacity:0.6;
+  }
+  .locked-copy{ flex:1; }
+  .locked-title{
+    font-size:13.5px;
+    font-weight:600;
+    color: var(--ink);
+    margin-bottom:2px;
+  }
+  .locked-sub{
+    font-size:12px;
+    color: var(--muted);
+  }
+  .locked-btn{
+    flex-shrink:0;
+    background: var(--amber);
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    padding:9px 14px;
+    font-family:'Work Sans', sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .locked-btn:hover{ opacity:0.9; }
+  .locked-btn:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+
+  .banner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-top:22px;
+    padding:14px 16px;
+    border-radius:10px;
+    background:#fff;
+    border:1px solid var(--line);
+    font-size:13px;
+  }
+  .banner .msg{ color: var(--ink); }
+  .banner .msg .sub{ display:block; color:var(--muted); font-size:12px; margin-top:2px; }
+  .banner .actions{ display:flex; gap:14px; flex-shrink:0; }
+  .banner button{
+    background:none;
+    border:none;
+    font-family:'Work Sans', sans-serif;
+    font-size:12.5px;
+    cursor:pointer;
+    padding:0;
+  }
+  .banner .primary{ color: var(--teal); font-weight:600; }
+  .banner .dismiss{ color: var(--muted); }
+  .banner button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+
+  .screen{ display:none; animation: fade 0.25s ease; }
+  .screen.active{ display:block; }
+  @media (prefers-reduced-motion: no-preference){
+    @keyframes fade{ from{ opacity:0; transform:translateY(4px);} to{ opacity:1; transform:none;} }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .screen{ animation:none; }
+  }
+
+  @media (max-width:480px){
+    .card{ padding:28px 22px; }
+    h1{ font-size:24px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="switcher">
+    <button class="active" data-target="s1">1 · Chegada</button>
+    <button data-target="s2">2 · Cadastro</button>
+    <button data-target="s3">3 · Home</button>
+    <button data-target="s4">4 · Antes do pré-cadastro</button>
+  </div>
+
+  <div class="stage">
+
+    <!-- SCREEN 1 — Chegada no Cuida -->
+    <section id="s1" class="screen active">
+      <div class="card">
+        <div class="mark"><b>Cuida</b> · presença</div>
+        <span class="eyebrow">Para profissionais</span>
+        <h1>Um espaço pra acompanhar quem você atende, entre um encontro e o outro.</h1>
+        <p class="lead">Seus pacientes continuam vivendo entre as sessões. O Cuida te deixa presente nesse intervalo — sem virar mais uma ferramenta pra gerenciar.</p>
+        <div class="stitch"></div>
+        <button class="btn">Criar meu espaço</button>
+        <a href="#" class="link-quiet">já tenho uma conta →</a>
+      </div>
+    </section>
+
+    <!-- SCREEN 2 — Cadastro mínimo -->
+    <section id="s2" class="screen">
+      <div class="card">
+        <span class="eyebrow">01 de 01</span>
+        <h1>Só o essencial pra começar</h1>
+        <p class="lead">O resto — abordagem, forma de trabalho — a gente pergunta quando fizer sentido, não agora.</p>
+
+        <div class="field">
+          <label for="nome">Seu nome</label>
+          <input id="nome" type="text" placeholder="Como seus pacientes te chamam">
+        </div>
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input id="email" type="email" placeholder="voce@exemplo.com">
+        </div>
+        <div class="field">
+          <label for="senha">Senha</label>
+          <input id="senha" type="password" placeholder="Mínimo 8 caracteres">
+        </div>
+
+        <button class="btn">Criar meu espaço</button>
+        <p class="note">Ao criar, você concorda com os termos de uso e a política de privacidade do Presença.</p>
+      </div>
+    </section>
+
+    <!-- SCREEN 3 — Home do Cuida -->
+    <section id="s3" class="screen">
+      <div class="card">
+        <div class="topbar">
+          <div class="who">Olá, Marina<span class="muted">Seu espaço no Cuida</span></div>
+        </div>
+
+        <div class="invite-box">
+          <div class="label">Seu código de convite</div>
+          <div class="invite-code">RAIZ-7K2Q</div>
+          <button class="invite-copy">copiar link do convite</button>
+        </div>
+
+        <div class="locked-action">
+          <div class="locked-icon">🔒</div>
+          <div class="locked-copy">
+            <div class="locked-title">Pré-cadastrar um paciente</div>
+            <div class="locked-sub">Complete seu perfil pra liberar — leva menos de um minuto.</div>
+          </div>
+          <button class="locked-btn">completar perfil →</button>
+        </div>
+
+        <div class="empty">
+          Nenhum paciente conectado ainda.<br>Use o código acima, ou complete seu perfil pra pré-cadastrar alguém com um link pessoal.
+        </div>
+
+        <div class="banner">
+          <div class="msg">Complete seu perfil<span class="sub">Ajuda a calibrar como seus pacientes chegam até você</span></div>
+          <div class="actions">
+            <button class="primary">completar</button>
+            <button class="dismiss">agora não</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 4 — Antes do primeiro convite -->
+    <section id="s4" class="screen">
+      <div class="card">
+        <span class="eyebrow">Antes de pré-cadastrar um paciente</span>
+        <h1>Como você trabalha?</h1>
+        <p class="lead">Pra pré-cadastrar alguém com segurança, primeiro conta pra gente como você trabalha. Leva menos de um minuto, e só precisa ser feito uma vez — depois disso, todo pré-cadastro fica liberado.</p>
+
+        <div class="field">
+          <label for="tipo">Abordagem</label>
+          <select id="tipo">
+            <option value="">Selecione</option>
+            <option>TCC</option>
+            <option>Psicanálise</option>
+            <option>Gestalt-terapia</option>
+            <option>Terapia Sistêmica</option>
+            <option>ACT</option>
+            <option>Humanista</option>
+            <option>Holística/Integrativa</option>
+            <option value="outra">Outra</option>
+          </select>
+        </div>
+
+        <div class="field-conditional" id="conditional-outra">
+          <div class="field">
+            <label for="forma">Como você descreveria seu jeito de trabalhar?</label>
+            <textarea id="forma" placeholder="Sem categoria certa ou errada — só pra entendermos melhor."></textarea>
+          </div>
+        </div>
+
+        <div class="stitch"></div>
+
+        <div class="toggle-row">
+          <div class="toggle-copy">
+            <div class="t-title">Usar leituras simbólicas como referência silenciosa</div>
+            <div class="t-desc">O Presença usa, por trás da experiência, algumas linguagens de compreensão humana como referência silenciosa — nunca como vocabulário exposto, nunca como verdade fechada. Isso vem ativado por padrão: aqui, acreditamos que toda forma de cuidado que ajuda merece espaço. Se sua abordagem não trabalha com esse tipo de leitura, você pode desligar. Vale saber: mesmo desligado por você, a pessoa sempre pode religar por conta própria — a decisão final é sempre dela.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="linguagens" checked>
+            <span class="track"></span>
+          </label>
+        </div>
+
+        <div class="stitch"></div>
+
+        <button class="btn">Salvar e continuar pro pré-cadastro</button>
+        <p class="note" style="text-align:center; margin-top:14px;">Isso não trava seu acesso ao resto do Cuida — só o pré-cadastro fica esperando essa informação.</p>
+      </div>
+    </section>
+
+  </div>
+
+<script>
+  document.getElementById('tipo').addEventListener('change', (e)=>{
+    document.getElementById('conditional-outra').classList.toggle('open', e.target.value === 'outra');
+  });
+</script>
+<script>
+  document.querySelectorAll('.switcher button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.switcher button').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.target).classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
