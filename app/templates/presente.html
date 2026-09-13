@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Presente · presente{% endblock %}
+{% block conteudo %}
+<div class="presente-topo">
+  <p class="presente-marca">◌ Presente</p>
+  {% if cabecalho_selo_tom %}<p class="presente-selo-tom">{{ cabecalho_selo_tom }}</p>{% endif %}
+</div>
+
+{% if eh_hunab_ku %}
+<div class="presente-corpo">
+  <p class="presente-reflexao">{{ hunab_ku_mensagem }}</p>
+</div>
+{% else %}
+<div class="presente-corpo">
+  <p class="presente-reflexao">{{ leitura.reflexao }}</p>
+</div>
+
+<div class="presente-pergunta">
+  <span class="presente-pergunta-rotulo">Uma pergunta</span>
+  <p class="presente-pergunta-texto">{{ leitura.pergunta }}</p>
+</div>
+
+{% if leitura.pratica %}
+<div class="presente-pratica">
+  <span class="presente-pratica-rotulo">◌ Prática</span>
+  <p class="presente-pratica-texto">{{ leitura.pratica }}</p>
+</div>
+{% endif %}
+{% endif %}
+
+<details class="entender presente-entender">
+  <summary>Entender o porquê</summary>
+  <div class="prova">
+    <p>{{ entender.data }}</p>
+    {% for linha in entender.linhas %}<p>{{ linha }}</p>{% endfor %}
+  </div>
+</details>
+{% endblock %}

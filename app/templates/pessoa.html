@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ participante.nome | capitalize }} · presente{% endblock %}
+{% block conteudo %}
+<div class="capa-topo">
+  <h1 class="capa-nome serif">{{ participante.nome | upper }}</h1>
+  <p class="capa-subtitulo">Sua configuração de origem.</p>
+</div>
+<div class="lista">
+  {% for card in cards %}
+    {% include "_card_pessoa.html" %}
+    <div class="separador"></div>
+  {% endfor %}
+</div>
+{% endblock %}

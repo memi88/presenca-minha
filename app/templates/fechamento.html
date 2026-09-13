@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fechamento do dia · presente</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <style>
+    /* Tela utilitária (A7) -- mesmo tratamento de cadastro.html, não
+       segue DESIGN_DIRECTION.md com o mesmo cuidado das telas de
+       experiência. */
+    body { padding-bottom: 40px; }
+    .form-fechamento { max-width: 480px; margin: 0 auto; padding: 32px 24px 60px; }
+    .form-fechamento h1 { font-size: 22px; margin: 0 0 6px; font-weight: 600; }
+    .form-fechamento p.aviso { color: var(--text-dim); font-size: 14px; margin: 0 0 24px; line-height: 1.5; }
+    fieldset { border: none; padding: 0; margin: 0 0 22px; }
+    legend { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); padding: 0 0 10px; }
+    .campo { margin-bottom: 14px; }
+    .campo label.rotulo { display: block; font-size: 14px; margin-bottom: 8px; }
+    textarea, input[type="text"] {
+      width: 100%; padding: 10px 12px; font-size: 15px; border: 1px solid var(--rule);
+      border-radius: 8px; background: #fff; box-sizing: border-box; font-family: inherit; color: var(--text);
+    }
+    textarea { min-height: 70px; resize: vertical; }
+    .opcoes { display: flex; flex-wrap: wrap; gap: 8px; }
+    .opcoes label {
+      font-size: 13px; padding: 7px 12px; border: 1px solid var(--rule); border-radius: 20px;
+      cursor: pointer; display: flex; align-items: center; gap: 6px;
+    }
+    .opcoes input { margin: 0; }
+    .mensagem-erro {
+      background: #fbeaea; border: 1px solid #e3b8b8; color: #a0342f;
+      padding: 12px 14px; border-radius: 8px; font-size: 14px; margin-bottom: 22px;
+    }
+    .mensagem-ok {
+      background: #eaf3ea; border: 1px solid #b8d8b8; color: #2f6b2f;
+      padding: 12px 14px; border-radius: 8px; font-size: 14px; margin-bottom: 22px;
+    }
+    button.enviar {
+      width: 100%; padding: 13px; font-size: 15px; border: none; border-radius: 8px;
+      background: var(--accent); color: white; cursor: pointer; margin-top: 4px; font-family: inherit;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-fechamento">
+    <h1>O que você percebeu hoje?</h1>
+    <p class="aviso">Editável até a virada do dia (03:00). Depois disso, esse registro congela.</p>
+
+    {% if erro %}<div class="mensagem-erro">{{ erro }}</div>{% endif %}
+    {% if salvo %}<div class="mensagem-ok">Salvo.</div>{% endif %}
+
+    {% set r = reflexao.respostas_laboratorio if reflexao else {} %}
+    <form method="post" action="/{{ participante.nome }}/fechamento">
+      <fieldset>
+        <legend>Registro livre</legend>
+        <div class="campo">
+          <label class="rotulo" for="texto_livre">Quer guardar algo do seu dia?</label>
+          <textarea id="texto_livre" name="texto_livre">{{ reflexao.texto_livre if reflexao else "" }}</textarea>
+        </div>
+        <div class="campo">
+          <span class="rotulo">Marcador rápido</span>
+          <div class="opcoes">
+            <label><input type="radio" name="marcador_rapido" value="ECO" {% if reflexao and reflexao.marcador_rapido == "ECO" %}checked{% endif %}> Algo encontrou eco</label>
+            <label><input type="radio" name="marcador_rapido" value="PERCEPCAO_DIFERENTE" {% if reflexao and reflexao.marcador_rapido == "PERCEPCAO_DIFERENTE" %}checked{% endif %}> Percebi algo diferente</label>
+            <label><input type="radio" name="marcador_rapido" value="NADA_ESPECIAL" {% if reflexao and reflexao.marcador_rapido == "NADA_ESPECIAL" %}checked{% endif %}> Nada em especial</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Perguntas de laboratório</legend>
+
+        <div class="campo">
+          <label class="rotulo">A reflexão desta manhã voltou à sua mente espontaneamente durante o dia?</label>
+          <div class="opcoes">
+            {% for v, texto in [("nao","Não"),("uma_vez","Uma vez"),("algumas_vezes","Algumas vezes"),("muitas_vezes","Muitas vezes")] %}
+            <label><input type="radio" name="permanencia_espontanea" value="{{ v }}" {% if r.get("permanencia_espontanea") == v %}checked{% endif %}> {{ texto }}</label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="campo">
+          <label class="rotulo">Ela fez você perceber alguma situação de uma maneira que talvez passasse despercebida?</label>
+          <div class="opcoes">
+            {% for v, texto in [("nao","Não"),("talvez","Talvez"),("sim","Sim")] %}
+            <label><input type="radio" name="qualidade_percepcao" value="{{ v }}" {% if r.get("qualidade_percepcao") == v %}checked{% endif %}> {{ texto }}</label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="campo">
+          <label class="rotulo">Você se percebeu procurando acontecimentos que combinassem com a leitura?</label>
+          <div class="opcoes">
+            {% for v, texto in [("nao","Não"),("um_pouco","Um pouco"),("sim","Sim")] %}
+            <label><input type="radio" name="vies_confirmacao" value="{{ v }}" {% if r.get("vies_confirmacao") == v %}checked{% endif %}> {{ texto }}</label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="campo">
+          <label class="rotulo">A pergunta do dia abriu alguma reflexão nova?</label>
+          <div class="opcoes">
+            {% for v, texto in [("nao","Não"),("um_pouco","Um pouco"),("bastante","Bastante"),("nao_sei","Não sei")] %}
+            <label><input type="radio" name="pergunta_abriu_reflexao" value="{{ v }}" {% if r.get("pergunta_abriu_reflexao") == v %}checked{% endif %}> {{ texto }}</label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="campo">
+          <label class="rotulo">Você fez a prática sugerida?</label>
+          <div class="opcoes">
+            {% for v, texto in [("sim","Sim"),("nao","Não"),("nao_havia","Não havia prática")] %}
+            <label><input type="radio" name="practice_done" value="{{ v }}" {% if r.get("practice_done") == v %}checked{% endif %}> {{ texto }}</label>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="campo">
+          <label class="rotulo">Se sim: ela ajudou ou pareceu uma tarefa? (só preencha se respondeu "Sim" acima)</label>
+          <div class="opcoes">
+            {% for v, texto in [("ajudou","Ajudou"),("neutra","Neutra"),("pareceu_tarefa","Pareceu tarefa")] %}
+            <label><input type="radio" name="practice_experience" value="{{ v }}" {% if r.get("practice_experience") == v %}checked{% endif %}> {{ texto }}</label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="campo">
+          <label class="rotulo">Alguma parte pareceu genérica, forçada ou "tentando encaixar" sua vida?</label>
+          <div class="opcoes">
+            {% for v, texto in [("nao","Não"),("sim","Sim")] %}
+            <label><input type="radio" name="linguagem_estranha" value="{{ v }}" {% if r.get("linguagem_estranha") == v %}checked{% endif %}> {{ texto }}</label>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="campo">
+          <label class="rotulo" for="linguagem_estranha_detalhe">Se sim, quer contar mais? (opcional)</label>
+          <input type="text" id="linguagem_estranha_detalhe" name="linguagem_estranha_detalhe" value="{{ r.get('linguagem_estranha_detalhe') or '' }}">
+        </div>
+
+        <div class="campo">
+          <label class="rotulo">Se o Presente não tivesse aparecido hoje, você acha que teria percebido algo diferente?</label>
+          <div class="opcoes">
+            {% for v, texto in [("nao","Não"),("talvez","Talvez"),("sim","Sim"),("nao_sei","Não sei")] %}
+            <label><input type="radio" name="valor_do_dia" value="{{ v }}" {% if r.get("valor_do_dia") == v %}checked{% endif %}> {{ texto }}</label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="campo">
+          <label class="rotulo" for="campo_livre_lab">Tem algo sobre a experiência de hoje que deveríamos saber? (opcional)</label>
+          <textarea id="campo_livre_lab" name="campo_livre_lab">{{ r.get("campo_livre_lab") or "" }}</textarea>
+        </div>
+      </fieldset>
+
+      <button class="enviar" type="submit">Salvar</button>
+    </form>
+  </div>
+</body>
+</html>

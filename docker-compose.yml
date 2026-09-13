@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: presente_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: presente
+      POSTGRES_PASSWORD: presente_dev_local
+      POSTGRES_DB: presente
+    ports:
+      - "5433:5432"
+    volumes:
+      - presente_pgdata:/var/lib/postgresql/data
+
+volumes:
+  presente_pgdata:

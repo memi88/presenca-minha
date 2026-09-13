@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cadastro · presente</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <style>
+    /* Tela utilitária -- não segue DESIGN_DIRECTION.md com o mesmo cuidado
+       das telas de experiência (IMPLEMENTATION_PLAN.md §7). Reaproveita só
+       os tokens de cor/tipografia pra não destoar. */
+    body { padding-bottom: 0; }
+    .form-cadastro { max-width: 480px; margin: 0 auto; padding: 32px 24px 60px; }
+    .form-cadastro h1 { font-size: 24px; margin: 0 0 6px; font-weight: 600; }
+    .form-cadastro p.aviso { color: var(--text-dim); font-size: 14px; margin: 0 0 28px; line-height: 1.5; }
+    fieldset { border: none; padding: 0; margin: 0 0 22px; }
+    legend { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); padding: 0 0 10px; }
+    .campo { margin-bottom: 14px; }
+    .campo label { display: block; font-size: 13px; color: var(--text-dim); margin-bottom: 5px; }
+    .campo .ajuda { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+    .campo input, .campo select {
+      width: 100%; padding: 10px 12px; font-size: 16px; border: 1px solid var(--rule);
+      border-radius: 8px; background: #fff; box-sizing: border-box; font-family: inherit; color: var(--text);
+    }
+    .linha-dupla { display: flex; gap: 12px; }
+    .linha-dupla .campo { flex: 1; }
+    .erro-geral {
+      background: #fbeaea; border: 1px solid #e3b8b8; color: #a0342f;
+      padding: 12px 14px; border-radius: 8px; font-size: 14px; margin-bottom: 22px;
+    }
+    button.enviar {
+      width: 100%; padding: 13px; font-size: 15px; border: none; border-radius: 8px;
+      background: var(--accent); color: white; cursor: pointer; margin-top: 4px; font-family: inherit;
+    }
+    .campo-autocomplete { position: relative; }
+    .sugestoes-cidade {
+      display: none; position: absolute; z-index: 10; left: 0; right: 0; top: calc(100% + 4px);
+      background: #fff; border: 1px solid var(--rule); border-radius: 8px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08); max-height: 240px; overflow-y: auto;
+    }
+    .sugestoes-cidade.aberta { display: block; }
+    .sugestoes-cidade li {
+      list-style: none; padding: 10px 12px; font-size: 14px; cursor: pointer; border-bottom: 1px solid var(--rule);
+    }
+    .sugestoes-cidade li:last-child { border-bottom: none; }
+    .sugestoes-cidade li:hover, .sugestoes-cidade li.selecionada { background: var(--bg); }
+    .sugestoes-cidade li .sem-fuso { color: var(--text-dim); font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="form-cadastro">
+    <h1>Cadastrar participante</h1>
+    <p class="aviso">Ao enviar, os três sistemas (Numerologia, Dreamspell, Design Humano) são calculados na hora, e você já cai na tela da pessoa com os dados reais.</p>
+
+    {% if erro %}<div class="erro-geral">{{ erro }}</div>{% endif %}
+
+    <form method="post" action="/cadastro">
+      <fieldset>
+        <legend>Identificação</legend>
+        <div class="campo">
+          <label for="nome_completo_nascimento">Nome completo de nascimento (para os cálculos)</label>
+          <input type="text" id="nome_completo_nascimento" name="nome_completo_nascimento"
+                 value="{{ valores.nome_completo_nascimento }}" required>
+        </div>
+        <div class="campo">
+          <label for="nome">Nome de exibição / URL — minúsculo, sem espaço ou acento</label>
+          <input type="text" id="nome" name="nome" placeholder="ex.: carlos" pattern="[a-z0-9-]+"
+                 value="{{ valores.nome }}" required>
+          <p class="ajuda">Vira o endereço /{{ valores.nome or 'nome' }}/hoje.</p>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Nascimento</legend>
+        <div class="linha-dupla">
+          <div class="campo">
+            <label for="data_nascimento">Data de nascimento</label>
+            <input type="date" id="data_nascimento" name="data_nascimento"
+                   value="{{ valores.data_nascimento }}" required>
+          </div>
+          <div class="campo">
+            <label for="hora_nascimento">Hora de nascimento</label>
+            <input type="time" id="hora_nascimento" name="hora_nascimento"
+                   value="{{ valores.hora_nascimento }}" required>
+          </div>
+        </div>
+        <div class="campo">
+          <label for="confiabilidade_hora">Confiabilidade da hora informada</label>
+          <select id="confiabilidade_hora" name="confiabilidade_hora">
+            <option value="alta" {% if valores.confiabilidade_hora == 'alta' %}selected{% endif %}>Alta (certidão/registro)</option>
+            <option value="media" {% if valores.confiabilidade_hora == 'media' %}selected{% endif %}>Média (lembrança de família)</option>
+            <option value="baixa" {% if valores.confiabilidade_hora == 'baixa' %}selected{% endif %}>Baixa (estimativa)</option>
+          </select>
+        </div>
+        <div class="campo campo-autocomplete">
+          <label for="local_nascimento_texto">Local de nascimento (cidade, estado, país)</label>
+          <input type="text" id="local_nascimento_texto" name="local_nascimento_texto" autocomplete="off"
+                 value="{{ valores.local_nascimento_texto }}" required>
+          <ul class="sugestoes-cidade" id="sugestoes-cidade"></ul>
+          <p class="ajuda" id="status-autocomplete"></p>
+        </div>
+        <div class="linha-dupla">
+          <div class="campo">
+            <label for="latitude">Latitude</label>
+            <input type="text" inputmode="decimal" id="latitude" name="latitude" placeholder="-29.9511"
+                   value="{{ valores.latitude }}" required>
+          </div>
+          <div class="campo">
+            <label for="longitude">Longitude</label>
+            <input type="text" inputmode="decimal" id="longitude" name="longitude" placeholder="-51.0900"
+                   value="{{ valores.longitude }}" required>
+          </div>
+        </div>
+        <p class="ajuda" style="margin: -6px 0 14px;">Preenchidos automaticamente ao escolher uma cidade na busca acima — ou consulte num mapa (ex.: Google Maps → clicar no local → copiar as coordenadas).</p>
+        <div class="campo">
+          <label for="timezone_nascimento">Fuso horário no momento do nascimento</label>
+          <input type="text" id="timezone_nascimento" name="timezone_nascimento" placeholder="America/Sao_Paulo"
+                 value="{{ valores.timezone_nascimento }}" required>
+          <p class="ajuda">Formato IANA — ex.: America/Sao_Paulo, America/New_York, Europe/Lisbon.</p>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Residência atual</legend>
+        <div class="campo campo-autocomplete">
+          <label for="cidade_atual_busca">Cidade onde mora hoje (opcional — só pra preencher o fuso abaixo)</label>
+          <input type="text" id="cidade_atual_busca" autocomplete="off" placeholder="ex.: Lisboa, Portugal">
+          <ul class="sugestoes-cidade" id="sugestoes-cidade-atual"></ul>
+          <p class="ajuda" id="status-autocomplete-atual"></p>
+        </div>
+        <div class="campo">
+          <label for="timezone_atual">Fuso horário de onde mora hoje</label>
+          <input type="text" id="timezone_atual" name="timezone_atual" placeholder="America/Sao_Paulo"
+                 value="{{ valores.timezone_atual }}" required>
+          <p class="ajuda">Usado pra decidir a virada de "Hoje" (03:00) e de "Semana" (segunda-feira).</p>
+        </div>
+      </fieldset>
+
+      <button class="enviar" type="submit">Cadastrar e calcular</button>
+    </form>
+  </div>
+  <script>
+    // Autocomplete de cidade -- busca em /api/geocode (proxy pro Nominatim,
+    // ver app/geocoding.py). Generico: instanciado 1x pro local de
+    // nascimento (preenche latitude/longitude/timezone_nascimento) e 1x
+    // pra cidade atual (preenche só timezone_atual -- Participante nao
+    // guarda lat/lon de residencia atual, so o fuso). Debounce de 450ms +
+    // mínimo de 3 caracteres, exigido pela política de uso do Nominatim
+    // (nunca busca a cada tecla). Falha de rede não trava o formulário --
+    // os campos continuam editáveis manualmente, é só uma conveniência.
+    function configurarAutocompleteCidade(opcoes) {
+      var inputCidade = document.getElementById(opcoes.inputId);
+      var lista = document.getElementById(opcoes.listaId);
+      var status = document.getElementById(opcoes.statusId);
+      var timer = null;
+      var buscaEmCurso = '';
+
+      function fecharLista() {
+        lista.classList.remove('aberta');
+        lista.innerHTML = '';
+      }
+
+      function escolher(item) {
+        opcoes.aoEscolher(item);
+        fecharLista();
+        status.textContent = item.timezone ? '' : 'Fuso horário não identificado — confira o campo abaixo manualmente.';
+      }
+
+      function renderizar(resultados) {
+        lista.innerHTML = '';
+        resultados.forEach(function (item) {
+          var li = document.createElement('li');
+          li.textContent = item.nome_exibicao;
+          li.addEventListener('click', function () { escolher(item); });
+          lista.appendChild(li);
+        });
+        if (resultados.length) {
+          lista.classList.add('aberta');
+        } else {
+          fecharLista();
+        }
+      }
+
+      inputCidade.addEventListener('input', function () {
+        var termo = inputCidade.value.trim();
+        clearTimeout(timer);
+        if (termo.length < 3) {
+          fecharLista();
+          status.textContent = '';
+          return;
+        }
+        status.textContent = 'Buscando…';
+        timer = setTimeout(function () {
+          buscaEmCurso = termo;
+          fetch('/api/geocode?q=' + encodeURIComponent(termo))
+            .then(function (r) { return r.json(); })
+            .then(function (dados) {
+              if (termo !== buscaEmCurso) return; // resposta atrasada de uma busca já superada
+              status.textContent = dados.resultados.length ? '' : 'Nenhuma cidade encontrada — preencha manualmente.';
+              renderizar(dados.resultados);
+            })
+            .catch(function () {
+              status.textContent = 'Busca indisponível agora — preencha manualmente.';
+              fecharLista();
+            });
+        }, 450);
+      });
+
+      document.addEventListener('click', function (e) {
+        if (e.target !== inputCidade && !lista.contains(e.target)) {
+          fecharLista();
+        }
+      });
+    }
+
+    configurarAutocompleteCidade({
+      inputId: 'local_nascimento_texto',
+      listaId: 'sugestoes-cidade',
+      statusId: 'status-autocomplete',
+      aoEscolher: function (item) {
+        document.getElementById('local_nascimento_texto').value = item.nome_exibicao;
+        document.getElementById('latitude').value = item.latitude;
+        document.getElementById('longitude').value = item.longitude;
+        if (item.timezone) {
+          document.getElementById('timezone_nascimento').value = item.timezone;
+        }
+      },
+    });
+
+    configurarAutocompleteCidade({
+      inputId: 'cidade_atual_busca',
+      listaId: 'sugestoes-cidade-atual',
+      statusId: 'status-autocomplete-atual',
+      aoEscolher: function (item) {
+        document.getElementById('cidade_atual_busca').value = item.nome_exibicao;
+        if (item.timezone) {
+          document.getElementById('timezone_atual').value = item.timezone;
+        }
+      },
+    });
+  </script>
+</body>
+</html>

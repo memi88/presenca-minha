@@ -1,0 +1,19 @@
+<div class="linha">
+  <div class="linha-cabecalho">
+    <span class="simbolo">{{ card.simbolo }}</span>
+    <span class="nome-sistema">{{ card.nome }}</span>
+  </div>
+  <p class="dado-principal serif">{{ card.dado_principal }}</p>
+  {% if card.leitura %}<p class="leitura">{{ card.leitura }}</p>{% endif %}
+  {% if card.composition_status == 'experimental' %}<p class="rotulo-exp">composição do produto</p>{% endif %}
+  <div class="observe">
+    <span class="observe-rotulo">Observe</span>
+    <p class="observe-texto">Reservado para a camada de interpretação futura — ver PRD_v0.1.md §9.</p>
+  </div>
+  <details class="entender">
+    <summary>Entender</summary>
+    <div class="prova">
+      {% for linha_prova in card.prova %}{{ linha_prova | safe }}<br>{% endfor %}
+    </div>
+  </details>
+</div>

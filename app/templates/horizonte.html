@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ titulo }} · presente{% endblock %}
+{% block conteudo %}
+<div class="topo">
+  <p class="contexto">{{ contexto_cabecalho }}</p>
+  <h1 class="titulo serif">{{ titulo }}</h1>
+  <p class="subtitulo">{{ subtitulo }}</p>
+</div>
+{% if horizonte_ativo == 'hoje' %}
+<a class="promo-presente" href="/{{ participante.nome }}/presente">
+  <span class="promo-presente-tag">Novo</span>
+  <p class="promo-presente-titulo serif">◌ Presente</p>
+  <p class="promo-presente-texto">Uma reflexão diária a partir do Tzolkin, pensada pra observar o dia — não prever.</p>
+  <span class="promo-presente-cta">Experimentar →</span>
+</a>
+{% endif %}
+<div class="lista">
+  {% for card in cards %}
+    {% include "_card_real.html" %}
+    <div class="separador"></div>
+  {% endfor %}
+</div>
+{% endblock %}

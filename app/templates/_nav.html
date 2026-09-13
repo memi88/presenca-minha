@@ -1,0 +1,10 @@
+<nav class="nav-horizontes">
+  <a class="parada pessoa{{ ' ativa' if horizonte_ativo == 'pessoa' else '' }}" href="/{{ participante.nome }}/pessoa">Pessoa</a>
+  <div class="divisor-nav"></div>
+  <div class="horizontes-temporais">
+    <a class="parada{{ ' ativa' if horizonte_ativo == 'ano' else '' }}" href="/{{ participante.nome }}/ano">{% if horizonte_ativo == 'ano' %}<span class="ponto"></span>{% endif %}Ano</a>
+    <a class="parada{{ ' ativa' if horizonte_ativo == 'mes' else '' }}" href="/{{ participante.nome }}/mes">{% if horizonte_ativo == 'mes' %}<span class="ponto"></span>{% endif %}Mês</a>
+    <a class="parada{{ ' ativa' if horizonte_ativo == 'semana' else '' }}" href="/{{ participante.nome }}/semana">{% if horizonte_ativo == 'semana' %}<span class="ponto"></span>{% endif %}Semana</a>
+    <a class="parada{{ ' ativa' if horizonte_ativo == 'hoje' else '' }}" href="/{{ participante.nome }}/hoje">{% if horizonte_ativo == 'hoje' %}<span class="ponto"></span>{% endif %}Hoje</a>
+  </div>
+</nav>

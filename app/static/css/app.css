@@ -1,0 +1,190 @@
+/*
+  app.css — direção visual da V1 (Variação D, DESIGN_DIRECTION.md §14).
+  Fundo/tom herdados da Variação A; arquitetura (lista sem cards grandes)
+  herdada da Variação C. Mobile-first — telas maiores são expansão, não o
+  caso base (DESIGN_DIRECTION.md §11).
+*/
+
+:root {
+  --bg: #f6f1e7;
+  --text: #2e2a24;
+  --text-dim: #7a7364;
+  --quiet: #a49a89;
+  --accent: #b5563a;
+  --rule: #e3dcc9;
+  --experimental: #a07c2e;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 88px; /* espaço pra nav fixa */
+}
+.serif { font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif; }
+
+.pagina { max-width: 560px; margin: 0 auto; }
+
+.topo { padding: 26px 24px 8px; }
+.contexto {
+  font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-dim); margin: 0 0 20px;
+}
+.titulo { font-size: 32px; margin: 0; font-weight: 500; text-wrap: balance; }
+.subtitulo { font-size: 15px; color: var(--text-dim); margin: 8px 0 0; }
+
+.lista { padding: 0 24px; margin-top: 8px; }
+.linha { padding: 22px 0; }
+.linha:first-child { padding-top: 14px; }
+.separador { border-top: 1px solid var(--rule); }
+
+.linha-cabecalho { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.simbolo { font-size: 13px; color: var(--accent); line-height: 1; }
+.nome-sistema {
+  font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim);
+}
+.dado-principal {
+  font-size: 27px; line-height: 1.3; margin: 0 0 8px; font-weight: 500;
+  /* unidade semantica -- "Dia Pessoal 1" e uma frase, nao um rotulo + metrica separada */
+}
+.leitura { font-size: 14.5px; color: var(--text-dim); margin: 0; line-height: 1.5; }
+.rotulo-exp {
+  display: inline-block; margin-top: 8px; font-size: 11px; letter-spacing: 0.04em;
+  color: var(--experimental);
+}
+
+/* Observe -- componente proprio reservado para a camada de interpretacao
+   futura (PRD_v0.1.md secao 9) -- nao apenas texto solto em italico. */
+.observe {
+  margin: 14px 0 0; padding: 10px 0 10px 12px;
+  border-left: 2px solid var(--rule);
+  display: flex; flex-direction: column; gap: 3px;
+}
+.observe-rotulo {
+  font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--quiet);
+}
+.observe-texto { font-size: 13px; color: var(--quiet); line-height: 1.5; margin: 0; }
+
+.entender { margin-top: 14px; }
+.entender summary {
+  font-size: 12px; color: var(--quiet); font-weight: 400; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 5px; list-style: none;
+}
+.entender summary::-webkit-details-marker { display: none; }
+.entender summary::before { content: "＋"; font-size: 10px; }
+.entender[open] summary::before { content: "－"; }
+.prova {
+  margin-top: 12px; padding: 12px 14px; background: rgba(0,0,0,0.02); border-radius: 8px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 12px; color: var(--text-dim); line-height: 1.9;
+}
+.prova b { color: var(--text); font-weight: 600; }
+
+.linha.reservada .nome-sistema { color: var(--text-dim); }
+.linha.reservada .simbolo { color: var(--text-dim); opacity: 0.55; }
+.linha.reservada .dado-principal { font-size: 16px; font-weight: 400; color: var(--text-dim); }
+.linha.reservada .leitura { font-style: italic; }
+
+/* Pessoa -- tratamento de "capa", nao de horizonte (DESIGN_DIRECTION.md §8) */
+.capa-topo { padding: 34px 24px 8px; }
+.capa-nome { font-size: 40px; margin: 0; font-weight: 500; }
+.capa-subtitulo { font-size: 15px; color: var(--text-dim); margin: 8px 0 0; }
+.linha-pessoa .dado-principal { font-size: 20px; }
+
+nav.nav-horizontes {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  max-width: 560px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: flex-start;
+  padding: 14px 22px calc(14px + env(safe-area-inset-bottom, 0px)) 22px;
+  gap: 14px;
+  background: var(--bg); border-top: 1px solid var(--rule);
+}
+.nav-horizontes .parada {
+  font-size: 12px; letter-spacing: 0.02em; color: var(--text-dim); text-decoration: none;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+}
+.nav-horizontes .parada.ativa { color: var(--text); font-weight: 600; }
+.nav-horizontes .parada .ponto { width: 5px; height: 5px; border-radius: 50%; background: transparent; }
+.nav-horizontes .parada.ativa .ponto { background: var(--accent); }
+.nav-horizontes .parada.pessoa {
+  text-transform: uppercase; font-size: 10.5px; letter-spacing: 0.1em; font-weight: 600; color: var(--text);
+}
+.divisor-nav { width: 1px; height: 22px; background: var(--rule); flex: none; }
+.horizontes-temporais { display: flex; flex: 1; justify-content: space-around; align-items: center; }
+
+@media (min-width: 560px) {
+  nav.nav-horizontes { border-left: 1px solid var(--rule); border-right: 1px solid var(--rule); }
+}
+
+/* Convite pro Presente -- so na tela "Hoje" da hierarquia antiga (ver
+   horizonte.html, `{% if horizonte_ativo == 'hoje' %}`). Visualmente
+   distinto de .linha de proposito -- e um convite pra outra tela, nao mais
+   um item na lista de sistemas. */
+.promo-presente {
+  display: block; margin: 4px 24px 8px; padding: 18px 20px;
+  border: 1px solid var(--accent); border-radius: 12px;
+  background: rgba(181, 86, 58, 0.06);
+  text-decoration: none; color: inherit; position: relative;
+}
+.promo-presente-tag {
+  position: absolute; top: -9px; left: 16px;
+  background: var(--accent); color: var(--bg);
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;
+  padding: 2px 8px; border-radius: 20px;
+}
+.promo-presente-titulo { font-size: 20px; margin: 4px 0 4px; font-weight: 500; }
+.promo-presente-texto { font-size: 13.5px; color: var(--text-dim); margin: 0 0 10px; line-height: 1.5; }
+.promo-presente-cta { font-size: 12.5px; color: var(--accent); font-weight: 600; }
+
+/* Presente (A6) -- tela diaria do Alpha. Tela propria, nao um card na
+   grade de horizonte -- por isso classes proprias, mas os MESMOS tokens
+   de cor/tipografia/spacing do resto do app (--bg/--text/--accent/--rule,
+   serif pra destaque, .entender/.prova reaproveitados como estao). */
+.presente-topo { padding: 30px 24px 4px; text-align: center; }
+.presente-marca { font-size: 13px; letter-spacing: 0.1em; color: var(--text-dim); margin: 0; }
+.presente-selo-tom {
+  font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--quiet); margin: 8px 0 0;
+}
+
+.presente-corpo { padding: 22px 24px 4px; }
+.presente-reflexao {
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  font-size: 21px; line-height: 1.55; margin: 0; text-wrap: balance;
+}
+
+/* A pergunta precisa ser visualmente distinta de mais um paragrafo --
+   borda + rotulo, mesmo padrao visual do .observe original, mas com mais
+   presenca (e conteudo real, nao mais um placeholder reservado). */
+.presente-pergunta {
+  margin: 26px 24px 0; padding: 16px 18px;
+  border: 1px solid var(--rule); border-radius: 10px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.presente-pergunta-rotulo {
+  font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
+}
+.presente-pergunta-texto { font-size: 16px; line-height: 1.5; margin: 0; font-weight: 500; }
+
+.presente-pratica {
+  margin: 16px 24px 0; padding: 14px 18px;
+  background: rgba(0,0,0,0.02); border-radius: 10px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.presente-pratica-rotulo {
+  font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim);
+}
+.presente-pratica-texto { font-size: 14px; line-height: 1.5; margin: 0; color: var(--text); }
+
+.presente-entender { margin: 22px 24px 24px; }
+
+.presente-carregando {
+  min-height: 60vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+  padding: 24px; gap: 10px;
+}
+.presente-carregando-texto { font-size: 17px; margin: 4px 0 0; }
+.presente-carregando-nota { font-size: 13px; color: var(--text-dim); margin: 0; }
