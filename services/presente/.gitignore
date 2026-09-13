@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+
+# Resultados brutos de baterias de teste de prompt/QA (scripts/testar_*,
+# scripts/investigar_*) -- saida de execucao, nao codigo. Nunca versionar.
+scripts/_resultado_*.json

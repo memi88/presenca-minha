@@ -1,0 +1,15 @@
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+jinja2==3.1.5
+sqlalchemy==2.0.36
+psycopg[binary]==3.2.3
+pydantic==2.10.4
+pydantic-settings==2.7.1
+python-dotenv==1.0.1
+pyswisseph==2.10.3.2
+itsdangerous==2.2.0
+python-multipart==0.0.20
+openai==3.3.1
+httpx==0.28.1  # TestClient (dev/teste) E chamadas reais a Nominatim (app/geocoding.py, cadastro)
+timezonefinder==8.3.0  # offline, sem API externa -- deriva fuso horario de lat/lon (autocomplete de cidade no cadastro)
+truststore==0.10.4  # usa o keychain do SO em vez de certifi -- ver app/geocoding.py (nota Netskope no CLAUDE.md)
