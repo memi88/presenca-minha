@@ -45,7 +45,8 @@ from typing import Optional
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from app.adapters.base import snapshot_date_hoje
+from app.adapters.base import ParticipanteInput, snapshot_date_hoje
+from app.adapters.dreamspell_adapter import DreamspellAdapter
 from app.alpha.interpretation import (
     FALLBACK_PERGUNTA,
     FALLBACK_REFLEXAO,
@@ -55,7 +56,8 @@ from app.alpha.interpretation import (
     _rodar_pipeline_qa,
     montar_payload_minimo,
 )
-from app.alpha.relevance import NIVEL_NONE, RULESET_VERSION
+from app.alpha.relationship_detector import detectar_relacoes_estruturais
+from app.alpha.relevance import NIVEL_NONE, NIVEL_SAME_SEAL, RULESET_VERSION, calcular_relacoes_autorizadas
 from app.db.models import LeituraDiariaGenerica
 from app.engines.dreamspell_engine import ENGINE_VERSION, MomentoDreamspell, momento_dreamspell
 
@@ -174,4 +176,96 @@ def obter_ou_publicar_leitura_generica(
         session, data_referencia, momento,
         reflexao=FALLBACK_REFLEXAO, pergunta=FALLBACK_PERGUNTA,
         status_qa=status_qa, resumo_derivacao=resumo_derivacao,
+    )
+
+
+# --- P8: ponte personalizada (data_nascimento, sem Participante real) -----
+#
+# Diferente da genérica acima, NÃO persiste nada aqui -- decisão já
+# registrada em docs/integracao-presente-presenca-auditoria.md (seção C):
+# o cache mora do lado do Presença (profiles.lente_presente_cache),
+# calculado uma vez por perfil por dia civil. Duas pessoas com o mesmo
+# Selo natal chamando no mesmo dia geram 2 chamadas de modelo
+# independentes -- aceito por simplicidade (cache por data_nascimento
+# ficou como pergunta em aberto na auditoria original, não resolvida
+# ainda; não introduzir essa complexidade sem decisão explícita).
+def _payload_personalizado(session: Session, momento: MomentoDreamspell, participante_input: ParticipanteInput) -> dict:
+    """Deriva o Selo/Tom NATAL só a partir da data de nascimento (+ hora,
+    só usada no caso-limite de Hunab Ku 0.0 -- ver DreamspellAdapter),
+    sem criar nenhuma linha de Participante/PerfilNatalDreamspell no
+    banco. Monta um objeto leve com o mesmo contrato de
+    ResultadoRelevancia (nivel_relacao/detalhe/versao_ruleset) que
+    montar_payload_minimo() espera -- mesmo truque que _payload_generico()
+    já usa acima, mas aqui com relevância REAL calculada (SAME_SEAL/
+    Guia/Análogo/Antípoda/Oculto), não NIVEL_NONE fixo."""
+    natal = DreamspellAdapter().compute_pessoa(participante_input)
+    kin_natal = natal.get("kin")
+    selo_natal = natal.get("selo")
+
+    relacoes_checked: Optional[dict] = None
+    autorizadas: list[str] = []
+    if kin_natal is not None and momento.kin is not None:
+        relacoes_checked = detectar_relacoes_estruturais(kin_natal, momento.kin).to_dict()
+        autorizadas = calcular_relacoes_autorizadas(relacoes_checked)
+
+    nivel = autorizadas[0] if autorizadas else NIVEL_NONE
+    resultado_sem_dono = SimpleNamespace(
+        nivel_relacao=nivel,
+        detalhe={
+            "selo_natal": selo_natal,
+            "selo_hoje": momento.selo,
+            "match": nivel == NIVEL_SAME_SEAL,
+            "relationships_checked": relacoes_checked,
+            "relacoes_autorizadas": autorizadas,
+        },
+        versao_ruleset=RULESET_VERSION,
+    )
+    return montar_payload_minimo(session, momento, resultado_sem_dono)
+
+
+def obter_leitura_personalizada(
+    session: Session,
+    modelo: ModeloClient,
+    data_nascimento: datetime.date,
+    hora_nascimento: Optional[datetime.time] = None,
+    now: Optional[datetime.datetime] = None,
+) -> LeituraDiariaGenerica:
+    """Mesma forma de retorno de obter_ou_publicar_leitura_generica (uma
+    instância NÃO persistida de LeituraDiariaGenerica -- só usada como
+    carregador de dados pra _resposta_json() reaproveitar, nunca
+    session.add()/commit() aqui) -- deixa o chamador (routes.py) tratar
+    os dois caminhos de forma idêntica."""
+    data_referencia = snapshot_date_hoje(TIMEZONE_PONTE_PRESENCA, now)
+    momento = momento_dreamspell(data_referencia)
+
+    if momento.tipo_dia == "HUNAB_KU_0_0":
+        return LeituraDiariaGenerica(
+            data_referencia=data_referencia, timezone_usado=TIMEZONE_PONTE_PRESENCA,
+            kin=momento.kin, selo=momento.selo, selo_cor=momento.selo_cor, tom=momento.tom,
+            tipo_dia="HUNAB_KU_0_0", reflexao=None, pergunta=None,
+            resumo_derivacao={"tipo_dia": "HUNAB_KU_0_0", "motivo": "sem Kin/Selo/Tom proprios nesse dia"},
+            status_qa=STATUS_FIXED_HUNAB_KU, versao_prompt=PROMPT_VERSION, versao_engine_dreamspell=ENGINE_VERSION,
+        )
+
+    participante_input = ParticipanteInput(
+        nome_completo_nascimento="",
+        data_nascimento=data_nascimento,
+        hora_nascimento=hora_nascimento,
+        timezone_nascimento=TIMEZONE_PONTE_PRESENCA,
+        timezone_atual=TIMEZONE_PONTE_PRESENCA,
+        latitude=0.0,
+        longitude=0.0,
+    )
+    payload = _payload_personalizado(session, momento, participante_input)
+    resposta, status_qa, resumo_derivacao = _rodar_pipeline_qa(payload, PROMPT_VERSION, modelo)
+
+    reflexao = resposta.reflection if resposta is not None else FALLBACK_REFLEXAO
+    pergunta = resposta.question if resposta is not None else FALLBACK_PERGUNTA
+
+    return LeituraDiariaGenerica(
+        data_referencia=data_referencia, timezone_usado=TIMEZONE_PONTE_PRESENCA,
+        kin=momento.kin, selo=momento.selo, selo_cor=momento.selo_cor, tom=momento.tom,
+        tipo_dia=momento.tipo_dia, reflexao=reflexao, pergunta=pergunta,
+        resumo_derivacao=resumo_derivacao, status_qa=status_qa,
+        versao_prompt=PROMPT_VERSION, versao_engine_dreamspell=ENGINE_VERSION,
     )

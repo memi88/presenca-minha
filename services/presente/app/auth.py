@@ -45,7 +45,20 @@ COOKIE_SENHA_OK_MAX_AGE = 60 * 10  # 10 min -- só o tempo de escolher a identid
 # ponte de leitura pro Presenca (produto externo) -- publica por design,
 # nao pertence a nenhum participante do Alpha, entao nao faz sentido
 # exigir nem a senha compartilhada do laboratorio.
-ROTAS_PUBLICAS = {"/login", "/identidade", "/healthz", "/api/publico/hoje-dreamspell"}
+#
+# /api/ponte-presenca/hoje-dreamspell-personalizado (P8) tambem precisa
+# estar aqui pelo MESMO motivo -- e uma chamada servidor-a-servidor do
+# Presenca, nunca vem com o cookie de sessao humana do Alpha. "Publica"
+# so no sentido de que esse middleware nao a protege; a protecao real e
+# o Bearer token verificado por exigir_chave() (app/ponte_presenca/auth.py),
+# checado como Depends() dentro da propria rota.
+ROTAS_PUBLICAS = {
+    "/login",
+    "/identidade",
+    "/healthz",
+    "/api/publico/hoje-dreamspell",
+    "/api/ponte-presenca/hoje-dreamspell-personalizado",
+}
 
 # /cadastro aceita COOKIE_SENHA_OK (senha certa) OU sessao completa --
 # registrar um novo participante nao e uma acao "de" nenhum participante

@@ -29,6 +29,7 @@ from app.config import settings
 from app.db.models import Participante
 from app.db.session import get_session
 from app.ponte_presenca.routes import router as router_ponte_presenca
+from app.ponte_presenca.routes import router_personalizado as router_ponte_presenca_personalizado
 from app.routes_cadastro import router as router_cadastro
 from app.routes_experiencia import router as router_experiencia
 
@@ -38,6 +39,7 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 app.include_router(router_cadastro)
 app.include_router(router_experiencia)
 app.include_router(router_ponte_presenca)
+app.include_router(router_ponte_presenca_personalizado)
 
 
 def _next_seguro(next_url: str) -> str:

@@ -15,16 +15,20 @@ GET /api/publico/hoje-dreamspell. O endpoint personalizado
 proximo passo (P8 do lado do Presenca) -- NAO implementado ainda, de
 proposito.
 """
+import datetime
 from typing import Optional
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel, Field
 
 from app.alpha.modelo_gpt56sol import GPT56SolClient
 from app.db.session import get_session
-from app.ponte_presenca.pipeline import obter_ou_publicar_leitura_generica
+from app.ponte_presenca.auth import exigir_chave
+from app.ponte_presenca.pipeline import obter_leitura_personalizada, obter_ou_publicar_leitura_generica
 from app.routes_experiencia import HUNAB_KU_MENSAGEM
 
 router = APIRouter(prefix="/api/publico", tags=["ponte-presenca"])
+router_personalizado = APIRouter(prefix="/api/ponte-presenca", tags=["ponte-presenca"])
 
 # ATENCAO -- incidente real de 30/08/2026, corrigido no mesmo dia: a
 # versao anterior desta funcao usava uma DENYLIST (removia so
@@ -114,6 +118,39 @@ def hoje_dreamspell():
     session = get_session()
     try:
         leitura = obter_ou_publicar_leitura_generica(session, GPT56SolClient())
+        return _resposta_json(leitura)
+    finally:
+        session.close()
+
+
+class HojeDreamspellPersonalizadoRequest(BaseModel):
+    # Só data — hora é opcional e só importa no caso-limite de nascer em
+    # 29/02 (ver DreamspellAdapter). Nunca pedimos local/lat/lon aqui:
+    # Dreamspell não usa (diferente de Design Humano), e pedir dado que
+    # não é usado só aumentaria a superfície de dado sensível trafegado
+    # à toa (docs/integracao-presente-presenca-decisoes.md, decisão 4).
+    data_nascimento: datetime.date = Field(...)
+    hora_nascimento: Optional[datetime.time] = None
+
+
+@router_personalizado.post("/hoje-dreamspell-personalizado", dependencies=[Depends(exigir_chave)])
+def hoje_dreamspell_personalizado(body: HojeDreamspellPersonalizadoRequest):
+    """P8 -- ver docs/integracao-presente-presenca-auditoria.md (seção C)
+    e CLAUDE.md. Protegida por API key servidor-a-servidor (Bearer,
+    exigir_chave), nunca por sessão de participante. Sem persistência de
+    propósito (ver docstring de obter_leitura_personalizada) -- o cache
+    mora do lado do Presença. Mesma allowlist de resposta que o endpoint
+    genérico (_resposta_json/_construir_derivation_summary_publico) --
+    NUNCA reverter pra expor resumo_derivacao/tentativas cru, mesmo
+    princípio do incidente de 30/08/2026 documentado acima."""
+    if body.data_nascimento > datetime.date.today():
+        raise HTTPException(status_code=422, detail="data_nascimento não pode ser no futuro")
+
+    session = get_session()
+    try:
+        leitura = obter_leitura_personalizada(
+            session, GPT56SolClient(), body.data_nascimento, body.hora_nascimento,
+        )
         return _resposta_json(leitura)
     finally:
         session.close()
